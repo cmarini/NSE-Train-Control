@@ -274,11 +274,11 @@ public class CTCView extends JFrame
         private JLabel trackID = new JLabel("Train ID");
         private JComboBox track = new JComboBox();
         private JLabel setpointLabel = new JLabel("Setpoint");
-        private JFormattedTextField setpoint;
+        private JTextField setpoint = new JTextField();
         private JLabel authorityLabel = new JLabel("Authority");
-        private JFormattedTextField authority;
-        private JButton sendSetpoint = new JButton("Send Setpoint");
-        private JButton sendAuthority = new JButton("Send Authority");
+        private JTextField authority = new JTextField();
+        private JButton sendSetpoint;
+        private JButton sendAuthority;
         private Insets insets = new Insets(0,0,0,0);
         private Insets insets2 = new Insets(0,0,0,10);
         private MaskFormatter format;
@@ -290,17 +290,10 @@ public class CTCView extends JFrame
         }
 
         private void initialize()
-        {
-            try
-            {
-                format = new MaskFormatter("##");
-                setpoint = new JFormattedTextField(format);
-                authority = new JFormattedTextField(format);
-            }
-            catch(ParseException e)
-            {
-                System.err.println("Unable to add format");
-            }
+        {            
+            sendSetpoint = new JButton("Send Setpoint"); 
+            sendAuthority = new JButton("Send Authority"); 
+            
             dispatcherIDLabel = new JLabel(dispatcherID);
             setpoint.setColumns(10);
             authority.setColumns(10);
@@ -324,15 +317,46 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent e)
             {
-                sendCommands();
+                if(e.getSource().toString().equals(sendSetpoint.toString()))
+                {
+                    try
+                    {
+                        int set = Integer.parseInt(setpoint.getText());
+                        if(set < 0 || set > 70)
+                        {
+                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        else
+                        {
+                            control.setDispatcherSpeed(set);
+                        }
+                    }
+                    catch(NumberFormatException p)
+                    {
+                        JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
+                if(e.getSource().toString().equals(sendAuthority.toString()))
+                {
+                    try
+                    {
+                        int auth = Integer.parseInt(authority.getText());
+                        if(auth < 0 || auth > 70)
+                        {
+                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        else
+                        {
+                            control.setDispatcherAuthority(auth);
+                        }
+                    }
+                    catch(NumberFormatException p)
+                    {
+                        JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
         };
-
-        public void sendCommands()
-        {
-//train ID
-            control.setCommands(Integer.parseInt(setpoint.getText()), Integer.parseInt(authority.getText()));
-        }
         
         public void paintComponent(Graphics g)
         {
@@ -349,10 +373,10 @@ public class CTCView extends JFrame
         private JLabel trainID = new JLabel("Train ID");
         private JComboBox trains = new JComboBox();
         private JLabel speedLabel = new JLabel("Speed");
-        private JFormattedTextField operatorSpeed;
+        private JTextField operatorSpeed = new JTextField();
         private JLabel brakeLabel = new JLabel ("Brake");
         private JCheckBox brake = new JCheckBox("");
-        private JButton send = new JButton("Send");
+        private JButton send;
         private Insets insets = new Insets(0,0,0,0);
         private MaskFormatter format;
 
@@ -364,15 +388,7 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
-            try
-            {
-                format = new MaskFormatter("##");
-                operatorSpeed = new JFormattedTextField(format);
-            }
-            catch(ParseException e)
-            {
-                System.err.println("Unable to add format");
-            }
+            send = new JButton("Send");
             operatorSpeed.setColumns(10);
             send.addActionListener(buttonClick);
             
@@ -390,7 +406,25 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent e)
             {
-                sendOperatorCommands();
+                if(e.getSource().toString().equals(send.toString()))
+                {
+                    try
+                    {
+                        int set = Integer.parseInt(operatorSpeed.getText());
+                        if(set < 0 || set > 100)
+                        {
+                            JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                        else
+                        {
+                            sendOperatorCommands();
+                        }
+                    }
+                    catch(NumberFormatException p)
+                    {
+                        JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                }
             }
         };
 
@@ -452,9 +486,9 @@ public class CTCView extends JFrame
         private JCheckBox brakeFailCheck = new JCheckBox();
         private JCheckBox engineFailCheck = new JCheckBox();
         private JCheckBox signalPickupFailCheck = new JCheckBox();
-        private JButton emergencyBrakeButton = new JButton("Emergency Brake");
-        private JButton addTrainButton = new JButton("Add Train");
-        private JButton removeTrainButton = new JButton("Remove Train");
+        private JButton emergencyBrakeButton;
+        private JButton addTrainButton;
+        private JButton removeTrainButton;
         private Insets insets = new Insets(5,20,0,20);
         private int height;
         private int width;
@@ -483,7 +517,8 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
-            String trainIDs [] = model.getTrainIDs();
+            //String trainIDs [] = sim.getTrainIDs();
+            String trainIDs [] = new String [0];
             currentTrains = new JComboBox();
             
             currentTrains.addItem("");
@@ -504,6 +539,10 @@ public class CTCView extends JFrame
                 System.err.println("Unable to add format");
             }
             
+            emergencyBrakeButton = new JButton("Emergency Brake");
+            addTrainButton = new JButton("Add Train");
+            removeTrainButton = new JButton("Remove Train");
+            
             heightField.setColumns(10);
             widthField.setColumns(10);
             numCarsField.setColumns(10);
@@ -521,7 +560,7 @@ public class CTCView extends JFrame
             numCarsField.setEditable(false);
             lengthField.setEditable(false);
             massField.setEditable(false);
-            crewCountField.setEditable(false);
+            crewCountField.setEditable(true);
             passengerCountField.setEditable(false);
             currentSpeedField.setEditable(false);
             currentAccelerationField.setEditable(false);
@@ -632,7 +671,7 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 String ID = (String)cb.getSelectedItem();
-                //sim.createTrain(t attributes);
+                //sim.createTrain(line, crewCount, trainID);
                 //initialize();
             }
         };
@@ -643,7 +682,7 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 String ID = (String)cb.getSelectedItem();
-                //TrainController t = model.getTrainController(ID);
+                //TrainController t = getTrainController(ID);
                 //t.remove();
                 //initialize();
             }
