@@ -17,11 +17,16 @@ public class CTCControl
         model = m;
     }
     
-    public void setCommands(int sp, int auth)
+    public void setDispatcherSpeed(int sp)
     {
         setpoint = sp;
+        System.out.println(sp);
+    }
+ 
+    public void setDispatcherAuthority(int auth)
+    {        
         authority = auth;
-        //System.out.println("Setpoint: " + setpoint + "   Authority:  " + authority);
+        System.out.println(auth);
     }
     
     public void setOperatorCommands(int sp, boolean b)
