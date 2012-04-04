@@ -1,19 +1,19 @@
 public class Wayside implements Runnable {
-	private Track[] track;
+	private ArrayList<Track> track;
 	private PLC plc;
-	private int id;
+	private String id;
 	public Wayside nextRight;
 	public Wayside nextLeft;
 	public Wayside prevRight;
 	public Wayside prevLeft;
 	
-	public Wayside(int id, Track[] t, Wayside nextRight, Wayside nextLeft, Wayside prevRight, Wayside prevLeft) {
+	public Wayside(String id, Wayside nextRight, Wayside nextLeft, Wayside prevRight, Wayside prevLeft) {
 		this.id = id;
-		this.track = t;
 		this.nextRight = nextRight;
 		this.nextLeft = nextLeft;
 		this.prevRight = prevRight;
 		this.prevLeft = prevLeft;
+		this.track = new ArrayList<Track>();
 	}
 	
 	public void run() {
@@ -32,8 +32,20 @@ public class Wayside implements Runnable {
 		/* set track's speed limit */
 	}
 	
+	private Track findTrack(String trackID) {
+		/* Scan track section for ID */
+	}
+	
+	private Train findTrain(String trainID) {
+		/* Scan track section for specified train ID */
+	}
+	
+	public void addTrack(Track t) {
+		track.add(t);
+	}
+	
 	public int getID() {
-		return this.id;
+		return id;
 	}
 
 	public String toString() {
