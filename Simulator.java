@@ -12,6 +12,7 @@ public class Simulator
     private static int demoEvent = 0;
     private static int timeCounter;
     private static CTCView view;
+    //private static TrainController [] trainControllers;
     
     public void setView(CTCView v)
     {
@@ -51,12 +52,41 @@ public class Simulator
     /*
      * public TrainController getTrainController(String TrainID)
      * {
-     * 
+     *      loc = trainControllers.length;
+     *      for(int i = 0; i < trainControllers.length; i++)
+     *      {
+     *          if(trainControllers[i].getTrainID().equals(TrainID))
+     *          {
+     *              break;    
+     *          }
+     *      }
+     *      if(i < loc)
+     *      {
+     *          return trainControllers[i]
+     *      }
+     *      else
+     *      {
+     *          return null;
+     *      }
      * }
      * 
-     * public void createTrain(train attributes)
+     * public void createTrain(int line, int crewCount, String trainID)
      * {
-     * 
+     *      Train t = new Train(crewCount, trainID);
+     *      
      * }
+     * 
+     * public String [] getTrainIDs()
+     * {
+     *      String trainIDs = new String [trainControllers.length];
+     * 
+     *      for(int i = 0; i < trainControllers.length; i++)
+     *      {
+     *          trainIDs[i] = trainControllers[i].getTrainID();
+     *      }
+     * 
+     *      return trainIDs;
+     * }
+     * 
      */
 }
