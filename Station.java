@@ -1,8 +1,8 @@
-package Track;
+package TrackModel;
 
 import java.util.Random;
 
-public class Station extends TrackModule
+public class Station extends Track
 {
 	private String stationName;
         private String stInfo;

@@ -1,6 +1,6 @@
-package Track;
+package TrackModel;
 
-public class Switch extends TrackModule
+public class Switch extends Track
 {
 	private boolean switchState = false; //defult setting
 	private String sInfo;

@@ -1,6 +1,6 @@
-package Track;
+package TrackModel;
 
-public class Tunnel extends TrackModule
+public class Tunnel extends Track
 {
 	private boolean isTunnel = false;
 	private int tunnelX, tunnelY;

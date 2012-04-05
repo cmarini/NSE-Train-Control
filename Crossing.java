@@ -1,6 +1,6 @@
-package Track;
+package TrackModel;
 
-public class Crossing extends TrackModule
+public class Crossing extends Track
 {
 	private boolean crossState = false;
 	private String cInfo;

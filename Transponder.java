@@ -1,6 +1,6 @@
-package Track;
+package TrackModel;
 
-public class Transponder extends TrackModule
+public class Transponder extends Track
 {
 	private String transponderName, transponderType, tInfo;
 	private int transponderPositionX, transponderPositionY;
