@@ -1,7 +1,7 @@
 // this class has the track property Train Yard, it is responsible 
 // for creating and removing trains from the system
 
-package TrackModel;
+package trackmodel;
 
 public class TrainYard extends Track
 {

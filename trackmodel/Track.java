@@ -1,6 +1,6 @@
 // Track Module Main class 
 
-package TrackModel;
+package trackmodel;
 
 
 public class Track

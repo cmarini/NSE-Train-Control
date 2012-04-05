@@ -1,4 +1,4 @@
-package TrackModel;
+package trackmodel;
 
 import java.util.Random;
 

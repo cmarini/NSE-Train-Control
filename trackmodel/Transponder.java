@@ -1,4 +1,4 @@
-package TrackModel;
+package trackmodel;
 
 public class Transponder extends Track
 {

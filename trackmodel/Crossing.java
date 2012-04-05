@@ -1,4 +1,4 @@
-package TrackModel;
+package trackmodel;
 
 public class Crossing extends Track
 {

@@ -1,4 +1,4 @@
-package TrackModel;
+package trackmodel;
 
 public class Tunnel extends Track
 {
