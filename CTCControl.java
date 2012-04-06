@@ -1,7 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	File.java
+*	Lead Programmer:	First Last
+*	Description:	This class/file/program will…
+*	Date Modified:	1/20/12
+*/
+
 package CTC;
 
 public class CTCControl 
@@ -34,10 +37,5 @@ public class CTCControl
         operatorSpeed = sp;
         operatorBrake = b;
         //System.out.println("Operator Speed : " + operatorSpeed + " Brake: " + operatorBrake);
-    }
-    
-    public void createTrain()
-    {
-        
     }
 }
