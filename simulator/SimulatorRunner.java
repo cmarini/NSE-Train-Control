@@ -2,9 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package Simulator;
+package simulator;
 
-import CTC.CTCView;
+import ctc.CTCView;
 import java.lang.Math;
 
 public class SimulatorRunner

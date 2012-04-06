@@ -5,9 +5,9 @@
 *	Date Modified:	1/20/12
 */
 
-package CTC;
+package ctc;
 
-import Simulator.Simulator;
+import simulator.Simulator;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

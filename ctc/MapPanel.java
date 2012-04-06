@@ -5,7 +5,7 @@
 *	Date Modified:	1/20/12
 */
 
-package CTC;
+package ctc;
 
 import java.awt.Color;
 import java.awt.Graphics;
