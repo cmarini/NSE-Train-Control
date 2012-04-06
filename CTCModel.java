@@ -1,7 +1,10 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	File.java
+*	Lead Programmer:	First Last
+*	Description:	This class/file/program will…
+*	Date Modified:	1/20/12
+*/
+
 package CTC;
 
 public class CTCModel 
@@ -10,7 +13,8 @@ public class CTCModel
     private int capacity;
     private int occupancy; 
     private String[] trackControllers = {"A1", "A2", "A3"};
-    //private TrackControllers trackControllers;
+    //private TrackControllers greenTrackControllers;
+    //private TrackControllers redTrackControllers;
     
     /*public Track getTrack(String TrackID)
      * {

@@ -1,13 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	File.java
+*	Lead Programmer:	First Last
+*	Description:	This class/file/program will…
+*	Date Modified:	1/20/12
+*/
+
 package CTC;
 
-/**
- *
- * @author AM
- */
 public class Login 
 {
     private static String userIDs[] = {"sweigartz", "washingtons", "marinic", "korenicj", "agiobeneboo"};

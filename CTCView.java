@@ -1,16 +1,19 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	File.java
+*	Lead Programmer:	First Last
+*	Description:	This class/file/program will…
+*	Date Modified:	1/20/12
+*/
+
 package CTC;
 
+import Simulator.Simulator;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
 import javax.swing.*;
-import javax.swing.text.*;
-import java.text.*;
-import Simulator.Simulator;
+import javax.swing.text.MaskFormatter;
 
 public class CTCView extends JFrame
 {
@@ -281,7 +284,6 @@ public class CTCView extends JFrame
         private JButton sendAuthority;
         private Insets insets = new Insets(0,0,0,0);
         private Insets insets2 = new Insets(0,0,0,10);
-        private MaskFormatter format;
 
         DispatcherPanel()
         {
@@ -690,16 +692,19 @@ public class CTCView extends JFrame
         
         public void paintComponent(Graphics g)
         {
-            int width = getWidth();
-            int height = getHeight();
+            int w = getWidth();
+            int h = getHeight();
             g.setColor(Color.WHITE);
-            g.fillRect(0,0, width, height);
+            g.fillRect(0,0, w, h);
         }
     }
     
     private class TrackPanel extends JPanel
     {
         private String [] failureTypes = {"Broken Rail", "Power Failure", "Circuit Failure"};
+        private String [] lines = {"Green", "Red"};
+        private JLabel lineLabel = new JLabel("Select Line");
+        private JLabel controllerLabel = new JLabel("Select Wayside");
         private JLabel trackLabel = new JLabel("Select Track");
         private JLabel speedLimitLabel = new JLabel("Speed Limit");
         private JLabel elevationLabel = new JLabel("Elevation");
@@ -708,6 +713,8 @@ public class CTCView extends JFrame
         private JLabel trackTypeLabel = new JLabel("Track Type");
         private JLabel passengersBoardingLabel = new JLabel("Passengers Boarding");
         private JLabel passengersDisembarkingLabel = new JLabel("Passengers Disembarking");
+        private JComboBox line;
+        private JComboBox controller;
         private JComboBox track;
         private JComboBox failType = new JComboBox(failureTypes);
         private JTextField speedLimitField = new JTextField();
@@ -739,8 +746,25 @@ public class CTCView extends JFrame
         private void initialize()
         {
             String trackIDs [] = model.getTrackIDs();
+            String controllerIDs [];
             
+            line = new JComboBox();
+            for(int i = 0; i < lines.length; i++)
+            {
+                line.addItem(lines[i]);
+            }
+            
+            //controllerIDs = model.getControllerIDs(line.getSelectedItem());
+            
+            controller = new JComboBox();
+            controller.addItem("");
+            for(int i = 0; i < lines.length; i++)
+            {
+                //controller.addItem(controllerIDs[i]);
+            }
+                        
             track = new JComboBox();
+            track.addItem("");
             for(int i = 0; i < trackIDs.length; i++)
             {
                 track.addItem(trackIDs[i]);
@@ -777,28 +801,31 @@ public class CTCView extends JFrame
             passengersBoardingField.setText(""+passengersBoarding);
             passengersDisembarkingField.setText(""+passengersDisembarking);
             
-            
-            addComponent(this, trackLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, track, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, speedLimitLabel, 0, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, speedLimitField, 1, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, elevationLabel, 0, 2, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, elevationField, 1, 2, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, gradeLabel, 0, 3, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, gradeField, 1, 3, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, blockSizeLabel, 0, 4, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, blockSizeField, 1, 4, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, trackTypeLabel, 0, 5, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, trackTypeField, 1, 5, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, passengersBoardingLabel, 0, 6, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, passengersBoardingField, 1, 6, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, passengersDisembarkingLabel, 0, 7, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, passengersDisembarkingField, 1, 7, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, closeButton, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, openButton, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, breakButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, failType, 1, 10, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, fixButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, lineLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, line, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, controllerLabel, 0, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, controller, 1, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, trackLabel, 0, 2, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, track, 1, 2, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, speedLimitLabel, 0, 3, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, speedLimitField, 1, 3, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, elevationLabel, 0, 4, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, elevationField, 1, 4, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, gradeLabel, 0, 5, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, gradeField, 1, 5, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, blockSizeLabel, 0, 6, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, blockSizeField, 1, 6, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, trackTypeLabel, 0, 7, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, trackTypeField, 1, 7, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, passengersBoardingLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, passengersBoardingField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, passengersDisembarkingLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, passengersDisembarkingField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, closeButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, breakButton, 0, 12, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failType, 1, 12, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, fixButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
         }
         
         ActionListener trackComboListener = new ActionListener()

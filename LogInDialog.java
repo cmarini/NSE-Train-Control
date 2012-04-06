@@ -1,12 +1,18 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	File.java
+*	Lead Programmer:	First Last
+*	Description:	This class/file/program will…
+*	Date Modified:	1/20/12
+*/
+
 package CTC;
 
+import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.*;
         
 public class LogInDialog extends JDialog
 {
