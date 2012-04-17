@@ -75,6 +75,12 @@ public class Track
 		trafficLight = lightState;
 	}
 	
+	public void setTrainID(String id) // set current trainID
+	{
+		trainID = id;
+		trackInfo = "info: trainID set to: " + trainID;
+	}
+		
 //---------------------------------------------------------------------------------------	
 	public int getSpeedLimit() // returns track speed limit
 	{
@@ -117,6 +123,12 @@ public class Track
 	{
 		trackInfo = "info: sent track ID: "+trackID;
 		return trackID;
+	}
+	
+	public String getTrainID() // returns train ID
+	{
+		trackInfo = "info: sent train ID: "+trainID;
+		return trainID;
 	}
 	
 	public double getGrade() // returns grade
