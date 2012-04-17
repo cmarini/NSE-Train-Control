@@ -6,19 +6,20 @@ package trackmodel;
 public class Track
 {
 	private double elevation;
-        private double grade;
+	private double grade;
 	private int speedLimit;
-        private int dispatchLimit;
+	private int dispatchLimit;
 	private boolean occupied;
-        private boolean open;
+	private boolean open;
 	private String trackID;
-        private String trackInfo;
+	private String trainID;
+	private String trackInfo;
 	private int failure;
-        private int trafficLight;
+	private int trafficLight;
 	private int x1;
-        private int y1;
-        private int x2;
-        private int y2;
+	private int y1;
+	private int x2;
+	private int y2;
 	
 	//Track module constructor	
 	public Track(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
@@ -56,13 +57,13 @@ public class Track
 		failure = 0;
 	}
 	
-	public void OccupiedStatus(boolean iOccupy) // set block to occupied
+	public void setOccupied(boolean iOccupy) // set block to occupied
 	{
 		trackInfo = " info: track set to: "+iOccupy;
 		occupied = iOccupy;
 	}
 	
-	public void openStatus(boolean iOpen) // set track to open
+	public void setOpen(boolean iOpen) // set track to open
 	{
 		trackInfo = "info: track set to: "+iOpen;
 		open = iOpen;
