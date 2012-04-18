@@ -13,6 +13,7 @@ public class Simulator
     private static int demoEvent = 0;
     private static int timeCounter;
     private static CTCView view;
+    private static int clockRate = 60;
     //private static TrainController [] trainControllers;
     
     public Simulator(boolean d)
@@ -23,6 +24,11 @@ public class Simulator
     public void setView(CTCView v)
     {
         view = v;
+    }
+    
+    public void setClockRate(int c)
+    {
+        clockRate = c;
     }
     
     public static void run()
@@ -80,10 +86,9 @@ public class Simulator
      *      }
      * }
      * 
-     * public void createTrain(int line, int crewCount, String trainID)
+     * public void createTrain(int line, int crewCount, String trainID, int clockRate)
      * {
-     *      Train t = new Train(crewCount, trainID);
-     *      
+     *      TrainController t = new TrainController(line, crewCount, trainID, clockRate);
      * }
      * 
      * public String [] getTrainIDs()

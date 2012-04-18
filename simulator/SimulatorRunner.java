@@ -28,6 +28,7 @@ public class SimulatorRunner
             int sleeptime = (int)(Math.ceil(clockRate/60.0));
             s.run();
             clockRate = view.getClockRate();
+            //s.setTrainControllerClockRate(clockRate);
             isOpen = view.getIsOpen();
             sleep(sleeptime);
         }
