@@ -8,11 +8,17 @@ import ctc.CTCView;
 
 public class Simulator 
 {
+    private static boolean debugMode;
     private static boolean demoMode = false;
     private static int demoEvent = 0;
     private static int timeCounter;
     private static CTCView view;
     //private static TrainController [] trainControllers;
+    
+    public Simulator(boolean d)
+    {
+        debugMode = d;
+    }
     
     public void setView(CTCView v)
     {
@@ -27,6 +33,10 @@ public class Simulator
         {
             if(timeCounter % 30000 == 0)
             {
+                if(debugMode)
+                {
+                    System.out.println(demoEvent);
+                }
                 switch(demoEvent)
                 {
                     case 0:
