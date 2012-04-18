@@ -10,6 +10,7 @@ package ctc;
 public class CTCModel 
 {
     private static boolean debugMode;
+    private static int clockRate = 60;
     private int throughput;
     private int capacity;
     private int occupancy; 
@@ -24,6 +25,11 @@ public class CTCModel
     public void setDebugMode(boolean d)
     {
         debugMode = d;
+    }
+    
+    public void setClockRate(int c)
+    {
+        clockRate = c;
     }
     
     /*public Track getTrack(String TrackID)

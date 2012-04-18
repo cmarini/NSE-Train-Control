@@ -324,6 +324,8 @@ public class CTCView extends JFrame
                     default:
                         clockRate = 120;
                 }
+                sim.setClockRate(clockRate);
+                model.setClockRate(clockRate);
                 if(CTCView.getDebugMode())
                 {
                     System.out.println("CTC View: Clock rate set to : " + clockRate);
