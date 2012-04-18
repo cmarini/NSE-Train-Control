@@ -13,7 +13,9 @@ import javax.swing.JPanel;
 
 public class MapPanel extends JPanel
 {
-    CTCModel model;
+    private boolean debugMode;
+    private CTCModel model;
+    private String trackSection;
     
     MapPanel(CTCModel m)
     {
@@ -22,8 +24,90 @@ public class MapPanel extends JPanel
         repaint();
     }
     
+    MapPanel(CTCModel m, String tc)
+    {
+        model = m;
+        trackSection = tc;
+        setBackground(Color.WHITE);
+        repaint();
+    }
+    
+    public void setDebugMode(boolean d)
+    {
+        debugMode = d;
+    }
+    
+    public void setTrackSection(String tc)
+    {
+        trackSection = tc;
+    }
+    
+    public void setSection(String s)
+    {
+        trackSection = s;
+        if(debugMode)
+        {
+            System.out.println("Map Panel: section selected: " + trackSection);
+        }
+    }
+    
     public void paintComponent(Graphics g) 
     {
+        super.paintComponent(g);
+        if(!trackSection.isEmpty())
+        {
+            if(!trackSection.equals(""));
+            {
+                if(trackSection.equals("Green Line"))
+                {
+                    g.setColor(Color.WHITE);
+                    g.fillRect(0, 0, WIDTH, HEIGHT);
+                    
+                    g.setColor(Color.GREEN);
+                    
+                    g.drawLine(400, 20, 450, 80);
+                    g.drawLine(450, 80, 475, 100);
+                    g.drawLine(475, 100, 525, 100);
+                    g.drawLine(525, 100, 550, 80);
+                    g.drawLine(550, 80, 500, 40);
+                    g.drawLine(500, 40, 450, 20);
+                    g.drawLine(450, 20, 400, 20);
+                    
+                    g.drawLine(450, 20, 100, 20);
+                    g.drawLine(100, 20, 50, 50);
+                    g.drawLine(50, 50, 25, 75);
+                    g.drawLine(25, 75, 25, 150);
+                    
+                    g.drawLine(25, 150, 50, 190);
+                    g.drawLine(50, 190, 75, 210);
+                    g.drawLine(75, 210, 550, 210);
+                    
+                    g.drawLine(550, 210, 600, 240);
+                    g.drawLine(600, 240, 620, 270);
+                    g.drawLine(620, 270, 620, 425);
+                    
+                    g.drawLine(620, 425, 600, 450);
+                    g.drawLine(600, 450, 540, 465);
+                    g.drawLine(540, 465, 100, 465);
+                    
+                    g.drawLine(100, 465, 80, 450);
+                    g.drawLine(80, 450, 60, 425);
+                    g.drawLine(60, 425, 60, 400);
+                    g.drawLine(60, 400, 70, 370);
+                    g.drawLine(70, 370, 90, 360);
+                    g.drawLine(90, 360, 110, 360);
+                    g.drawLine(110, 360, 140, 400);
+                    g.drawLine(140, 400, 160, 450);
+                    g.drawLine(160, 450, 175, 465);
+                }
+            }
+        }
+        else
+        {
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, WIDTH, HEIGHT);
+        }
+        /*
         g.setColor(Color.BLACK);
         
         g.drawLine(0,0,0,800);
@@ -66,6 +150,7 @@ public class MapPanel extends JPanel
         g.drawLine(740,0,740,800);
         g.drawLine(760,0,760,800);
         g.drawLine(780,0,780,800);
+        g.drawLine(800,0,800,800);
         
         
         g.drawLine(0,0,0,800);
@@ -109,8 +194,7 @@ public class MapPanel extends JPanel
         g.drawLine(0,760,800,760);
         g.drawLine(0,780,800,780);
         g.drawLine(0,800,800,800);
-        g.drawLine(0,820,800,820);
-        
+        */
         
     }
 }

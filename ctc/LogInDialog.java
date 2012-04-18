@@ -16,7 +16,7 @@ import javax.swing.*;
         
 public class LogInDialog extends JDialog
 {
-
+    private boolean debugMode;
     private JTextField tfUsername;
     private JPasswordField pfPassword;
     private JLabel lbUsername;
@@ -26,10 +26,11 @@ public class LogInDialog extends JDialog
     private boolean succeeded;
     private String verifiedUsername;
 
-    public LogInDialog(JFrame owner) 
+    public LogInDialog(JFrame owner, boolean d) 
     {
         super(owner, "Login", true);
-        //
+        
+        debugMode = d;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
 
@@ -66,7 +67,12 @@ public class LogInDialog extends JDialog
 
             public void actionPerformed(ActionEvent e) 
             {
-                if (Login.authenticate(getUsername(), getPassword())) 
+                if(debugMode)
+                {
+                    System.out.println("Log In Dialog: Username entered: " + getUsername());
+                    System.out.println("Log In Dialog: Password entered: " + getPassword());
+                }
+                if (Login.authenticate(getUsername(), getPassword(), debugMode)) 
                 {
                     JOptionPane.showMessageDialog(LogInDialog.this,
                         "Hi " + getUsername() + "! You have successfully logged in.",
@@ -96,6 +102,10 @@ public class LogInDialog extends JDialog
         {
             public void actionPerformed(ActionEvent e) 
             {
+                if(debugMode)
+                {
+                    System.out.println("Log In Dialog: Cancel button clicked");
+                }
                 dispose();
             }
         });
