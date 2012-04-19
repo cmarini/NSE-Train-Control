@@ -36,10 +36,11 @@ public class TrackParser
 		public boolean underground;
 		public double elevation;
 		public double cumuElevation;
+		public boolean linkback;
 		
 		public String toString()
 		{
-			String s = "%-6s %c %3d %6.2f %5.2f %3d %8s %-20s %-5b %5.2f %5.2f";
+			String s = "%-6s %c %3d %6.2f %5.2f %3d %8s %-20s %-5b %5.2f %5.2f %-5b";
 			String f = String.format(s, 
 				line, 
 				section, 
@@ -51,7 +52,8 @@ public class TrackParser
 				station,
 				underground,
 				elevation,
-				cumuElevation);
+				cumuElevation,
+				linkback);
 			return f;
 		}
 	}
@@ -96,7 +98,14 @@ public class TrackParser
 			}
 			if (infoStr.contains("SWITCH"))
 			{
-				e.tracktype = TrackType.SWITCH;
+				if (infoStr.contains("YARD"))
+				{
+					e.tracktype = TrackType.SWITCHTY;
+				}
+				else
+				{
+					e.tracktype = TrackType.SWITCH;
+				}
 			}
 			if (infoStr.equals("UNDERGROUND"))
 			{
@@ -109,6 +118,15 @@ public class TrackParser
 			
 			e.elevation = Double.parseDouble(ss[8]);
 			e.cumuElevation = Double.parseDouble(ss[9]);
+			
+			e.linkback = false;
+			if (ss.length > 10)
+			{
+				if (!ss[10].toUpperCase().equals(""))
+				{
+					e.linkback = true;
+				}
+			}
 			
 			entries.add(e);
 		}
@@ -235,6 +253,15 @@ public class TrackParser
 	public double getCumuElevation()
 	{
 		return entries.get(index).cumuElevation;
+	}
+
+	/**
+	 * Returns <code>true</code> if the block needs to link back to a switch
+	 * @return <code>true</code> if the block needs to link back to a switch
+	 */
+	public boolean isLinkback()
+	{
+		return entries.get(index).linkback;
 	}
 	
 	/**
