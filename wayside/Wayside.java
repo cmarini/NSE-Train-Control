@@ -1,29 +1,45 @@
-public class Wayside implements Runnable
+package wayside;
+
+import java.util.*;
+import trackmodel.*;
+import trainmodel.*;
+
+abstract class Wayside implements Runnable
 {
-	private ArrayList<Track> track;
-	private PLC plc;
+	private List<Track> track;
 	private String id;
 	
-	public Wayside nextRight;
-	public Wayside nextLeft;
-	public Wayside prevRight;
-	public Wayside prevLeft;
+	private boolean trainDir;
 	
-	public Wayside(String id, Wayside nextRight, Wayside nextLeft, Wayside prevRight, Wayside prevLeft)
+	public Wayside a;
+	public Wayside b;
+	
+	public Wayside(String id, Wayside a, Wayside b)
 	{
 		this.id = id;
-		this.nextRight = nextRight;
-		this.nextLeft = nextLeft;
-		this.prevRight = prevRight;
-		this.prevLeft = prevLeft;
+		this.a = a;
+		this.b = b;
 		this.track = new ArrayList<Track>();
+		this.trainDir = true;
 	}
 	
 	public void run()
 	{
-		
+		if(hasTrain())
+		{
+			runLogic();
+		}
 	}
 	
+	/*
+	 * Runs the logic for its track section which is assumed to have a train.
+	 */
+	abstract void runLogic();
+	
+	/*
+	 * Think this should set something in the track, not directly on the 
+	 * train model/controller
+	 */
 	public void setAuthority(String trainID, int authority)
 	{
 		/* VALIDATE */
@@ -31,21 +47,49 @@ public class Wayside implements Runnable
 		/* set train's authority */
 	}
 	
-	public void setSpeedLimit(String trackID, int speed)
+	public void setDispatchLimit(String trackID, int speed)
 	{
-		/* VALIDATE */
-		/* Find specified track */
-		/* set track's speed limit */
+		Track t;
+		if((speed < 0) || ((t = findTrack(trackID)) == null))
+		{
+			return;
+		}
+		t.setDispatchLimit(speed);
 	}
 	
 	private Track findTrack(String trackID)
 	{
 		/* Scan track section for ID */
+		for (Track t : track)
+		{
+			if (t.getID().equals(trackID))
+			{
+				return t;
+			}
+		}
+		return null;
 	}
 	
+	/* 
+	 * Not sure if this should return a Train or trainID.
+	 * This may not even be needed at all.
+	 */
 	private Train findTrain(String trainID)
 	{
 		/* Scan track section for specified train ID */
+	}
+	
+	public boolean hasTrain()
+	{
+		/* Scan track for any train */
+		for (Track t : track)
+		{
+			if (t.isOccupied())
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	public void addTrack(Track t)
@@ -60,6 +104,6 @@ public class Wayside implements Runnable
 
 	public String toString()
 	{
-		return new String();
+		return id.toString();
 	}
 }
