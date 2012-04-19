@@ -5,6 +5,7 @@ import global.ID;
 public class Switch extends Track
 {
 	public enum SwitchState { LEFT, RIGHT; }
+        public Track C;
 	
 	private SwitchState switchState = SwitchState.LEFT; //defult setting
 	private String sInfo;
@@ -30,4 +31,23 @@ public class Switch extends Track
 	{
 		return sInfo;
 	}
+        
+        public Track getNext()
+        {
+            if(direction == true)
+            {
+                if(switchState.equals(SwitchState.LEFT))
+                {
+                    return B;
+                }
+                else
+                {
+                    return C;
+                }
+            }
+            else
+            {
+                return A;
+            }
+        }
 }

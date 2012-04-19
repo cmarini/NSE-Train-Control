@@ -17,6 +17,9 @@ public class Track
 	private int failure;
         private int trafficLight;
         private int blockLength;
+        protected Track A;
+        protected Track B;
+        protected boolean direction = true;
 	
 	//Track module constructor	
 	public Track(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
@@ -51,13 +54,21 @@ public class Track
 		failure = 0;
 	}
 	
-	public void OccupiedStatus(boolean iOccupy) // set block to occupied
+	public void setOccupied(boolean iOccupy, Track from) // set block to occupied
 	{
+                if(from.equals(B))
+                {
+                    direction = true;
+                }
+                else
+                {
+                    direction = false;
+                }
 		trackInfo = " info: track set to: "+iOccupy;
 		occupied = iOccupy;
 	}
 	
-	public void openStatus(boolean iOpen) // set track to open
+	public void setOpen(boolean iOpen) // set track to open
 	{
 		trackInfo = "info: track set to: "+iOpen;
 		open = iOpen;
@@ -68,9 +79,32 @@ public class Track
 		trackInfo = "info: traffic light set to: "+lightState;
 		trafficLight = lightState;
 	}
+        
+        public void setNext(Track t)
+        {
+            A = t;
+        }
+        
+        public void setPrev(Track t)
+        {
+            B = t;
+        }
 	
 //---------------------------------------------------------------------------------------	
-	public int getSpeedLimit() // returns track speed limit
+	
+        public Track getNext()
+        {
+            if(direction)
+            {
+                return A;
+            }
+            else
+            {
+                return B;
+            }
+        }
+        
+        public int getSpeedLimit() // returns track speed limit
 	{
 		trackInfo = "info: sent speed limit: "+speedLimit;
 		return speedLimit;
