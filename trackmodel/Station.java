@@ -8,21 +8,17 @@ public class Station extends Track
         private String stInfo;
 	private int stopPoint;
 	private int passengerCount;
-	private int positionX;
-        private int positionY;
 	
 	// Station constructor
-	public Station(double iElevate, double iGrade, int spLimit, String trkID)
+	public Station(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
 	{
-		super(iElevate, iGrade, spLimit, trkID);
+		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}
         
-	public void setStationInfo(String name, int stop, int posX, int posY)
+	public void setStationInfo(String name, int stop)
 	{
 		stationName = name;
 		stopPoint = stop;
-		positionX = posX;
-		positionY = posY;
 		stInfo = "station parameters set";
 	}
 	
@@ -54,18 +50,6 @@ public class Station extends Track
 	{
 		stInfo = "sent station stopping point";
 		return stopPoint;
-	}
-	
-	public int getStationPosX() // returns station position X
-	{
-		stInfo = "sent station position X";
-		return positionX;
-	}
-	
-	public int getStationPosY() // returns station position Y
-	{
-		stInfo = "sent station positionY";
-		return positionY;
 	}
 	
 	public String getStationInfo() // returns station activity update

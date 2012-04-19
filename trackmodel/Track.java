@@ -15,9 +15,10 @@ public class Track
         private String trackInfo;
 	private int failure;
         private int trafficLight;
+        private int blockLength;
 	
 	//Track module constructor	
-	public Track(double iElevate, double iGrade, int spLimit, String trkID)
+	public Track(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
 	{
 		elevation = iElevate;
 		grade = iGrade;
@@ -27,6 +28,7 @@ public class Track
 		trackID = trkID;
 		failure = 0;
 		trafficLight = 0;
+                blockLength = blkLen;
 		open = true;
 	}
 	
@@ -95,4 +97,9 @@ public class Track
 	{
 		return trackInfo;
 	}
+        
+        public int getBlockLength()
+        {
+            return blockLength;
+        }
 }
