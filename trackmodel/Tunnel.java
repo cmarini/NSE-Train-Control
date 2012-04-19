@@ -7,9 +7,9 @@ public class Tunnel extends Track
 	private String tnlInfo;
 	
 	// Tunnel constructor
-	public Tunnel(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
+	public Tunnel(double iElevate, double iGrade, int spLimit, String trkID)
 	{
-		super(iElevate, iGrade, spLimit, trkID, X1, Y1, X2, Y2);
+		super(iElevate, iGrade, spLimit, trkID);
 	}
 	
 	public void setTunnelInfo(boolean iamTunnel, int X, int Y) // set tunnel info

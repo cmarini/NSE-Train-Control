@@ -7,9 +7,9 @@ public class Switch extends Track
 	private SwitchState switchState = SwitchState.LEFT; //defult setting
 	private String sInfo;
 	
-	public Switch(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
+	public Switch(double iElevate, double iGrade, int spLimit, String trkID)
 	{
-		super (iElevate, iGrade, spLimit, trkID, X1, Y1, X2, Y2);
+		super (iElevate, iGrade, spLimit, trkID);
 	}
 
 	public void setSwitchState(SwitchState state) //set switch state

@@ -9,9 +9,9 @@ public class TrainYard extends Track
 	private String yInfo;
 	
 	// constructor for TrainYard constructor
-	public TrainYard(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
+	public TrainYard(double iElevate, double iGrade, int spLimit, String trkID)
 	{
-		super(iElevate, iGrade, spLimit, trkID, X1, Y1, X2, Y2);
+		super(iElevate, iGrade, spLimit, trkID);
 	}
 	
 	public void setYardPosition(int X, int Y) // set train yard coordinates
