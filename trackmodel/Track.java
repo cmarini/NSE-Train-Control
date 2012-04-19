@@ -119,7 +119,7 @@ public class Track
 		return y2;
 	}
 	
-	public String getTrackID() // returns track ID
+	public String getID() // returns track ID
 	{
 		trackInfo = "info: sent track ID: "+trackID;
 		return trackID;
