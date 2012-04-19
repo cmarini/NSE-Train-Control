@@ -1,15 +1,10 @@
 package wayside;
 
-public class WaysideABQ extends Wayside
+public class WaysideB extends Wayside
 {
-	private Wayside a;
-	private Wayside b;
-	
-	public Wayside(String id, Wayside a, Wayside b)
+	public Wayside(ID id)
 	{
-		super(id, a, null, b, null);
-		this.a = a;
-		this.b = b;
+		super(id);
 	}
 
 	private void runLogic()
@@ -23,7 +18,6 @@ public class WaysideABQ extends Wayside
 		/* Clear to send to next wayside */
 		{
 			/* Let train continue to next section */
-			b.trainIncFrom(this);
 			spreadAuthorityFrom(1);
 		}
 	}
