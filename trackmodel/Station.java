@@ -1,6 +1,7 @@
 package trackmodel;
 
 import java.util.Random;
+import global.ID;
 
 public class Station extends Track
 {
@@ -10,7 +11,7 @@ public class Station extends Track
 	private int passengerCount;
 	
 	// Station constructor
-	public Station(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
+	public Station(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

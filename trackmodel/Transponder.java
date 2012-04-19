@@ -1,11 +1,13 @@
 package trackmodel;
 
+import global.ID;
+
 public class Transponder extends Track
 {
 	private String transponderName, transponderType, tInfo;
 	
 	// Transponder constructor
-	public Transponder(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
+	public Transponder(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

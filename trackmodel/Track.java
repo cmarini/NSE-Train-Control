@@ -2,6 +2,7 @@
 
 package trackmodel;
 
+import global.ID;
 
 public class Track
 {
@@ -11,14 +12,14 @@ public class Track
         private int dispatchLimit;
 	private boolean occupied;
         private boolean open;
-	private String trackID;
+	private ID trackID;
         private String trackInfo;
 	private int failure;
         private int trafficLight;
         private int blockLength;
 	
 	//Track module constructor	
-	public Track(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
+	public Track(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
 	{
 		elevation = iElevate;
 		grade = iGrade;
@@ -81,7 +82,7 @@ public class Track
 		return elevation;
 	}
 	
-	public String getTrackID() // returns track ID
+	public ID getTrackID() // returns track ID
 	{
 		trackInfo = "info: sent track ID: "+trackID;
 		return trackID;

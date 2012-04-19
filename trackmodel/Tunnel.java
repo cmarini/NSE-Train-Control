@@ -1,12 +1,14 @@
 package trackmodel;
 
+import global.ID;
+
 public class Tunnel extends Track
 {
 	private boolean isTunnel = false;
 	private String tnlInfo;
 	
 	// Tunnel constructor
-	public Tunnel(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
+	public Tunnel(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

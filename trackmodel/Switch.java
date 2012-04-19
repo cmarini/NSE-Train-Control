@@ -1,5 +1,7 @@
 package trackmodel;
 
+import global.ID;
+
 public class Switch extends Track
 {
 	public enum SwitchState { LEFT, RIGHT; }
@@ -7,7 +9,7 @@ public class Switch extends Track
 	private SwitchState switchState = SwitchState.LEFT; //defult setting
 	private String sInfo;
 	
-	public Switch(double iElevate, double iGrade, int spLimit, int blkLen, String trkID)
+	public Switch(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
 	{
 		super (iElevate, iGrade, spLimit, blkLen, trkID);
 	}

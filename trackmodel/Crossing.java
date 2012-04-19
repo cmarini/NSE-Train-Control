@@ -1,12 +1,14 @@
 package trackmodel;
 
+import global.ID;
+
 public class Crossing extends Track
 {
 	private boolean crossState = false;
 	private String cInfo;
 	
 	// crossing constructor
-	public Crossing(double iElevate, double iGrade, int spLimit, int blkLen, String trkID) 
+	public Crossing(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID) 
 	{
 		super (iElevate, iGrade, spLimit, blkLen, trkID);		
 	}
