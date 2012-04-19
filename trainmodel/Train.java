@@ -27,7 +27,7 @@ public class Train
 		lights = false;
 		maxTrainSpeed = 70; // km/h
 		//maxPower = // ???
-		occupancy = crewCount// how many crew members?
+		occupancy = crewCount; // how many crew members?
 		trainId = id;
 	}
 
@@ -68,7 +68,7 @@ public class Train
 		return transponder;
 	}
 
-	public getTransponderInfo()
+	public String getTransponderInfo()
 	{
 
 	}
