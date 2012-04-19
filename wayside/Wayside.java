@@ -1,24 +1,25 @@
 package wayside;
 
 import java.util.*;
+import global.*;
 import trackmodel.*;
 import trainmodel.*;
 
 abstract class Wayside implements Runnable
 {
 	private List<Track> track;
-	private String id;
+	private ID id;
 	
 	private boolean trainDir;
 	
-	public Wayside a;
-	public Wayside b;
+	public Wayside nextL;
+	public Wayside nextR;
+	public Wayside prevL;
+	public Wayside prevR;
 	
-	public Wayside(String id, Wayside a, Wayside b)
+	public Wayside(ID id)
 	{
 		this.id = id;
-		this.a = a;
-		this.b = b;
 		this.track = new ArrayList<Track>();
 		this.trainDir = true;
 	}
@@ -34,7 +35,9 @@ abstract class Wayside implements Runnable
 	/*
 	 * Runs the logic for its track section which is assumed to have a train.
 	 */
-	abstract void runLogic();
+	private abstract void runLogic();
+	
+	public abstract void trainIncFrom(Wayside w);
 	
 	/*
 	 * Think this should set something in the track, not directly on the 
@@ -97,7 +100,27 @@ abstract class Wayside implements Runnable
 		track.add(t);
 	}
 	
-	public String getID()
+	public void addWaysideNextLeft(Wayside w)
+	{
+		nextL = w;
+	}
+	
+	public void addWaysideNextRight(Wayside w)
+	{
+		nextR = w;
+	}
+	
+	public void addWaysidePrevLeft(Wayside w)
+	{
+		prevL = w;
+	}
+	
+	public void addWaysidePrevRight(Wayside w)
+	{
+		prevR = w;
+	}
+	
+	public ID getID()
 	{
 		return id;
 	}

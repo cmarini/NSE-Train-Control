@@ -2,5 +2,5 @@ package global;
 
 public enum TrackType
 {
-	TRACK, STATION, SWITCH, CROSSING;
+	TRACK, STATION, SWITCH, SWITCHTY, CROSSING;
 }
