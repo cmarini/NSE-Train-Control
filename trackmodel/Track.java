@@ -39,7 +39,7 @@ public class Track
 		y2 = Y2;
 	}
 	
-	public void setFailure(int fail) // set track to fail (set value to 1)
+	public void setFailure() // set track to fail
 	{
 		trackInfo = "info: track failed";
 		failure = fail;
@@ -51,7 +51,7 @@ public class Track
 		dispatchLimit = dLimit;
 	}
 	
-	public void setFix() // call this method to fix track
+	public void setFix() // fix track
 	{
 		trackInfo = "info: track fixed";
 		failure = 0;
