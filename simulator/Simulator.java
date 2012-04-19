@@ -5,16 +5,19 @@
 package simulator;
 
 import ctc.CTCView;
+import ctc.CTCModel;
 
 public class Simulator 
 {
     private static boolean debugMode;
     private static boolean demoMode = false;
     private static int demoEvent = 0;
-    private static int timeCounter;
+    private static int timeCounter = 0;
     private static CTCView view;
+    private static CTCModel model;
     private static int clockRate = 60;
     //private static TrainController [] trainControllers;
+    private static String TrainIDs[] = {"G000001", "G000002", "R000001"};
     
     public Simulator(boolean d)
     {
@@ -26,6 +29,11 @@ public class Simulator
         view = v;
     }
     
+    public void setModel(CTCModel m)
+    {
+        model = m;
+    }
+    
     public void setClockRate(int c)
     {
         clockRate = c;
@@ -34,6 +42,12 @@ public class Simulator
     public static void run()
     {
         demoMode = view.getDemo();
+//        for(int i = 0; i < trainControllers.length; i++)
+//        {
+//            trainControllers[i].setClockRate(clockRate);
+//        }
+//
+//          model.setClockRate(clockRate);
         
         if(demoMode)
         {
@@ -41,7 +55,8 @@ public class Simulator
             {
                 if(debugMode)
                 {
-                    System.out.println(demoEvent);
+                    System.out.println("Simulator: Demo Event: " + demoEvent);
+                    System.out.println("Simulator: Time Counter: " + timeCounter);
                 }
                 switch(demoEvent)
                 {
@@ -51,6 +66,7 @@ public class Simulator
                         break;
                 }
                 demoEvent++;
+                timeCounter++;
             }
             else
             {
@@ -90,18 +106,19 @@ public class Simulator
      * {
      *      TrainController t = new TrainController(line, crewCount, trainID, clockRate);
      * }
-     * 
-     * public String [] getTrainIDs()
-     * {
-     *      String trainIDs = new String [trainControllers.length];
-     * 
-     *      for(int i = 0; i < trainControllers.length; i++)
-     *      {
-     *          trainIDs[i] = trainControllers[i].getTrainID();
-     *      }
-     * 
-     *      return trainIDs;
-     * }
-     * 
      */
+     public String [] getTrainIDs()
+     {
+         return TrainIDs;
+        /*String trainIDs = new String [trainControllers.length];
+     
+        for(int i = 0; i < trainControllers.length; i++)
+        {
+            trainIDs[i] = trainControllers[i].getTrainID();
+        }
+
+        return trainIDs;*/
+    }
+      
+     
 }

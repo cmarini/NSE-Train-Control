@@ -18,9 +18,9 @@ public class SimulatorRunner
     public static void main(String[] args) 
     {
         s = new Simulator(DEBUG_MODE);
-        view = new CTCView(DEBUG_MODE);
+        view = new CTCView(DEBUG_MODE, s);
         s.setView(view);
-        view.setSimulator(s);
+        s.setModel(view.getModel());
         isOpen = true;
         
         while(isOpen)

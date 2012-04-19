@@ -81,10 +81,12 @@ public class MapPanel extends JPanel
                     g.drawLine(25, 150, 50, 190);
                     g.drawLine(50, 190, 75, 210);
                     g.drawLine(75, 210, 550, 210);
+                    g.drawLine(550, 210, 650, 180);
                     
                     g.drawLine(550, 210, 600, 240);
                     g.drawLine(600, 240, 620, 270);
                     g.drawLine(620, 270, 620, 425);
+                    g.drawLine(620, 270, 670, 200);
                     
                     g.drawLine(620, 425, 600, 450);
                     g.drawLine(600, 450, 540, 465);
@@ -99,6 +101,69 @@ public class MapPanel extends JPanel
                     g.drawLine(110, 360, 140, 400);
                     g.drawLine(140, 400, 160, 450);
                     g.drawLine(160, 450, 175, 465);
+                    
+                    g.drawLine(450, 465, 465, 450);
+                    g.drawLine(465, 450, 525, 450);
+                    
+                    g.drawLine(525, 450, 585, 435);
+                    g.drawLine(585, 435, 605, 405);
+                    g.drawLine(605, 405, 605, 275);
+                    
+                    g.drawLine(605, 275, 605, 275);
+                    g.drawLine(605, 275, 585, 245);
+                    g.drawLine(585, 245, 550, 225);
+                    g.drawLine(550, 225, 70, 225);
+                    
+                    g.drawLine(70, 225, 35, 195);
+                    g.drawLine(35, 195, 10, 150);
+                    g.drawLine(10, 150, 10, 135);
+                    g.drawLine(10, 135, 25, 125);
+                }
+                else
+                {
+                    if(trackSection.equals("Red Line"))
+                    {
+                        g.setColor(Color.WHITE);
+                        g.fillRect(0, 0, WIDTH, HEIGHT);
+                    
+                        g.setColor(Color.RED);
+                        
+                        g.drawLine(475, 100, 525, 75);
+                        g.drawLine(525, 75, 575, 40);
+                        g.drawLine(575, 40, 610, 20);
+                        g.drawLine(610, 20, 620, 20);
+                        g.drawLine(620, 20, 650, 40);
+                        g.drawLine(650, 40, 670, 70);
+                        g.drawLine(670, 70, 670, 80);
+                        g.drawLine(670, 80, 660, 150);
+                        g.drawLine(670, 80, 620, 90);
+                        g.drawLine(620, 90, 500, 100);
+                        g.drawLine(500, 100, 375, 100);
+                        
+                        g.drawLine(375, 100, 350, 120);
+                        g.drawLine(350, 120, 325, 170);
+                        g.drawLine(325, 170, 325, 400);
+                        g.drawLine(325, 400, 310, 440);
+                        g.drawLine(310, 440, 275, 465);
+                        
+                        g.drawLine(275, 465, 100, 465);
+                        g.drawLine(100, 465, 50, 440);
+                        g.drawLine(50, 440, 40, 400);
+                        g.drawLine(40, 400, 40, 380);
+                        g.drawLine(40, 380, 60, 350);
+                        g.drawLine(60, 350, 90, 350);
+                        g.drawLine(90, 350, 100, 375);
+                        g.drawLine(100, 375, 120, 445);
+                        g.drawLine(120, 445, 145, 465);
+                        
+                        g.drawLine(325, 375, 300, 365);
+                        g.drawLine(300, 365, 300, 310);
+                        g.drawLine(300, 310, 325, 300);
+                        
+                        g.drawLine(325, 265, 300, 255);
+                        g.drawLine(300, 255, 300, 200);
+                        g.drawLine(300, 200, 325, 190);
+                    }
                 }
             }
         }
@@ -107,94 +172,5 @@ public class MapPanel extends JPanel
             g.setColor(Color.WHITE);
             g.fillRect(0, 0, WIDTH, HEIGHT);
         }
-        /*
-        g.setColor(Color.BLACK);
-        
-        g.drawLine(0,0,0,800);
-        g.drawLine(20,0,20,800);
-        g.drawLine(40,0,40,800);
-        g.drawLine(60,0,60,800);
-        g.drawLine(80,0,80,800);
-        g.drawLine(100,0,100,800);
-        g.drawLine(120,0,120,800);
-        g.drawLine(140,0,140,800);
-        g.drawLine(160,0,160,800);
-        g.drawLine(180,0,180,800);
-        g.drawLine(200,0,200,800);
-        g.drawLine(220,0,220,800);
-        g.drawLine(240,0,240,800);
-        g.drawLine(260,0,260,800);
-        g.drawLine(280,0,280,800);
-        g.drawLine(300,0,300,800);
-        g.drawLine(320,0,320,800);
-        g.drawLine(340,0,340,800);
-        g.drawLine(360,0,360,800);
-        g.drawLine(380,0,380,800);
-        g.drawLine(400,0,400,800);
-        g.drawLine(420,0,420,800);
-        g.drawLine(440,0,440,800);
-        g.drawLine(460,0,460,800);
-        g.drawLine(480,0,480,800);
-        g.drawLine(500,0,500,800);
-        g.drawLine(520,0,520,800);
-        g.drawLine(540,0,540,800);
-        g.drawLine(560,0,560,800);
-        g.drawLine(580,0,580,800);
-        g.drawLine(600,0,600,800);
-        g.drawLine(620,0,620,800);
-        g.drawLine(640,0,640,800);
-        g.drawLine(660,0,660,800);
-        g.drawLine(680,0,680,800);        
-        g.drawLine(700,0,700,800);
-        g.drawLine(720,0,720,800);
-        g.drawLine(740,0,740,800);
-        g.drawLine(760,0,760,800);
-        g.drawLine(780,0,780,800);
-        g.drawLine(800,0,800,800);
-        
-        
-        g.drawLine(0,0,0,800);
-        g.drawLine(0,20,800,20);
-        g.drawLine(0,40,800,40);
-        g.drawLine(0,60,800,60);
-        g.drawLine(0,80,800,80);
-        g.drawLine(0,100,800,100);
-        g.drawLine(0,120,800,120);
-        g.drawLine(0,140,800,140);
-        g.drawLine(0,160,800,160);
-        g.drawLine(0,180,800,180);
-        g.drawLine(0,200,800,200);
-        g.drawLine(0,220,800,220);
-        g.drawLine(0,240,800,240);
-        g.drawLine(0,260,800,260);
-        g.drawLine(0,280,800,280);
-        g.drawLine(0,300,800,300);
-        g.drawLine(0,320,800,320);
-        g.drawLine(0,340,800,340);
-        g.drawLine(0,360,800,360);
-        g.drawLine(0,380,800,380);
-        g.drawLine(0,400,800,400);
-        g.drawLine(0,420,800,420);
-        g.drawLine(0,440,800,440);
-        g.drawLine(0,460,800,460);
-        g.drawLine(0,480,800,480);
-        g.drawLine(0,500,800,500);
-        g.drawLine(0,520,800,520);
-        g.drawLine(0,540,800,540);
-        g.drawLine(0,560,800,560);
-        g.drawLine(0,580,800,580);
-        g.drawLine(0,600,800,600);
-        g.drawLine(0,620,800,620);
-        g.drawLine(0,640,800,640);
-        g.drawLine(0,660,800,660);
-        g.drawLine(0,680,800,680);
-        g.drawLine(0,700,800,700);
-        g.drawLine(0,720,800,720);
-        g.drawLine(0,740,800,740);
-        g.drawLine(0,760,800,760);
-        g.drawLine(0,780,800,780);
-        g.drawLine(0,800,800,800);
-        */
-        
     }
 }
