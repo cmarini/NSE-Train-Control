@@ -1,3 +1,5 @@
+package trainmodel;
+
 public class Train
 {
 	private double length;
