@@ -2,6 +2,7 @@ package parser;
 
 import java.util.*;
 import java.io.*;
+import global.*;
 
 /**
  * Parses and holds csv track information until requested.
@@ -18,6 +19,7 @@ import java.io.*;
  * </pre></blockquote>
  * @author Christian Marini
  */
+ 
 public class TrackParser
 {
 
