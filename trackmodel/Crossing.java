@@ -6,9 +6,9 @@ public class Crossing extends Track
 	private String cInfo;
 	
 	// crossing constructor
-	public Crossing(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2) 
+	public Crossing(double iElevate, double iGrade, int spLimit, String trkID) 
 	{
-		super (iElevate, iGrade, spLimit, trkID, X1, Y1, X2, Y2);		
+		super (iElevate, iGrade, spLimit, trkID);		
 	}
 	
 	// crossing lights and bar are treated as one entity

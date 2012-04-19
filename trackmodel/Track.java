@@ -6,23 +6,18 @@ package trackmodel;
 public class Track
 {
 	private double elevation;
-	private double grade;
+        private double grade;
 	private int speedLimit;
-	private int dispatchLimit;
+        private int dispatchLimit;
 	private boolean occupied;
-	private boolean open;
+        private boolean open;
 	private String trackID;
-	private String trainID;
-	private String trackInfo;
+        private String trackInfo;
 	private int failure;
-	private int trafficLight;
-	private int x1;
-	private int y1;
-	private int x2;
-	private int y2;
+        private int trafficLight;
 	
 	//Track module constructor	
-	public Track(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
+	public Track(double iElevate, double iGrade, int spLimit, String trkID)
 	{
 		elevation = iElevate;
 		grade = iGrade;
@@ -33,13 +28,9 @@ public class Track
 		failure = 0;
 		trafficLight = 0;
 		open = true;
-		x1 = X1;
-		y1 = Y1;
-		x2 = X2;
-		y2 = Y2;
 	}
 	
-	public void setFailure() // set track to fail
+	public void setFailure(int fail) // set track to fail (set value to 1)
 	{
 		trackInfo = "info: track failed";
 		failure = fail;
@@ -51,19 +42,19 @@ public class Track
 		dispatchLimit = dLimit;
 	}
 	
-	public void setFix() // fix track
+	public void setFix() // call this method to fix track
 	{
 		trackInfo = "info: track fixed";
 		failure = 0;
 	}
 	
-	public void setOccupied(boolean iOccupy) // set block to occupied
+	public void OccupiedStatus(boolean iOccupy) // set block to occupied
 	{
 		trackInfo = " info: track set to: "+iOccupy;
 		occupied = iOccupy;
 	}
 	
-	public void setOpen(boolean iOpen) // set track to open
+	public void openStatus(boolean iOpen) // set track to open
 	{
 		trackInfo = "info: track set to: "+iOpen;
 		open = iOpen;
@@ -75,12 +66,6 @@ public class Track
 		trafficLight = lightState;
 	}
 	
-	public void setTrainID(String id) // set current trainID
-	{
-		trainID = id;
-		trackInfo = "info: trainID set to: " + trainID;
-	}
-		
 //---------------------------------------------------------------------------------------	
 	public int getSpeedLimit() // returns track speed limit
 	{
@@ -94,41 +79,10 @@ public class Track
 		return elevation;
 	}
 	
-	// position data
-	public int getX1()
-	{
-		trackInfo = "sent x1: "+x1;
-		return x1;
-	}
-	
-	public int getY1()
-	{
-		trackInfo = "sent y1: "+y1;
-		return y1;
-	}
-
-	public int getX2()
-	{
-		trackInfo = "sent x2: "+x2;
-		return x2;
-	}
-
-	public int getY2()
-	{
-		trackInfo = "sent y2: "+y2;
-		return y2;
-	}
-	
-	public String getID() // returns track ID
+	public String getTrackID() // returns track ID
 	{
 		trackInfo = "info: sent track ID: "+trackID;
 		return trackID;
-	}
-	
-	public String getTrainID() // returns train ID
-	{
-		trackInfo = "info: sent train ID: "+trainID;
-		return trainID;
 	}
 	
 	public double getGrade() // returns grade

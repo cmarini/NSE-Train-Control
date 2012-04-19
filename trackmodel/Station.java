@@ -12,9 +12,9 @@ public class Station extends Track
         private int positionY;
 	
 	// Station constructor
-	public Station(double iElevate, double iGrade, int spLimit, String trkID, int X1, int Y1, int X2, int Y2)
+	public Station(double iElevate, double iGrade, int spLimit, String trkID)
 	{
-		super(iElevate, iGrade, spLimit, trkID, X1, Y1, X2, Y2);
+		super(iElevate, iGrade, spLimit, trkID);
 	}
         
 	public void setStationInfo(String name, int stop, int posX, int posY)
