@@ -9,6 +9,7 @@ package ctc;
 
 public class CTCControl 
 {
+    private static boolean debugMode;
     private int authority;
     private int setpoint;
     private int operatorSpeed;
@@ -20,22 +21,36 @@ public class CTCControl
         model = m;
     }
     
+    public void setDebugMode(boolean d)
+    {
+        debugMode = d;
+    }
+    
     public void setDispatcherSpeed(int sp)
     {
         setpoint = sp;
-        System.out.println(sp);
+        if(debugMode)
+        {
+            System.out.println("CTC Control: Dispatcher speed set to: " + setpoint);
+        }
     }
  
     public void setDispatcherAuthority(int auth)
     {        
         authority = auth;
-        System.out.println(auth);
+        if(debugMode)
+        {
+            System.out.println("CTC Control: Dispatcher authority set to: " + authority);
+        }
     }
     
     public void setOperatorCommands(int sp, boolean b)
     {
         operatorSpeed = sp;
         operatorBrake = b;
-        //System.out.println("Operator Speed : " + operatorSpeed + " Brake: " + operatorBrake);
+        if(debugMode)
+        {
+            System.out.println("CTC Control: Operator Speed : " + operatorSpeed + " Brake: " + operatorBrake);
+        }
     }
 }

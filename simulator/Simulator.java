@@ -8,15 +8,27 @@ import ctc.CTCView;
 
 public class Simulator 
 {
+    private static boolean debugMode;
     private static boolean demoMode = false;
     private static int demoEvent = 0;
     private static int timeCounter;
     private static CTCView view;
+    private static int clockRate = 60;
     //private static TrainController [] trainControllers;
+    
+    public Simulator(boolean d)
+    {
+        debugMode = d;
+    }
     
     public void setView(CTCView v)
     {
         view = v;
+    }
+    
+    public void setClockRate(int c)
+    {
+        clockRate = c;
     }
     
     public static void run()
@@ -27,6 +39,10 @@ public class Simulator
         {
             if(timeCounter % 30000 == 0)
             {
+                if(debugMode)
+                {
+                    System.out.println(demoEvent);
+                }
                 switch(demoEvent)
                 {
                     case 0:
@@ -70,10 +86,9 @@ public class Simulator
      *      }
      * }
      * 
-     * public void createTrain(int line, int crewCount, String trainID)
+     * public void createTrain(int line, int crewCount, String trainID, int clockRate)
      * {
-     *      Train t = new Train(crewCount, trainID);
-     *      
+     *      TrainController t = new TrainController(line, crewCount, trainID, clockRate);
      * }
      * 
      * public String [] getTrainIDs()

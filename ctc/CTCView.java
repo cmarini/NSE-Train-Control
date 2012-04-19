@@ -17,6 +17,10 @@ import javax.swing.text.MaskFormatter;
 
 public class CTCView extends JFrame
 {
+    private static boolean debugMode;
+    private String dispatcherID = "";
+    private int blockSelectedIndex = 0;
+    private int trainSelectedIndex = 0;
     private CTCModel model = new CTCModel();
     private CTCControl control = new CTCControl(model);
     private Simulator sim;
@@ -30,9 +34,6 @@ public class CTCView extends JFrame
     private TrackPanel trackPanel = new TrackPanel();
     private MetricsPanel metricsPanel = new MetricsPanel();
     private SplashPanel splashPanel = new SplashPanel();
-    private String dispatcherID;
-    private int blockSelectedIndex;
-    private int trainSelectedIndex;
     
     public CTCView()//SimulatorPrototype3 s)
     {
@@ -43,6 +44,21 @@ public class CTCView extends JFrame
         this.add(splashPanel);
         this.setSize(800,600);
         this.setVisible(true);
+        debugMode = false;
+    }
+    
+    public CTCView(boolean d)//SimulatorPrototype3 s)
+    {
+        //simulator = s;
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        intialize();
+        setLayout(new BorderLayout());
+        this.add(splashPanel);
+        this.setSize(800,600);
+        this.setVisible(true);
+        debugMode = d;
+        control.setDebugMode(debugMode);
+        model.setDebugMode(debugMode);
     }
     
     private void intialize()
@@ -90,6 +106,10 @@ public class CTCView extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
+            if(debugMode)
+            {
+                System.out.println("CTC View: Run Demo menu item clicked");
+            }
             demoMode = true;
         }
     }
@@ -101,6 +121,10 @@ public class CTCView extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
+            if(debugMode)
+            {
+                System.out.println("CTC View: Close menu item clicked");
+            }
             isOpen = false;
             dispose();
         }
@@ -118,7 +142,7 @@ public class CTCView extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-            LogInDialog login = new LogInDialog(frame);
+            LogInDialog login = new LogInDialog(frame, debugMode);
             login.setVisible(true);
             if(login.isSucceeded())
             {
@@ -155,36 +179,60 @@ public class CTCView extends JFrame
     {
         if(panel instanceof MainPanel)
         {
+            if(debugMode)
+            {
+                System.out.println("CTC View: View Main menu item clicked");
+            }
             ((MainPanel)panel).initialize();
         }
         else
         {
             if(panel instanceof DispatcherPanel)
             {
+                if(debugMode)
+                {
+                    System.out.println("CTC View: View Dispatcher menu item clicked");
+                }
                 ((DispatcherPanel)panel).initialize();
             }
             else
             {
                 if(panel instanceof OperatorPanel)
                 {
+                    if(debugMode)
+                    {
+                        System.out.println("CTC View: View Operator menu item clicked");
+                    }
                     ((OperatorPanel)panel).initialize();
                 }  
                 else
                 {
                     if(panel instanceof TrainPanel)
                     {
+                        if(debugMode)
+                        {
+                            System.out.println("CTC View: View Add/Modify Train menu item clicked");
+                        }
                         ((TrainPanel)panel).initialize();
                     }
                     else
                     {
                         if(panel instanceof TrackPanel)
                         {
+                            if(debugMode)
+                            {
+                                System.out.println("CTC View: View View/Modify Track menu item clicked");
+                            }
                             ((TrackPanel)panel).initialize();
                         } 
                         else
                         {
                             if(panel instanceof MetricsPanel)
                             {
+                                if(debugMode)
+                                {
+                                    System.out.println("CTC View: View Metrics menu item clicked");
+                                }
                                 ((MetricsPanel)panel).initialize();
                             }   
                         }
@@ -198,12 +246,20 @@ public class CTCView extends JFrame
         update(getGraphics());
     }
     
+    public static boolean getDebugMode()
+    {
+        return debugMode;
+    }
+    
     private class MainPanel extends JPanel
     {
-        private MapPanel map = new MapPanel(model);
+        private MapPanel map = new MapPanel(model, "");
         private JLabel clockLabel = new JLabel("Clock Rate (1 hr = )");
-        private final String clockRates [] = {"15 minutes", "20 minutes", "30 minutes", "40 minutes", "45 minutes", "60 minutes", "90 minutes", "120 minutes"};
-        private JComboBox clockCombo= new JComboBox(clockRates);
+        private final String clockRates [] = {"5 minutes", "6 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes", "40 minutes", "45 minutes", "60 minutes", "90 minutes", "120 minutes"};
+        private JComboBox clockCombo= new JComboBox(clockRates);        
+        private JLabel trackSectionLabel = new JLabel("Display track seciont: ");
+        private final String trackSections [] = {"", "Green Line", "Green A", "Green B", "Green C", "Green D"};
+        private JComboBox trackCombo = new JComboBox(trackSections);  
         private Insets insets = new Insets(0,10,0,0);
         private Insets insets2 = new Insets(0,0,0,0);
 
@@ -215,10 +271,14 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
-            addComponent(this, map, 0, 0, 2, 1, 1.0, 1.0, insets2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+            map.setDebugMode(debugMode);
+            addComponent(this, map, 0, 0, 4, 1, 1.0, 1.0, insets2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             addComponent(this, clockLabel, 0, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, clockCombo, 1, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, trackSectionLabel, 2, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, trackCombo, 3, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             clockCombo.addActionListener(clockComboListener);
+            trackCombo.addActionListener(trackComboListener);
             clockCombo.setSelectedItem("60 minutes");
         }
         
@@ -232,30 +292,59 @@ public class CTCView extends JFrame
                 switch(index)
                 {
                     case 0:
-                        clockRate = 15;
+                        clockRate = 5;
                         break;
                     case 1:
-                        clockRate = 20;
+                        clockRate = 6;
                         break;
                     case 2:
-                        clockRate = 30;
+                        clockRate = 10;
                         break;
                     case 3:
-                        clockRate = 40;
+                        clockRate = 15;
                         break;
                     case 4:
-                        clockRate = 45;
+                        clockRate = 20;
                         break;
                     case 5:
-                        clockRate = 60;
+                        clockRate = 30;
                         break;
                     case 6:
-                        clockRate = 90;
+                        clockRate = 40;
+                        break;
+                    case 7:
+                        clockRate = 45;  
+                        break;
+                    case 8:
+                        clockRate = 60;  
+                        break;
+                    case 9:
+                        clockRate = 90;  
                         break;
                     default:
-                        clockRate = 120;       
+                        clockRate = 120;
+                }
+                sim.setClockRate(clockRate);
+                model.setClockRate(clockRate);
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Clock rate set to : " + clockRate);
                 }
             }
+        };
+        
+        ActionListener trackComboListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: track section selected: " + trackCombo.getSelectedItem().toString());
+                }
+                map.setSection(trackCombo.getSelectedItem().toString());
+                map.repaint();
+            }
+            
         };
         
 
@@ -292,7 +381,20 @@ public class CTCView extends JFrame
         }
 
         private void initialize()
-        {            
+        {           
+            map.setDebugMode(debugMode);
+            if(CTCView.getDebugMode())
+            {
+                System.out.println("CTC View: Dispatcher ID: " + dispatcherID);
+            }
+            if(dispatcherID.equals("sweigartz"))
+            {
+                map.setTrackSection("GreenLine");
+            }
+            else
+            {
+                map.setTrackSection("GreenLine");
+            }
             sendSetpoint = new JButton("Send Setpoint"); 
             sendAuthority = new JButton("Send Authority"); 
             
@@ -324,6 +426,10 @@ public class CTCView extends JFrame
                     try
                     {
                         int set = Integer.parseInt(setpoint.getText());
+                        if(CTCView.getDebugMode())
+                        {
+                            System.out.println("CTC View: Setpoint value entered: " + set);
+                        }
                         if(set < 0 || set > 70)
                         {
                             JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -343,6 +449,10 @@ public class CTCView extends JFrame
                     try
                     {
                         int auth = Integer.parseInt(authority.getText());
+                        if(CTCView.getDebugMode())
+                        {
+                            System.out.println("CTC View: Authority Entered: " + auth);
+                        }
                         if(auth < 0 || auth > 70)
                         {
                             JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -390,6 +500,8 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
+            map.setDebugMode(debugMode);
+            map.setTrackSection("Green Line");
             send = new JButton("Send");
             operatorSpeed.setColumns(10);
             send.addActionListener(buttonClick);
@@ -413,6 +525,10 @@ public class CTCView extends JFrame
                     try
                     {
                         int set = Integer.parseInt(operatorSpeed.getText());
+                        if(CTCView.getDebugMode())
+                        {   
+                            System.out.println("CTC View: Speed Entered: " + set);
+                        }
                         if(set < 0 || set > 100)
                         {
                             JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -432,6 +548,10 @@ public class CTCView extends JFrame
 
         public void sendOperatorCommands()
         {
+            if(CTCView.getDebugMode())
+            {
+                System.out.println("CTC View: Commands sent, speed: " + operatorSpeed.getText() + " , brake: " + brake.isSelected());
+            }
             control.setOperatorCommands(Integer.parseInt(operatorSpeed.getText()), brake.isSelected());
         }
         
@@ -545,6 +665,10 @@ public class CTCView extends JFrame
             addTrainButton = new JButton("Add Train");
             removeTrainButton = new JButton("Remove Train");
             
+            emergencyBrakeButton.addActionListener(emergencyBrakeButtonListener);
+            addTrainButton.addActionListener(addTrainButtonListener);
+            removeTrainButton.addActionListener(removeTrainButtonListener);
+            
             heightField.setColumns(10);
             widthField.setColumns(10);
             numCarsField.setColumns(10);
@@ -649,6 +773,10 @@ public class CTCView extends JFrame
                 JComboBox cb = (JComboBox)event.getSource();
                 String ID = (String)cb.getSelectedItem();
                 trainSelectedIndex = (int)cb.getSelectedIndex();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Train selected " + cb.getSelectedItem().toString());
+                }
                 //TrainController t = sim.getTrainController(ID);
                 //get all train properties
                 //initialize();
@@ -659,8 +787,11 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)currentTrains.getSelectedItem();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Emergency Brake Signal sent to Train: " + currentTrains.getSelectedItem().toString());
+                }
                 //TrainController t = sim.getTrainController(ID);
                 //t.emergencyBrake();
                 //initialize();
@@ -671,9 +802,13 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String trainID = trainIDField.getText();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Train created: ");
+                }
                 //sim.createTrain(line, crewCount, trainID);
+                //t = sim.getTrain(trainID);
                 //initialize();
             }
         };
@@ -682,8 +817,11 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)currentTrains.getSelectedItem();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Train: " + ID + " sent remove command");
+                }
                 //TrainController t = getTrainController(ID);
                 //t.remove();
                 //initialize();
@@ -736,6 +874,8 @@ public class CTCView extends JFrame
         private int trackType;
         private int passengersBoarding;
         private int passengersDisembarking;
+        private String trackIDs[];
+        private String controllerIDs [];
                 
         TrackPanel()
         {
@@ -745,8 +885,7 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
-            String trackIDs [] = model.getTrackIDs();
-            String controllerIDs [];
+            trackIDs = model.getTrackIDs();
             
             line = new JComboBox();
             for(int i = 0; i < lines.length; i++)
@@ -792,6 +931,7 @@ public class CTCView extends JFrame
             trackTypeField.setEditable(false);
             passengersBoardingField.setEditable(false);
             passengersDisembarkingField.setEditable(false);
+            track.setEditable(false);
             
             speedLimitField.setText(""+speedLimit);
             elevationField.setText(""+elevation);
@@ -833,11 +973,15 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
                 blockSelectedIndex = (int)cb.getSelectedIndex();
+                String ID = (String)cb.getSelectedItem();
                 //Track t = model.getTrack(ID);
                 //get all track properties
                 //initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + ID + " selected");
+                }
             }
         };
         
@@ -845,11 +989,14 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //track.close();
                 //initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + ID + " closed");
+                }
             }
         };
         
@@ -857,11 +1004,14 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //t.open();
                 //initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + ID + " opened");
+                }
             }
         };
         
@@ -869,12 +1019,15 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)trackIDs[blockSelectedIndex - 1];
                 String type = (String)failType.getSelectedItem();
                 //Track t = model.getTrack();
                 //t.fail(type);
                 //initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + ID + " broken: " + type);
+                }
             }
         };
         
@@ -882,11 +1035,14 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String ID = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //t.fix();
                 //initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + ID + " fixed");
+                }
             }
         };
         

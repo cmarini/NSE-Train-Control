@@ -12,7 +12,7 @@ public class Login
     private static String userIDs[] = {"sweigartz", "washingtons", "marinic", "korenicj", "agiobeneboo"};
     private static String userPasswords[] = {"password", "1234", "secret", "admin", "default"};
     
-    public static boolean authenticate(String userName, String password)
+    public static boolean authenticate(String userName, String password, boolean debugMode)
     {
         String temp = "";
         int i = 0;
@@ -23,6 +23,11 @@ public class Login
                 temp = userIDs[i];
                 break;
             }   
+        }
+        if(debugMode)
+        {
+            System.out.println("Log In: Username: " + userName);
+            System.out.println("Log In: Password: " + password);
         }
         if(temp.equals(""))
         {
