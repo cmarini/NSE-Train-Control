@@ -424,6 +424,25 @@ public class CTCModel
         return occupancy;
     }
     
+    /**
+     * 
+     * @return
+     */
+//    public Track [] getWaysideTrack(Line l, int i)
+//    {
+//        if(l.equals(Line.GREEN))
+//        {
+//            return greenTrackControllers[i].getTrack();
+//        }
+//        else
+//        {
+//            if(l.equals(Line.RED))
+//            {
+//                return redTrackControllers[i].getTrack();
+//            }
+//        }
+//    }
+    
 //    public Track getTrack(ID id)
 //    {
 //        if(id.getLine().equals(Line.GREEN))

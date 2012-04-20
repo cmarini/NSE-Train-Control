@@ -10,6 +10,8 @@ package ctc;
 import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
+import global.*;
+import trackmodel.*;
 
 /**
  * 
@@ -19,7 +21,7 @@ public class MapPanel extends JPanel
 {
     private boolean debugMode;
     private CTCModel model;
-    private String trackSection;
+    private String trackSection = "";
     
     MapPanel(CTCModel m)
     {
@@ -70,6 +72,12 @@ public class MapPanel extends JPanel
     public void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
+        
+        if(debugMode)
+        {
+            System.out.println("Track section: " + trackSection + " being painted");
+        }
+        
         if(!trackSection.isEmpty())
         {
             if(!trackSection.equals(""));
@@ -182,9 +190,14 @@ public class MapPanel extends JPanel
                     }
                     else
                     {
-                        if(trackSection.equals("Green A"));
+                        if(trackSection.equals("GREEN_A_-1"));
                         {
+                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
                             
+                            if(t[0].getOccupied())
+                            {
+                                
+                            }
                         }
                     }
                 }

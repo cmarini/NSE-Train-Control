@@ -29,17 +29,20 @@ public class LogInDialog extends JDialog
     private JButton btnCancel;
     private boolean succeeded;
     private String verifiedUsername;
+    private Dispatcher [] dispatchers;
+    private Dispatcher verifiedDispatcher;
 
     /**
      * 
      * @param owner
      * @param d
      */
-    public LogInDialog(JFrame owner, boolean d) 
+    public LogInDialog(JFrame owner, boolean d, Dispatcher [] dispatch) 
     {
         super(owner, "Login", true);
         
         debugMode = d;
+        dispatchers = dispatch;
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints cs = new GridBagConstraints();
 
@@ -81,13 +84,15 @@ public class LogInDialog extends JDialog
                     System.out.println("Log In Dialog: Username entered: " + getUsername());
                     System.out.println("Log In Dialog: Password entered: " + getPassword());
                 }
-                if (Login.authenticate(getUsername(), getPassword(), debugMode)) 
+                int location = Login.authenticate(getUsername(), getPassword(), debugMode, dispatchers);
+                if (!(location == -1)) 
                 {
                     JOptionPane.showMessageDialog(LogInDialog.this,
                         "Hi " + getUsername() + "! You have successfully logged in.",
                         "Login",
                     JOptionPane.INFORMATION_MESSAGE);
                     verifiedUsername = getUsername();
+                    verifiedDispatcher = dispatchers[location];
                     succeeded = true;
                     dispose();
                 } 
@@ -138,6 +143,15 @@ public class LogInDialog extends JDialog
     public String getVerifiedUsername()
     {
         return verifiedUsername;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public Dispatcher getVerifiedDispatcher()
+    {
+        return verifiedDispatcher;
     }
     
     /**

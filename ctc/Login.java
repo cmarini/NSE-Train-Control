@@ -13,9 +13,7 @@ package ctc;
  */
 public class Login 
 {
-    private static String userIDs[] = {"sweigartz", "washingtons", "marinic", "korenicj", "agiobeneboo"};
-    private static String userPasswords[] = {"password", "password", "password", "password", "password"};
-    
+
     /**
      * 
      * @param userName
@@ -23,15 +21,15 @@ public class Login
      * @param debugMode
      * @return
      */
-    public static boolean authenticate(String userName, String password, boolean debugMode)
+    public static int authenticate(String userName, String password, boolean debugMode, Dispatcher [] dispatchers)
     {
         String temp = "";
         int i = 0;
-        for(i = 0; i < userIDs.length; i++)
+        for(i = 0; i < dispatchers.length; i++)
         {
-            if(userName.equals(userIDs[i]))
+            if(userName.equals(dispatchers[i].getUserName()))
             {
-                temp = userIDs[i];
+                temp = dispatchers[i].getUserName();
                 break;
             }   
         }
@@ -42,16 +40,16 @@ public class Login
         }
         if(temp.equals(""))
         {
-            return false;
+            return -1;
         }
         else
         {
-            if(password.equals(userPasswords[i]))
+            if(password.equals(dispatchers[i].getPassword()))
             {
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
     
 }

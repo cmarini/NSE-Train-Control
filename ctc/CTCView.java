@@ -27,6 +27,7 @@ public class CTCView extends JFrame
 {
     private static boolean debugMode;   // used to determine if the system is in debug mode
     private String dispatcherID = "";   // used to hold the id for the dispatcher currently logged in
+    private Dispatcher dispatcherLoggedin = null;
     private int lineSelectedIndex = 0; // used to hold the location of the currently selected train line
     private int controllerSelectedIndex = 0; // used to hold the location of the currently selected wayside
     private int blockSelectedIndex = 0; // used to hold the location of the currently selected train block
@@ -48,6 +49,10 @@ public class CTCView extends JFrame
     private SplashPanel splashPanel = new SplashPanel();    // used to create the dispaly for the splash screen
     private Line selectedLine;
     private ID selectedWaysideID;
+    private ID selectedDispatcherTrainID;
+    private Line dispatcherLine;
+    private ID dispatcherWaysideID;
+    private Dispatcher [] dispatchers = new Dispatcher [18];
     
     /**
      * creates a new CTCView object and initializes debug mode to false
@@ -130,6 +135,9 @@ public class CTCView extends JFrame
         viewMetrics.addActionListener(new MenuOpenScreen(metricsPanel));
         runDemo.addActionListener(new MenuActionRunDemo());
         runCancel.addActionListener(new MenuActionCancelDemo());
+        
+        dispatchers[0] = (new Dispatcher("sweigartz", "password", Line.GREEN, (new ID(Line.GREEN, 'A', -1))));
+        dispatchers[1] = (new Dispatcher("marinic", "password", Line.GREEN, (new ID(Line.GREEN, 'Z', -1))));
     }
     
     private class MenuActionRunDemo implements ActionListener
@@ -190,11 +198,11 @@ public class CTCView extends JFrame
         @Override
         public void actionPerformed(ActionEvent e) 
         {
-            LogInDialog login = new LogInDialog(frame, debugMode);
+            LogInDialog login = new LogInDialog(frame, debugMode, dispatchers);
             login.setVisible(true);
             if(login.isSucceeded())
             {
-                dispatcherID = login.getVerifiedUsername();
+                dispatcherLoggedin = login.getVerifiedDispatcher();
                 dispatcherPanel.initialize();
                 changePanel(dispatcherPanel);
             }
@@ -475,15 +483,12 @@ public class CTCView extends JFrame
             
             if(CTCView.getDebugMode())
             {
-                System.out.println("CTC View: Dispatcher ID: " + dispatcherID);
+                System.out.println("CTC View: Dispatcher ID: " + dispatcherLoggedin.getUserName());
             }
-            if(dispatcherID.equals("sweigartz"))
+            
+            if(dispatcherLoggedin != null)
             {
-                map.setTrackSection("Green Line");
-            }
-            else
-            {
-                map.setTrackSection("Green Line");
+                map.setTrackSection(dispatcherLoggedin.getWayside().toString());
             }
             sendSetpoint = new JButton("Send Setpoint"); 
             sendAuthority = new JButton("Send Authority"); 
@@ -586,9 +591,7 @@ public class CTCView extends JFrame
                 JComboBox cb = (JComboBox)event.getSource();
                 dispatcherSelectedIndex = (int)cb.getSelectedIndex();
                 String id = (String)cb.getSelectedItem();
-                //Track t = model.getTrack(id);
-                //get all track properties
-                //initialize();
+                //selectedDispatcherTrainID = 
                 if(CTCView.getDebugMode())
                 {
                     System.out.println("Track " + id + " selected");
@@ -1173,8 +1176,8 @@ public class CTCView extends JFrame
         private int trackType;  // holds the track type of the selected track block
         private int passengersBoarding; // holds the number of passengers boarding of the selected track block
         private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
-        private String trackIDs[];  // holds the ids of the track blocks in the system
-        private String controllerIDs [];    // holds the ids of the controllers in the system
+        private String trackIDs[] = new String [0];  // holds the ids of the track blocks in the system
+        private String controllerIDs [] = new String [0];    // holds the ids of the controllers in the system
                 
         TrackPanel()
         {
