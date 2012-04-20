@@ -24,6 +24,17 @@ public class ID {
 		return unit;
 	}
 	
+	public boolean equals(ID thatID)
+	{
+		if (this.line == thatID.getLine() &&
+			this.section == thatID.getSection() &&
+			this.unit == thatID.getUnit())
+		{
+			return true;
+		}
+		return false;
+	}
+	
 	public String toString() {
 		return line + "_" + section + "_" + unit;
 	}
