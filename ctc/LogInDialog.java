@@ -1,8 +1,8 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	LogInDialog.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
@@ -14,6 +14,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
         
+/**
+ * 
+ * @author AM
+ */
 public class LogInDialog extends JDialog
 {
     private boolean debugMode;
@@ -26,6 +30,11 @@ public class LogInDialog extends JDialog
     private boolean succeeded;
     private String verifiedUsername;
 
+    /**
+     * 
+     * @param owner
+     * @param d
+     */
     public LogInDialog(JFrame owner, boolean d) 
     {
         super(owner, "Login", true);
@@ -122,21 +131,37 @@ public class LogInDialog extends JDialog
         //setLocationRelativeTo(parent);
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getVerifiedUsername()
     {
         return verifiedUsername;
     }
     
+    /**
+     * 
+     * @return
+     */
     public String getUsername() 
     {
         return tfUsername.getText().trim();
     }
 
+    /**
+     * 
+     * @return
+     */
     public String getPassword() 
     {
         return new String(pfPassword.getPassword());
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean isSucceeded() 
     {
         return succeeded;

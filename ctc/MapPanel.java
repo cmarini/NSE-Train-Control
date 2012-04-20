@@ -1,8 +1,8 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	MapPanel.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
@@ -11,6 +11,10 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
+/**
+ * 
+ * @author AM
+ */
 public class MapPanel extends JPanel
 {
     private boolean debugMode;
@@ -32,16 +36,28 @@ public class MapPanel extends JPanel
         repaint();
     }
     
+    /**
+     * 
+     * @param d
+     */
     public void setDebugMode(boolean d)
     {
         debugMode = d;
     }
     
+    /**
+     * 
+     * @param tc
+     */
     public void setTrackSection(String tc)
     {
         trackSection = tc;
     }
     
+    /**
+     * 
+     * @param s
+     */
     public void setSection(String s)
     {
         trackSection = s;

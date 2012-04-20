@@ -1,17 +1,28 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	Login.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
 
+/**
+ * 
+ * @author AM
+ */
 public class Login 
 {
     private static String userIDs[] = {"sweigartz", "washingtons", "marinic", "korenicj", "agiobeneboo"};
     private static String userPasswords[] = {"password", "1234", "secret", "admin", "default"};
     
+    /**
+     * 
+     * @param userName
+     * @param password
+     * @param debugMode
+     * @return
+     */
     public static boolean authenticate(String userName, String password, boolean debugMode)
     {
         String temp = "";

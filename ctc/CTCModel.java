@@ -1,8 +1,8 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	CTCModel.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
@@ -14,6 +14,10 @@ import trackmodel.*;
 import java.util.Stack;
 //import wayside.*;
 
+/**
+ * 
+ * @author AM
+ */
 public class CTCModel 
 {
     private static boolean debugMode;
@@ -26,6 +30,9 @@ public class CTCModel
 //    private Wayside [] greenTrackControllers;
 //    private Wayside [] redTrackControllers;
     
+    /**
+     * 
+     */
     public CTCModel()
     {
         try
@@ -248,11 +255,19 @@ public class CTCModel
         }
     }
     
+    /**
+     * 
+     * @param d
+     */
     public void setDebugMode(boolean d)
     {
         debugMode = d;
     }
     
+    /**
+     * 
+     * @param c
+     */
     public void setClockRate(int c)
     {
         clockRate = c;
@@ -268,6 +283,10 @@ public class CTCModel
 //        }
     }
 
+    /**
+     * 
+     * @return
+     */
     public String [] getTrackIDs()
     {
         String s[] = new String [trackControllers.length];
@@ -278,6 +297,10 @@ public class CTCModel
         return s;
     }
     
+    /**
+     * 
+     * @return
+     */
     public int getThroughput()
     {
         if(debugMode)
@@ -287,6 +310,10 @@ public class CTCModel
         return throughput;
     }
     
+    /**
+     * 
+     * @return
+     */
     public int getCapacity()
     {
         if(debugMode)
@@ -296,6 +323,10 @@ public class CTCModel
         return capacity;
     }
     
+    /**
+     * 
+     * @return
+     */
     public int getOccupancy()
     {
         if(debugMode)

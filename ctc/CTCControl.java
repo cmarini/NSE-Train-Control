@@ -1,12 +1,16 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	CTCControl.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
 
+/**
+ * 
+ * @author AM
+ */
 public class CTCControl 
 {
     private static boolean debugMode;
@@ -21,11 +25,19 @@ public class CTCControl
         model = m;
     }
     
+    /**
+     * 
+     * @param d
+     */
     public void setDebugMode(boolean d)
     {
         debugMode = d;
     }
     
+    /**
+     * 
+     * @param sp
+     */
     public void setDispatcherSpeed(int sp)
     {
         setpoint = sp;
@@ -35,6 +47,10 @@ public class CTCControl
         }
     }
  
+    /**
+     * 
+     * @param auth
+     */
     public void setDispatcherAuthority(int auth)
     {        
         authority = auth;
@@ -44,6 +60,11 @@ public class CTCControl
         }
     }
     
+    /**
+     * 
+     * @param sp
+     * @param b
+     */
     public void setOperatorCommands(int sp, boolean b)
     {
         operatorSpeed = sp;

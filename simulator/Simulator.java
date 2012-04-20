@@ -1,12 +1,19 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+*	Program Name:	Simulator.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
+*/
+
 package simulator;
 
 import ctc.CTCView;
 import ctc.CTCModel;
 
+/**
+ * 
+ * @author Zachary Sweigart
+ */
 public class Simulator 
 {
     private static boolean debugMode;
@@ -19,26 +26,45 @@ public class Simulator
     //private static TrainController [] trainControllers;
     private static String TrainIDs[] = {"G000001", "G000002", "R000001"};
     
+    /**
+     * 
+     * @param d
+     */
     public Simulator(boolean d)
     {
         debugMode = d;
     }
     
+    /**
+     * 
+     * @param v
+     */
     public void setView(CTCView v)
     {
         view = v;
     }
     
+    /**
+     * 
+     * @param m
+     */
     public void setModel(CTCModel m)
     {
         model = m;
     }
     
+    /**
+     * 
+     * @param c
+     */
     public void setClockRate(int c)
     {
         clockRate = c;
     }
     
+    /**
+     * 
+     */
     public static void run()
     {
         demoMode = view.getDemo();
@@ -47,7 +73,7 @@ public class Simulator
 //            trainControllers[i].setClockRate(clockRate);
 //        }
 //
-//          model.setClockRate(clockRate);
+          model.setClockRate(clockRate);
         
         if(demoMode)
         {
@@ -107,7 +133,11 @@ public class Simulator
      *      TrainController t = new TrainController(line, crewCount, trainID, clockRate);
      * }
      */
-     public String [] getTrainIDs()
+    /**
+     * 
+     * @return
+     */
+    public String [] getTrainIDs()
      {
          return TrainIDs;
         /*String trainIDs = new String [trainControllers.length];

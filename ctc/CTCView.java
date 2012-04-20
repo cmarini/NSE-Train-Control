@@ -1,8 +1,8 @@
 /*
-*	Program Name:	File.java
-*	Lead Programmer:	First Last
-*	Description:	This class/file/program will…
-*	Date Modified:	1/20/12
+*	Program Name:	CTCView.java
+*	Lead Programmer:	Zachary Sweigart
+*	Description:	
+*	Date Modified:	4/19/12
 */
 
 package ctc;
@@ -17,6 +17,10 @@ import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 
+/**
+ * 
+ * @author AM
+ */
 public class CTCView extends JFrame
 {
     private static boolean debugMode;
@@ -39,6 +43,9 @@ public class CTCView extends JFrame
     private MetricsPanel metricsPanel;
     private SplashPanel splashPanel = new SplashPanel();
     
+    /**
+     * 
+     */
     public CTCView()
     {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -52,6 +59,11 @@ public class CTCView extends JFrame
         model.setDebugMode(debugMode);
     }
     
+    /**
+     * 
+     * @param d
+     * @param s
+     */
     public CTCView(boolean d, Simulator s)
     {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -275,11 +287,19 @@ public class CTCView extends JFrame
         update(getGraphics());
     }
     
+    /**
+     * 
+     * @return
+     */
     public static boolean getDebugMode()
     {
         return debugMode;
     }
     
+    /**
+     * 
+     * @return
+     */
     public static CTCModel getModel()
     {
         return model;
@@ -1376,21 +1396,37 @@ public class CTCView extends JFrame
         c.add(comp, gbc);
     }
     
+    /**
+     * 
+     * @return
+     */
     public int getClockRate()
     {
         return clockRate;
     }
     
+    /**
+     * 
+     * @return
+     */
     public boolean getDemo()
     {
         return demoMode;
     }
 
+    /**
+     * 
+     * @return
+     */
     public boolean getIsOpen()
     {
         return isOpen;
     }
     
+    /**
+     * 
+     * @param s
+     */
     public void setSimulator(Simulator s)
     {
         sim = s;
