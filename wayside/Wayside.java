@@ -5,7 +5,7 @@ import global.*;
 import trackmodel.*;
 import trainmodel.*;
 
-abstract class Wayside implements Runnable
+abstract class Wayside implements WaysideInterface, Runnable
 {
 	private List<Track> track;
 	private ID id;
@@ -35,22 +35,22 @@ abstract class Wayside implements Runnable
 	/*
 	 * Runs the logic for its track section which is assumed to have a train.
 	 */
-	private abstract void runLogic();
+	abstract void runLogic();
 	
-	public abstract void trainIncFrom(Wayside w);
+	abstract void trainIncFrom(Wayside w);
 	
 	/*
 	 * Think this should set something in the track, not directly on the 
 	 * train model/controller
 	 */
-	public void setAuthority(String trainID, int authority)
+	public void setAuthority(ID trackID, int authority)
 	{
 		/* VALIDATE */
 		/* Find specified train */
 		/* set train's authority */
 	}
 	
-	public void setDispatchLimit(String trackID, int speed)
+	public void setDispatchLimit(ID trackID, int speed)
 	{
 		Track t;
 		if((speed < 0) || ((t = findTrack(trackID)) == null))
@@ -60,7 +60,7 @@ abstract class Wayside implements Runnable
 		t.setDispatchLimit(speed);
 	}
 	
-	private Track findTrack(String trackID)
+	private Track findTrack(ID trackID)
 	{
 		/* Scan track section for ID */
 		for (Track t : track)
