@@ -10,9 +10,9 @@ package ctc;
 import parser.*;
 import global.*;
 import java.io.IOException;
-import javax.swing.JOptionPane;
 import trackmodel.*;
-import wayside.*;
+import java.util.Stack;
+//import wayside.*;
 
 public class CTCModel 
 {
@@ -23,25 +23,25 @@ public class CTCModel
     private int occupancy; 
     private String[] trackControllers = {"A1", "A2", "A3"};
     private TrackParser parser;
-    //private TrackControllers greenTrackControllers;
-    //private TrackControllers redTrackControllers;
+//    private Wayside [] greenTrackControllers;
+//    private Wayside [] redTrackControllers;
     
     public CTCModel()
     {
         try
         {
             parser = new TrackParser("GreenLine.csv");
+            initializeTrack(parser);
         }
         catch(IOException e)
         {
            System.out.println("Invalid File or File Format");
         }
         
-        initializeTrack(parser);
-        
         try
         {
             parser = new TrackParser("RedLine.csv");
+            initializeTrack(parser);
         }
         catch(IOException e)
         {
@@ -53,8 +53,11 @@ public class CTCModel
     {
         int blockCounter = 0;
         char previous = '.';
+        boolean prevLinkBack = false;
         Track prev = null;
         Track t;
+        Stack switches = new Stack();
+        
         while (parser.next())
         {
             double elevation = parser.getElevation();
@@ -63,6 +66,7 @@ public class CTCModel
             int blockLength = parser.getBlock();
             TrackType type = parser.getTrackType();
             char waysideChar = parser.getSection();
+            boolean linkback = parser.isLinkback();
             
             if(waysideChar != previous)
             {
@@ -79,7 +83,7 @@ public class CTCModel
             }
             else
             {
-                if(type.equals(TrackType.STATION))
+                if(type.equals(TrackType.STATION) || type.equals(TrackType.SWITCHTY))
                 {
                     t = new Station(elevation, grade, blockLength, speedLimit, idNum);
                 }
@@ -96,6 +100,151 @@ public class CTCModel
                 }
             }
             
+            if(prev == null)
+            {
+                prev = t;
+                prevLinkBack = linkback;
+                
+                if(type.equals(TrackType.SWITCH))
+                {
+                    switches.push(t);
+                }
+                
+//                if(idNum.getLine().equals(Line.GREEN))
+//                {
+//                    switch (idNum.getSection())
+//                    {
+//                        case 'A':
+//                            greenTrackControllers[0].setTrack(t);
+//                        case 'B':
+//                            greenTrackControllers[1].setTrack(t);
+//                        case 'C':
+//                            greenTrackControllers[2].setTrack(t);
+//                        case 'D':
+//                            greenTrackControllers[3].setTrack(t);
+//                        case 'E':
+//                            greenTrackControllers[4].setTrack(t);
+//                        case 'F':
+//                            greenTrackControllers[5].setTrack(t);
+//                        case 'G':
+//                            greenTrackControllers[6].setTrack(t);
+//                        case 'H':
+//                            greenTrackControllers[7].setTrack(t);
+//                        case 'I':
+//                            greenTrackControllers[8].setTrack(t);
+//                        case 'J':
+//                            greenTrackControllers[9].setTrack(t);    
+//                    }
+//                }
+//                else
+//                {
+//                    switch (id.getSection())
+//                    {
+//                        case 'A':
+//                            return redTrackControllers[0].setTrack(t);
+//                        case 'B':
+//                            return redTrackControllers[1].setTrack(t);
+//                        case 'C':
+//                            return redTrackControllers[2].setTrack(t);
+//                        case 'D':
+//                            return redTrackControllers[3].setTrack(t);
+//                        case 'E':
+//                            return redTrackControllers[4].setTrack(t);
+//                        case 'F':
+//                            return redTrackControllers[5].setTrack(t);
+//                        case 'G':
+//                            return redTrackControllers[6].setTrack(t);
+//                        case 'H':
+//                            return redTrackControllers[7].setTrack(t);
+//                        case 'I':
+//                            return redTrackControllers[8].setTrack(t);
+//                        case 'J':
+//                            return redTrackControllers[9].setTrack(t);    
+//                    }
+//                }
+            }
+            else
+            {
+                if(type.equals(TrackType.SWITCH))
+                {
+                    switches.push(t);
+                }
+                
+//                if(idNum.getLine().equals(Line.GREEN))
+//                {
+//                    switch (idNum.getSection())
+//                    {
+//                        case 'A':
+//                            greenTrackControllers[0].setTrack(t);
+//                        case 'B':
+//                            greenTrackControllers[1].setTrack(t);
+//                        case 'C':
+//                            greenTrackControllers[2].setTrack(t);
+//                        case 'D':
+//                            greenTrackControllers[3].setTrack(t);
+//                        case 'E':
+//                            greenTrackControllers[4].setTrack(t);
+//                        case 'F':
+//                            greenTrackControllers[5].setTrack(t);
+//                        case 'G':
+//                            greenTrackControllers[6].setTrack(t);
+//                        case 'H':
+//                            greenTrackControllers[7].setTrack(t);
+//                        case 'I':
+//                            greenTrackControllers[8].setTrack(t);
+//                        case 'J':
+//                            greenTrackControllers[9].setTrack(t);    
+//                    }
+//                }
+//                else
+//                {
+//                    switch (id.getSection())
+//                    {
+//                        case 'A':
+//                            redTrackControllers[0].setTrack(t);
+//                        case 'B':
+//                            redTrackControllers[1].setTrack(t);
+//                        case 'C':
+//                            redTrackControllers[2].setTrack(t);
+//                        case 'D':
+//                            redTrackControllers[3].setTrack(t);
+//                        case 'E':
+//                            redTrackControllers[4].setTrack(t);
+//                        case 'F':
+//                            redTrackControllers[5].setTrack(t);
+//                        case 'G':
+//                            redTrackControllers[6].setTrack(t);
+//                        case 'H':
+//                            redTrackControllers[7].setTrack(t);
+//                        case 'I':
+//                            redTrackControllers[8].setTrack(t);
+//                        case 'J':
+//                            redTrackControllers[9].setTrack(t);    
+//                    }
+//                } 
+                if(linkback)
+                {
+                    if(!prevLinkBack)
+                    {
+                        Switch u = (Switch)switches.pop();
+                        t.setPrev(prev);
+                        prev.setNext(t);
+                        t.setNext(u);
+                        u.setNext(t);
+                    }
+                    else
+                    {
+                        Switch u = (Switch)switches.pop();
+                        t.setPrev(u);
+                        u.setNext(t);
+                    }
+                }
+                else
+                {
+                    t.setPrev(prev);
+                    prev.setNext(t);
+                }
+            }
         }
     }
     
@@ -118,12 +267,7 @@ public class CTCModel
 //            redTrackControllers[i].setClockRate(clockRate);
 //        }
     }
-    
-    /*public Track getTrack(String TrackID)
-     * {
-     *      
-     * }   
-    */
+
     public String [] getTrackIDs()
     {
         String s[] = new String [trackControllers.length];
@@ -160,5 +304,61 @@ public class CTCModel
         }
         return occupancy;
     }
+    
+//    public Track getTrack(ID id)
+//    {
+//        if(id.getLine().equals(Line.GREEN))
+//        {
+//            switch (id.getSection())
+//            {
+//                case 'A':
+//                    return greenTrackControllers[0].getTrack(id.getUnit());
+//                case 'B':
+//                    return greenTrackControllers[1].getTrack(id.getUnit());
+//                case 'C':
+//                    return greenTrackControllers[2].getTrack(id.getUnit());
+//                case 'D':
+//                    return greenTrackControllers[3].getTrack(id.getUnit());
+//                case 'E':
+//                    return greenTrackControllers[4].getTrack(id.getUnit());
+//                case 'F':
+//                    return greenTrackControllers[5].getTrack(id.getUnit());
+//                case 'G':
+//                    return greenTrackControllers[6].getTrack(id.getUnit());
+//                case 'H':
+//                    return greenTrackControllers[7].getTrack(id.getUnit());
+//                case 'I':
+//                    return greenTrackControllers[8].getTrack(id.getUnit());
+//                case 'J':
+//                    return greenTrackControllers[9].getTrack(id.getUnit());    
+//            }
+//        }
+//        else
+//        {
+//            switch (id.getSection())
+//            {
+//                case 'A':
+//                    return redTrackControllers[0].getTrack(id.getUnit());
+//                case 'B':
+//                    return redTrackControllers[1].getTrack(id.getUnit());
+//                case 'C':
+//                    return redTrackControllers[2].getTrack(id.getUnit());
+//                case 'D':
+//                    return redTrackControllers[3].getTrack(id.getUnit());
+//                case 'E':
+//                    return redTrackControllers[4].getTrack(id.getUnit());
+//                case 'F':
+//                    return redTrackControllers[5].getTrack(id.getUnit());
+//                case 'G':
+//                    return redTrackControllers[6].getTrack(id.getUnit());
+//                case 'H':
+//                    return redTrackControllers[7].getTrack(id.getUnit());
+//                case 'I':
+//                    return redTrackControllers[8].getTrack(id.getUnit());
+//                case 'J':
+//                    return redTrackControllers[9].getTrack(id.getUnit());    
+//            }
+//        }
+//    }
     
 }

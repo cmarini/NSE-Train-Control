@@ -32,6 +32,18 @@ public class Switch extends Track
 		return sInfo;
 	}
         
+        public void setNext(Track t)
+        {
+            if(B == null)
+            {
+                B = t;
+            }
+            else
+            {
+                C = t;
+            }
+        }
+        
         public Track getNext()
         {
             if(direction == true)

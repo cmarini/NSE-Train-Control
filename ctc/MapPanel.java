@@ -164,6 +164,13 @@ public class MapPanel extends JPanel
                         g.drawLine(300, 255, 300, 200);
                         g.drawLine(300, 200, 325, 190);
                     }
+                    else
+                    {
+                        if(trackSection.equals("Green A"));
+                        {
+                            
+                        }
+                    }
                 }
             }
         }
