@@ -30,9 +30,9 @@ public class Track
 		dispatchLimit = speedLimit;
 		occupied = false;
 		trackID = trkID;
-		failure = 0;
+		failure = TrackFault.NONE;
 		trafficLight = 0;
-                blockLength = blkLen;
+		blockLength = blkLen;
 		open = true;
 	}
 	
@@ -51,7 +51,7 @@ public class Track
 	public void setFix() // call this method to fix track
 	{
 		trackInfo = "info: track fixed";
-		failure = 0;
+		failure = TrackFault.NONE;
 	}
 	
 	public void setOccupied(boolean iOccupy, Track from) // set block to occupied
@@ -99,6 +99,7 @@ public class Track
 	
 	public Track getNext()
 	{
+		/*
 		if(direction)
 		{
 			return A;
@@ -107,6 +108,8 @@ public class Track
 		{
 			return B;
 		}
+		*/
+		return (direction ? A : B);
 	}
         
 	public int getSpeedLimit() // returns track speed limit

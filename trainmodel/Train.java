@@ -14,7 +14,7 @@ public class Train
 	private boolean doors; // false = close, true = open
 	private boolean lights; // false = off, true = on
 	private String trainId;
-	//private boolean ;
+	private boolean transponder;
 
 	public Train(int line, int crew, String id)
 	{
@@ -29,6 +29,7 @@ public class Train
 		//maxPower = // ???
 		occupancy = crewCount; // how many crew members?
 		trainId = id;
+		transponder = false;
 	}
 
 	public double calcVelocity()
@@ -63,7 +64,7 @@ public class Train
 		return trainLine;
 	}
 
-	public boolean getTransponder()
+	public boolean hasTransponder()
 	{
 		return transponder;
 	}
