@@ -14,7 +14,7 @@ package ctc;
 public class Login 
 {
     private static String userIDs[] = {"sweigartz", "washingtons", "marinic", "korenicj", "agiobeneboo"};
-    private static String userPasswords[] = {"password", "1234", "secret", "admin", "default"};
+    private static String userPasswords[] = {"password", "password", "password", "password", "password"};
     
     /**
      * 

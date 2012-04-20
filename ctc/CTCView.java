@@ -1,7 +1,6 @@
 /*
 *	Program Name:	CTCView.java
 *	Lead Programmer:	Zachary Sweigart
-*	Description:	
 *	Date Modified:	4/19/12
 */
 
@@ -16,35 +15,42 @@ import java.beans.PropertyChangeListener;
 import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
+import global.*;
 
 /**
+ * This file contains the specification for the CTCView object which defines the
+ *  main GUI for the program
  * 
- * @author AM
+ * @author Zachary Sweigart
  */
 public class CTCView extends JFrame
 {
-    private static boolean debugMode;
-    private String dispatcherID = "";
-    private int blockSelectedIndex = 0;
-    private int trainSelectedIndex = 0;
-    private int dispatcherSelectedIndex = 0;
+    private static boolean debugMode;   // used to determine if the system is in debug mode
+    private String dispatcherID = "";   // used to hold the id for the dispatcher currently logged in
+    private int lineSelectedIndex = 0; // used to hold the location of the currently selected train line
+    private int controllerSelectedIndex = 0; // used to hold the location of the currently selected wayside
+    private int blockSelectedIndex = 0; // used to hold the location of the currently selected train block
+    private int trainSelectedIndex = 0; // used to hold the location of the currently selected train
+    private int dispatcherSelectedIndex = 0;    // used to hold the location of the currently selected train block on the dipatcher screen
     //private int dispatcherSelectedTrainIndex = 0;
-    private static CTCModel model = new CTCModel();
-    private static CTCControl control = new CTCControl(model);
-    private static Simulator sim;
-    private boolean isOpen = true;
-    private int clockRate = 60;
-    private boolean demoMode = false;
-    private MainPanel mainPanel;
-    private DispatcherPanel dispatcherPanel;
-    private OperatorPanel operatorPanel = new OperatorPanel();
-    private TrainPanel trainPanel;
-    private TrackPanel trackPanel;
-    private MetricsPanel metricsPanel;
-    private SplashPanel splashPanel = new SplashPanel();
+    private static CTCModel model = new CTCModel(); // references the model of the system 
+    private static CTCControl control = new CTCControl(model);  // references the control that passes messages to the system
+    private static Simulator sim;   // references the simulator for the system
+    private boolean isOpen = true;  // used to determine if the main GUI window is open
+    private int clockRate = 60; // used to set the clock rate for the system
+    private boolean demoMode = false;   // used to determine if demo mode is active
+    private MainPanel mainPanel;    // used to create the dispaly for the main screen
+    private DispatcherPanel dispatcherPanel;    // used to create the dispaly for the dispatcher screen
+    private OperatorPanel operatorPanel = new OperatorPanel();  // used to create the dispaly for the operator screen
+    private TrainPanel trainPanel;  // used to create the dispaly for the add/modify train screen
+    private TrackPanel trackPanel;  // used to create the dispaly for the view/modify track screen
+    private MetricsPanel metricsPanel;  // used to create the dispaly for the view metrics screen
+    private SplashPanel splashPanel = new SplashPanel();    // used to create the dispaly for the splash screen
+    private Line selectedLine;
+    private ID selectedWaysideID;
     
     /**
-     * 
+     * creates a new CTCView object and initializes debug mode to false
      */
     public CTCView()
     {
@@ -60,9 +66,10 @@ public class CTCView extends JFrame
     }
     
     /**
+     * creates a new CTCView object with provided debug mode and simulator
      * 
-     * @param d
-     * @param s
+     * @param d boolean which sets the debug mode flag
+     * @param s Simulator object which the runs the system on clock ticks
      */
     public CTCView(boolean d, Simulator s)
     {
@@ -77,22 +84,22 @@ public class CTCView extends JFrame
         control.setDebugMode(debugMode);
         model.setDebugMode(debugMode);
     }
-    
+
     private void intialize()
     {
-        JMenuBar menuBar = new JMenuBar();
-        JMenu fileMenu = new JMenu("File");
-        JMenuItem fileClose = new JMenuItem("Close");
-        JMenu viewMenu = new JMenu("View");
-        JMenuItem viewMain = new JMenuItem("Main");
-        JMenuItem viewDispatcher = new JMenuItem("Dispatcher");
-        JMenuItem viewOperator = new JMenuItem("Operator");
-        JMenuItem viewTrain = new JMenuItem("Add/Modify Train");
-        JMenuItem viewTrack = new JMenuItem("View/Modify Track");
-        JMenuItem viewMetrics = new JMenuItem("Metrics");
-        JMenu runMenu = new JMenu("Run");
-        JMenuItem runDemo = new JMenuItem("Run Demo");
-        JMenuItem runCancel = new JMenuItem("Cancel Demo");
+        JMenuBar menuBar = new JMenuBar();  // used to create the main menu bar for the GUI
+        JMenu fileMenu = new JMenu("File"); // used to create the file menu for the main menu bar
+        JMenuItem fileClose = new JMenuItem("Close");   // used to create the Close option in the file menu
+        JMenu viewMenu = new JMenu("View"); // used to create the view menu for the main menu bar
+        JMenuItem viewMain = new JMenuItem("Main"); // used to create the Main option in the view menu
+        JMenuItem viewDispatcher = new JMenuItem("Dispatcher"); // used to create the Dispatcher option in the view menu
+        JMenuItem viewOperator = new JMenuItem("Operator"); // used to create the Operator option in the view menu
+        JMenuItem viewTrain = new JMenuItem("Add/Modify Train");    // used to create the Add/Modify Train option in the view menu
+        JMenuItem viewTrack = new JMenuItem("View/Modify Track");   // used to create the View/Modify Track option in the view menu
+        JMenuItem viewMetrics = new JMenuItem("Metrics");   // used to create the Metrics option in the view menu
+        JMenu runMenu = new JMenu("Run");   // used to create the run menu for the main menu bar
+        JMenuItem runDemo = new JMenuItem("Run Demo");  // used to create the Run Demo option in the run menu
+        JMenuItem runCancel = new JMenuItem("Cancel Demo"); // used to create the Cancel Demo option in the run menu
         
         menuBar.add(fileMenu);
         menuBar.add(viewMenu);
@@ -288,8 +295,9 @@ public class CTCView extends JFrame
     }
     
     /**
+     * return the state of the debug mode flag
      * 
-     * @return
+     * @return a boolean representing the state of the debug mode flag
      */
     public static boolean getDebugMode()
     {
@@ -297,8 +305,9 @@ public class CTCView extends JFrame
     }
     
     /**
+     * return the model
      * 
-     * @return
+     * @return a CTCModel 
      */
     public static CTCModel getModel()
     {
@@ -307,15 +316,21 @@ public class CTCView extends JFrame
     
     private class MainPanel extends JPanel
     {
-        private MapPanel map = new MapPanel(model, "");
-        private JLabel clockLabel = new JLabel("Clock Rate (1 hr = )");
+        private MapPanel map = new MapPanel(model, ""); // references the panel that paints the system
+        private JLabel clockLabel = new JLabel("Clock Rate (1 hr = )"); // labels the dropdown for selecting clock rate
         private final String clockRates [] = {"5 minutes", "6 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes", "40 minutes", "45 minutes", "60 minutes", "90 minutes", "120 minutes"};
-        private JComboBox clockCombo= new JComboBox(clockRates);        
-        private JLabel trackSectionLabel = new JLabel("Display track secion: ");
+        /*
+         * Holds the possible options for setting the clock rate
+         */
+        private JComboBox clockCombo= new JComboBox(clockRates);    // used to create a dropdown which holds the options for setting the clock rate 
+        private JLabel trackSectionLabel = new JLabel("Display track secion: ");    // labels the dropdown for selecting the section to paint
         private final String trackSections [] = {"", "Green Line", "Green A", "Green B", "Green C", "Green D", "Red Line"};
-        private JComboBox trackCombo = new JComboBox(trackSections);  
-        private Insets insets = new Insets(0,10,0,0);
-        private Insets insets2 = new Insets(0,0,0,0);
+        /*
+         * Holds the possible options for displaying the system
+         */
+        private JComboBox trackCombo = new JComboBox(trackSections);  // used to create a dropdown which holds the options for setting the clock rate
+        private Insets insets = new Insets(0,10,0,0);   // sets the insets for all of the displayed objects except the map
+        private Insets insets2 = new Insets(0,0,0,0);   // sets the insets for the map panel
 
         MainPanel()
         {
@@ -378,12 +393,12 @@ public class CTCView extends JFrame
                     default:
                         clockRate = 120;
                 }
-                //sim.setClockRate(clockRate);
-                //model.setClockRate(clockRate);
                 if(CTCView.getDebugMode())
                 {
                     System.out.println("CTC View: Clock rate set to : " + clockRate);
                 }
+                sim.setClockRate(clockRate);
+                model.setClockRate(clockRate);
             }
         };
         
@@ -412,22 +427,22 @@ public class CTCView extends JFrame
     
     private class DispatcherPanel extends JPanel
     {
-        private MapPanel map = new MapPanel(model);
-        private JLabel dispatcherIDLabel;
-        //private JLabel trainID = new JLabel("Train ID");
-        //private JComboBox trains = new JComboBox();
-        private JLabel trackID = new JLabel("Track ID");
-        private JComboBox track = new JComboBox();
-        private JLabel setpointLabel = new JLabel("Setpoint");
-        private JTextField setpoint = new JTextField();
-        private JLabel authorityLabel = new JLabel("Authority");
-        private JTextField authority = new JTextField();
-        private JButton sendSetpoint;
-        private JButton sendAuthority;
-        private Insets insets = new Insets(0,0,0,0);
-        private Insets insets2 = new Insets(0,0,0,10);
-        private String [] trackIDs;
-        private String [] trainIDs;
+        private MapPanel map = new MapPanel(model); // references the panel that paints the map
+        private JLabel dispatcherIDLabel;   // displays the userid of the dispatcher that is logged in
+        //private JLabel trainID = new JLabel("Train ID");  //
+        //private JComboBox trains = new JComboBox();   //
+        private JLabel trackID = new JLabel("Track ID");    // lables the track id combo box
+        private JComboBox track = new JComboBox();  // holds the track blocks available to the dispatcher
+        private JLabel setpointLabel = new JLabel("Setpoint");  // labels  the setpoint input field
+        private JTextField setpoint = new JTextField(); // used to enter the desired setpoint
+        private JLabel authorityLabel = new JLabel("Authority");    // labels the authority input field
+        private JTextField authority = new JTextField();    // used to enter the desired authority
+        private JButton sendSetpoint;   // sends the value in the setpoint to the block
+        private JButton sendAuthority;  // sends the value in the authority to the block
+        private Insets insets = new Insets(0,0,0,0);    // insets for the map
+        private Insets insets2 = new Insets(0,0,0,10);  // insets for all other display components
+        private String [] trackIDs; // holds the trackIDs available to the dispatcher
+        private String [] trainIDs; //
 
         DispatcherPanel()
         {
@@ -438,7 +453,7 @@ public class CTCView extends JFrame
         private void initialize()
         {           
             map.setDebugMode(debugMode);
-            trackIDs = model.getTrackIDs();
+            trackIDs = model.getTrackIDs(dispatcherID);
             trainIDs = sim.getTrainIDs();
             
             track = new JComboBox();
@@ -570,13 +585,13 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 dispatcherSelectedIndex = (int)cb.getSelectedIndex();
-                String ID = (String)cb.getSelectedItem();
-                //Track t = model.getTrack(ID);
+                String id = (String)cb.getSelectedItem();
+                //Track t = model.getTrack(id);
                 //get all track properties
                 //initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " selected");
+                    System.out.println("Track " + id + " selected");
                 }
             }
         };
@@ -587,13 +602,13 @@ public class CTCView extends JFrame
 //            {
 //                JComboBox cb = (JComboBox)event.getSource();
 //                dispatcherSelectedTrainIndex = (int)cb.getSelectedIndex();
-//                String ID = (String)cb.getSelectedItem();
-//                //Track t = model.getTrack(ID);
+//                String id = (String)cb.getSelectedItem();
+//                //Track t = model.getTrack(id);
 //                //get all track properties
 //                //initialize();
 //                if(CTCView.getDebugMode())
 //                {
-//                    System.out.println("Track " + ID + " selected");
+//                    System.out.println("Track " + id + " selected");
 //                }
 //            }
 //        };
@@ -609,20 +624,25 @@ public class CTCView extends JFrame
     
     private class OperatorPanel extends JPanel
     {
-        private MapPanel map = new MapPanel(model);
-        private JLabel trainID = new JLabel("Train ID: ");
-        private JComboBox trains = new JComboBox();
-        private JLabel speedLabel = new JLabel("Speed: ");
-        private JTextField operatorSpeed = new JTextField();
-        private JLabel brakeLabel = new JLabel ("Emergency Brake: ");
-        private JCheckBox brake = new JCheckBox("");
-        private JButton send;
-        private Insets insets = new Insets(0,0,0,0);
-        private Insets insets2 = new Insets(0,0,0,10);
+        private MapPanel map = new MapPanel(model); // references the panel that paints the display
+        private JLabel trainID = new JLabel("Train ID: ");  // labels the train id combo box
+        private JComboBox trains = new JComboBox(); // holds the train ids currently in the system
+        private JLabel speedLabel = new JLabel("Speed: ");  // labels the speed input box
+        private JTextField operatorSpeed = new JTextField();    // input field for the operator speed
+        private JLabel brakeLabel = new JLabel ("Emergency Brake: ");   // labels the brake check box
+        private JCheckBox brake = new JCheckBox("");    // allows the brake to be set on or off
+        private JButton send;   // sends the operator commands to the system
+        private Insets insets = new Insets(0,0,0,0);    // insets for all components except the map panel
+        private Insets insets2 = new Insets(0,0,0,10);  // insets for the map panel
         private JLabel trackSectionLabel = new JLabel("Display track secion: ");
+        /*
+         * labels the track combo box select
+         */
         private final String trackSections [] = {"", "Green Line", "Green A", "Green B", "Green C", "Green D"};
-        private JComboBox trackCombo = new JComboBox(trackSections);  
-        private MaskFormatter format;
+        /*
+         * holds all of the sections that can be displayed
+         */
+        private JComboBox trackCombo = new JComboBox(trackSections);    // displays all the track sections that can be displayed  
 
         OperatorPanel()
         {
@@ -716,72 +736,75 @@ public class CTCView extends JFrame
     
     private class TrainPanel extends JPanel
     {
-        private String [] lines = {"Green", "Red"};
-        private String [] trainYards = {"", "Train Yard 1"};
-        private JLabel currentTrainsLabel = new JLabel("Current Trains");
+        private String [] lines = {"Green", "Red"}; // holds the different lines in the system
+        private String [] trainYards = {"", "Train Yard 1"};    // holds the train yards in the system
+        private JLabel currentTrainsLabel = new JLabel("Current Trains");   // labels the combo box for the train ids
         private JLabel trainYardSelectLabel = new JLabel("Add new train from train yard: ");
-        private JLabel lineLabel = new JLabel("Line");
-        private JLabel heightLabel = new JLabel("Height");
-        private JLabel widthLabel = new JLabel("Width");
-        private JLabel numCarsLabel = new JLabel("Number of Cars");
-        private JLabel lengthLabel = new JLabel("Length");
-        private JLabel massLabel = new JLabel("Mass");
-        private JLabel crewCountLabel = new JLabel("Crew Count");
-        private JLabel passengerCountLabel = new JLabel("Passenger Count");
-        private JLabel currentSpeedLabel = new JLabel("Current Speed");
-        private JLabel currentAccelerationLabel = new JLabel("Current Acceleration");
-        private JLabel messageLabel = new JLabel("Message Displayed");
-        private JLabel headlightLabel = new JLabel("Headlights on");
-        private JLabel cabinLightLabel = new JLabel("Cabin Lights on");
-        private JLabel doorLabel = new JLabel("Doors Open");
-        private JLabel brakeFailLabel = new JLabel("Brake Failure");
-        private JLabel engineFailLabel = new JLabel("Engine Failure");
-        private JLabel signalPickupFailLabel = new JLabel("Signal Pickup Failure");
-        private JLabel trainIDLabel = new JLabel("Train ID");
-        private JComboBox currentTrains;
-        private JComboBox trainYard = new JComboBox(trainYards);
-        private JComboBox line = new JComboBox(lines);
-        private JTextField heightField = new JTextField();
-        private JTextField widthField = new JTextField();
-        private JTextField numCarsField = new JTextField();
-        private JTextField lengthField = new JTextField();
-        private JTextField massField = new JTextField();
-        private JTextField crewCountField = new JTextField();
-        private JTextField passengerCountField = new JTextField();
-        private JTextField currentSpeedField = new JTextField();
-        private JTextField currentAccelerationField = new JTextField();
-        private JTextField messageField = new JTextField();
-        private JFormattedTextField trainIDField;
-        private JCheckBox headlightCheck = new JCheckBox();
-        private JCheckBox cabinLightCheck = new JCheckBox();
-        private JCheckBox doorCheck = new JCheckBox();
-        private JCheckBox brakeFailCheck;
-        private JCheckBox engineFailCheck;
-        private JCheckBox signalPickupFailCheck;
-        private JButton emergencyBrakeButton;
-        private JButton addTrainButton;
-        private JButton removeTrainButton;
-        private Insets insets = new Insets(5,20,0,20);
-        private int height;
-        private int width;
-        private int numCars;
-        private int length;
-        private int mass;
-        private int crewCount;
-        private int passCount;
-        private int currentSpeed;
-        private int currentAcceleration;
-        private String message;
-        private boolean cabinLights;
-        private boolean headlights;
-        private boolean doors;
-        private boolean brakeFailure;
-        private boolean engineFailure;
-        private boolean signalFailure;
-        private int lineIndex;
-        private MaskFormatter format;
-        private String trainIDs [];
-        private String enteredTrainID;
+        /*
+         * labels the train yard selection combo box
+         */
+        private JLabel lineLabel = new JLabel("Line");  // labels the line combo
+        private JLabel heightLabel = new JLabel("Height");  // labels the height field
+        private JLabel widthLabel = new JLabel("Width");    // labels the width field
+        private JLabel numCarsLabel = new JLabel("Number of Cars"); // labels the number of cars field
+        private JLabel lengthLabel = new JLabel("Length");  // labels the length field
+        private JLabel massLabel = new JLabel("Mass");  // labels the mass field
+        private JLabel crewCountLabel = new JLabel("Crew Count");   // labels the crew count field
+        private JLabel passengerCountLabel = new JLabel("Passenger Count"); // labels the passenger count field
+        private JLabel currentSpeedLabel = new JLabel("Current Speed"); // labels the current speed field
+        private JLabel currentAccelerationLabel = new JLabel("Current Acceleration");   // labels the current acceleration field
+        private JLabel messageLabel = new JLabel("Message Displayed");  // labels the message field
+        private JLabel headlightLabel = new JLabel("Headlights on");    // labels the hedlights check box
+        private JLabel cabinLightLabel = new JLabel("Cabin Lights on"); // labels the cabin lights check box
+        private JLabel doorLabel = new JLabel("Doors Open");    // labels the door check box
+        private JLabel brakeFailLabel = new JLabel("Brake Failure");    // labels the brake failure check box
+        private JLabel engineFailLabel = new JLabel("Engine Failure");  // labels the engine failure check box
+        private JLabel signalPickupFailLabel = new JLabel("Signal Pickup Failure"); // labels the signal pickup failure check box
+        private JLabel trainIDLabel = new JLabel("Train ID");   // labels the train ID dropdown 
+        private JComboBox currentTrains;    // displays the ids of the trains in the system
+        private JComboBox trainYard = new JComboBox(trainYards);    // displays the train yard ids in the system
+        private JComboBox line = new JComboBox(lines);  // displays the lines in the system
+        private JTextField heightField = new JTextField();  // displays the height of the train selected
+        private JTextField widthField = new JTextField();   // displays the width of the train selected
+        private JTextField numCarsField = new JTextField(); // displays the number of cars of the train selected
+        private JTextField lengthField = new JTextField();  // displays the length of the train selected
+        private JTextField massField = new JTextField();    // displays the mass of the train selected
+        private JTextField crewCountField = new JTextField();   // displays the crew count of the train selected
+        private JTextField passengerCountField = new JTextField();  // displays the passenger count of the train selected
+        private JTextField currentSpeedField = new JTextField();    // displays the current speed of the train selected
+        private JTextField currentAccelerationField = new JTextField(); // displays the current acceleration of the train selected
+        private JTextField messageField = new JTextField(); // displays the message of the train selected
+        private JFormattedTextField trainIDField;   // input field for a new train's id
+        private JCheckBox headlightCheck = new JCheckBox(); // displays the headlight state of the train selected
+        private JCheckBox cabinLightCheck = new JCheckBox();    // displays the cabin light state of the train selected
+        private JCheckBox doorCheck = new JCheckBox();  // displays the door state of the train selected
+        private JCheckBox brakeFailCheck;   // displays the brake failure state of the train selected
+        private JCheckBox engineFailCheck;  // displays the engine failure state of the train selected
+        private JCheckBox signalPickupFailCheck;    // displays the signal pickup state of the train selected
+        private JButton emergencyBrakeButton;   // sends emergency brake signal to the current train
+        private JButton addTrainButton; // creates and adds a new train to the system
+        private JButton removeTrainButton;  // removes selected train from the system
+        private Insets insets = new Insets(5,20,0,20);  // insets for all components in the display
+        private int height; // holds the height of the selected train
+        private int width;  // holds the width of the selected train
+        private int numCars;    // holds the number of cars of the selected train
+        private int length; // holds the length of the selected train
+        private int mass;   // holds the mass of the selected train
+        private int crewCount;  // holds the crew count of the selected train
+        private int passCount;  // holds the passenger count of the selected train
+        private int currentSpeed;   // holds the current speed of the selected train
+        private int currentAcceleration;    // holds the current acceleration of the selected train
+        private String message; // holds the message of the selected train
+        private boolean cabinLights;    // holds the cabin light state of the selected train
+        private boolean headlights; // holds the headlight state of the selected train
+        private boolean doors;  // holds the door state of the selected train
+        private boolean brakeFailure;   // holds the brake failure state of the selected train
+        private boolean engineFailure;  // holds the engine failure state of the selected train
+        private boolean signalFailure;  // holds the signal pickup state of the selected train
+        private int lineIndex;  // holds the index of the selected line
+        private MaskFormatter format;   // formats the train id field to only accept 10 characters
+        private String trainIDs []; // holds the train IDs currently in the system
+        private String enteredTrainID;  // holds the train id entered by the user
         
         TrainPanel()
         {
@@ -958,13 +981,13 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JComboBox cb = (JComboBox)event.getSource();
-                String ID = (String)cb.getSelectedItem();
+                String id = (String)cb.getSelectedItem();
                 trainSelectedIndex = (int)cb.getSelectedIndex();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("CTC View: Train selected " + ID);
+                    System.out.println("CTC View: Train selected " + id);
                 }
-                //TrainController t = sim.getTrainController(ID);
+                //TrainController t = sim.getTrainController(id);
                 //get all train properties
                 //initialize();
             }
@@ -974,12 +997,12 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = trainIDs[trainSelectedIndex - 1];
+                String id = trainIDs[trainSelectedIndex - 1];
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("CTC View: Emergency Brake Signal sent to Train: " + ID);
+                    System.out.println("CTC View: Emergency Brake Signal sent to Train: " + id);
                 }
-                //TrainController t = sim.getTrainController(ID);
+                //TrainController t = sim.getTrainController(id);
                 //t.emergencyBrake();
                 //initialize();
             }
@@ -1003,12 +1026,12 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = trainIDs[trainSelectedIndex - 1];
+                String id = trainIDs[trainSelectedIndex - 1];
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("CTC View: Train: " + ID + " sent remove command");
+                    System.out.println("CTC View: Train: " + id + " sent remove command");
                 }
-                //TrainController t = getTrainController(ID);
+                //TrainController t = getTrainController(id);
                 //t.remove();
                 //initialize();
             }
@@ -1019,14 +1042,14 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String ID = trainIDs[trainSelectedIndex - 1];
-                //TrainController t = getTrainController(ID);
+                String id = trainIDs[trainSelectedIndex - 1];
+                //TrainController t = getTrainController(id);
                 if(cb.isSelected())
                 {
                     //t.fail(0);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent brake failure command");
+                        System.out.println("CTC View: Train: " + id + " sent brake failure command");
                     } 
                 }
                 else
@@ -1034,7 +1057,7 @@ public class CTCView extends JFrame
                     //t.fail(false);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent fix brake failure command");
+                        System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
                     } 
                 }
                 //initialize();
@@ -1046,14 +1069,14 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String ID = trainIDs[trainSelectedIndex - 1];
-                //TrainController t = getTrainController(ID);
+                String id = trainIDs[trainSelectedIndex - 1];
+                //TrainController t = getTrainController(id);
                 if(cb.isSelected())
                 {
                     //t.fail(1);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent engine failure command");
+                        System.out.println("CTC View: Train: " + id + " sent engine failure command");
                     } 
                 }
                 else
@@ -1061,7 +1084,7 @@ public class CTCView extends JFrame
                     //t.fail(false);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent fix engine failure command");
+                        System.out.println("CTC View: Train: " + id + " sent fix engine failure command");
                     } 
                 }
                 //initialize();
@@ -1073,14 +1096,14 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String ID = trainIDs[trainSelectedIndex - 1];
-                //TrainController t = getTrainController(ID);
+                String id = trainIDs[trainSelectedIndex - 1];
+                //TrainController t = getTrainController(id);
                 if(cb.isSelected())
                 {
                     //t.fail(2);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent signal pickup failure command");
+                        System.out.println("CTC View: Train: " + id + " sent signal pickup failure command");
                     } 
                 }
                 else
@@ -1088,7 +1111,7 @@ public class CTCView extends JFrame
                     //t.fail(false);
                     if(CTCView.getDebugMode())
                     {
-                        System.out.println("CTC View: Train: " + ID + " sent fix signal pickup failure command");
+                        System.out.println("CTC View: Train: " + id + " sent fix signal pickup failure command");
                     } 
                 }
                 //initialize();
@@ -1107,42 +1130,51 @@ public class CTCView extends JFrame
     private class TrackPanel extends JPanel
     {
         private String [] failureTypes = {"Broken Rail", "Power Failure", "Circuit Failure"};
-        private String [] lines = {"Green", "Red"};
-        private JLabel lineLabel = new JLabel("Select Line");
-        private JLabel controllerLabel = new JLabel("Select Wayside");
-        private JLabel trackLabel = new JLabel("Select Track");
-        private JLabel speedLimitLabel = new JLabel("Speed Limit");
-        private JLabel elevationLabel = new JLabel("Elevation");
-        private JLabel gradeLabel = new JLabel("Grade");
-        private JLabel blockSizeLabel = new JLabel("Block Size");
-        private JLabel trackTypeLabel = new JLabel("Track Type");
+        /*
+         * holds the types of track failures 
+         */
+        private String [] lines = {"Green", "Red"}; // holds the lines in the system
+        private JLabel lineLabel = new JLabel("Select Line");   // lables the line combo
+        private JLabel controllerLabel = new JLabel("Select Wayside");  // lables the wayside id combo
+        private JLabel trackLabel = new JLabel("Select Track"); // labels the track id combo
+        private JLabel speedLimitLabel = new JLabel("Speed Limit"); // labels the speed limit for the selected track block
+        private JLabel elevationLabel = new JLabel("Elevation");    // labels the elevation for the selected track block
+        private JLabel gradeLabel = new JLabel("Grade");    // labels the grade for the selected track block
+        private JLabel blockSizeLabel = new JLabel("Block Size");   // labels the block size for the selected track block
+        private JLabel trackTypeLabel = new JLabel("Track Type");   // labels the track type for the selected track block
         private JLabel passengersBoardingLabel = new JLabel("Passengers Boarding");
+        /*
+         * labels the number of passengers boarding if the bloc is a station
+         */
         private JLabel passengersDisembarkingLabel = new JLabel("Passengers Disembarking");
-        private JComboBox line;
-        private JComboBox controller;
-        private JComboBox track;
-        private JComboBox failType = new JComboBox(failureTypes);
-        private JTextField speedLimitField = new JTextField();
-        private JTextField elevationField = new JTextField();
-        private JTextField gradeField = new JTextField();
-        private JTextField blockSizeField = new JTextField();
-        private JTextField trackTypeField = new JTextField();
-        private JTextField passengersBoardingField = new JTextField();
-        private JTextField passengersDisembarkingField = new JTextField();
-        private JButton closeButton = new JButton("Close");
-        private JButton openButton = new JButton("Open");
-        private JButton breakButton = new JButton("Break");
-        private JButton fixButton = new JButton("Fix");
-        private Insets insets = new Insets(5,20,0,20);
-        private int speedLimit;
-        private int elevation;
-        private int grade;
-        private int blockSize;
-        private int trackType;
-        private int passengersBoarding;
-        private int passengersDisembarking;
-        private String trackIDs[];
-        private String controllerIDs [];
+        /*
+         * labels the number of passengers disembarking if the block is a station
+         */
+        private JComboBox line; // holds the lines to be selected
+        private JComboBox controller;   // holds the waysides to be selected
+        private JComboBox track;    // holds the track blocks to be selected
+        private JComboBox failType = new JComboBox(failureTypes);   // displays the track block failure types
+        private JTextField speedLimitField = new JTextField();  // displays the speed limit for the selected block
+        private JTextField elevationField = new JTextField();   // displays the elevation for the selected block
+        private JTextField gradeField = new JTextField();   // displays the grade for the selected block
+        private JTextField blockSizeField = new JTextField();   // displays the block size for the selected block
+        private JTextField trackTypeField = new JTextField();   // displays the track type for the selected block
+        private JTextField passengersBoardingField = new JTextField();  // displays the passengers boarding for the selected block
+        private JTextField passengersDisembarkingField = new JTextField();  // displays the passengers disembarking for the selected block
+        private JButton closeButton = new JButton("Close"); // sends close signal to the selected track block
+        private JButton openButton = new JButton("Open");   // sends open signal to the selected track block
+        private JButton breakButton = new JButton("Break"); // sends break signal to the selected track block
+        private JButton fixButton = new JButton("Fix"); // sends fix signal to the selected track block
+        private Insets insets = new Insets(5,20,0,20);  // insets for all display components
+        private int speedLimit; // holds the speed limit of the selected track block
+        private int elevation;  // holds the elevation of the selected track block
+        private int grade;  // holds the grade of the selected track block
+        private int blockSize;  // holds the block size of the selected track block
+        private int trackType;  // holds the track type of the selected track block
+        private int passengersBoarding; // holds the number of passengers boarding of the selected track block
+        private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
+        private String trackIDs[];  // holds the ids of the track blocks in the system
+        private String controllerIDs [];    // holds the ids of the controllers in the system
                 
         TrackPanel()
         {
@@ -1152,23 +1184,24 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
-            trackIDs = model.getTrackIDs();
-            
             line = new JComboBox();
             for(int i = 0; i < lines.length; i++)
             {
                 line.addItem(lines[i]);
             }
-            
-            //controllerIDs = model.getControllerIDs(line.getSelectedItem());
+            line.setSelectedIndex(lineSelectedIndex);
             
             controller = new JComboBox();
             controller.addItem("");
-            for(int i = 0; i < lines.length; i++)
+            //controllerIDs = model.getControllers()
+            for(int i = 0; i < controllerIDs.length; i++)
             {
                 //controller.addItem(controllerIDs[i]);
             }
-                        
+            controller.setSelectedIndex(controllerSelectedIndex);
+             
+            trackIDs = model.getTrackIDs();
+            //trackIDs = model.getTrackIDs(selectedWaysideID);
             track = new JComboBox();
             track.addItem("");
             for(int i = 0; i < trackIDs.length; i++)
@@ -1240,19 +1273,63 @@ public class CTCView extends JFrame
             addComponent(this, fixButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
         }
         
+        ActionListener lineComboListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                JComboBox cb = (JComboBox)event.getSource();
+                lineSelectedIndex = (int)cb.getSelectedIndex();
+                String id = (String)cb.getSelectedItem();
+                if(id.equals("Green Line"))
+                {
+                    selectedLine = Line.GREEN;
+                }
+                else
+                {
+                    if(id.equals("Red Line"))
+                    {
+                        selectedLine = Line.RED;
+                    }
+                }
+                initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + id + " selected");
+                }
+            }
+        };
+                
+        ActionListener controllerComboListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                JComboBox cb = (JComboBox)event.getSource();
+                controllerSelectedIndex = (int)cb.getSelectedIndex();
+                char id = (char)cb.getSelectedItem();
+                ID selectedWaysideID = new ID(selectedLine, id, -1);
+                initialize();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("Track " + id + " selected");
+                }
+            }
+        };
+        
         ActionListener trackComboListener = new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 blockSelectedIndex = (int)cb.getSelectedIndex();
-                String ID = (String)cb.getSelectedItem();
-                //Track t = model.getTrack(ID);
+                String id = (String)cb.getSelectedItem();
+                int trackIDval = Integer.parseInt(id);
+                ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDval);
+                //Track t = model.getTrack(trackselectedID);
                 //get all track properties
-                //initialize();
+                initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " selected");
+                    System.out.println("Track " + id + " selected");
                 }
             }
         };
@@ -1261,13 +1338,13 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = (String)trackIDs[blockSelectedIndex - 1];
+                String id = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //track.close();
                 //initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " closed");
+                    System.out.println("Track " + id + " closed");
                 }
             }
         };
@@ -1276,13 +1353,13 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = (String)trackIDs[blockSelectedIndex - 1];
+                String id = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //t.open();
                 //initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " opened");
+                    System.out.println("Track " + id + " opened");
                 }
             }
         };
@@ -1291,14 +1368,14 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = (String)trackIDs[blockSelectedIndex - 1];
+                String id = (String)trackIDs[blockSelectedIndex - 1];
                 String type = (String)failType.getSelectedItem();
                 //Track t = model.getTrack();
                 //t.fail(type);
                 //initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " broken: " + type);
+                    System.out.println("Track " + id + " broken: " + type);
                 }
             }
         };
@@ -1307,13 +1384,13 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String ID = (String)trackIDs[blockSelectedIndex - 1];
+                String id = (String)trackIDs[blockSelectedIndex - 1];
                 //Track t = model.getTrack();
                 //t.fix();
                 //initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + ID + " fixed");
+                    System.out.println("Track " + id + " fixed");
                 }
             }
         };
@@ -1329,13 +1406,13 @@ public class CTCView extends JFrame
     
     private class MetricsPanel extends JPanel
     {
-        private JLabel throughputLabel = new JLabel("Throughput");
-        private JLabel capacityLabel = new JLabel("Capacity");
-        private JLabel occupancyLabel = new JLabel("Occupancy");
-        private JTextField throughputField = new JTextField();
-        private JTextField capacityField = new JTextField();
-        private JTextField occupancyField = new JTextField();
-        private Insets insets = new Insets(5,20,0,20);
+        private JLabel throughputLabel = new JLabel("Throughput");  // labels the throughput field
+        private JLabel capacityLabel = new JLabel("Capacity");  // labels the throughput field
+        private JLabel occupancyLabel = new JLabel("Occupancy");    // labels the throughput field
+        private JTextField throughputField = new JTextField();  // displays system throughput
+        private JTextField capacityField = new JTextField();    // displays system capacity
+        private JTextField occupancyField = new JTextField();   // displays the system occupancy
+        private Insets insets = new Insets(5,20,0,20);  // insets for all display components
         
         MetricsPanel()
         {
@@ -1397,8 +1474,9 @@ public class CTCView extends JFrame
     }
     
     /**
+     * returns the clock rate
      * 
-     * @return
+     * @return integer clock rate
      */
     public int getClockRate()
     {
@@ -1406,8 +1484,8 @@ public class CTCView extends JFrame
     }
     
     /**
-     * 
-     * @return
+     * returns demo mode flag
+     * @return boolean demo mode flag
      */
     public boolean getDemo()
     {
@@ -1415,8 +1493,9 @@ public class CTCView extends JFrame
     }
 
     /**
+     * returns GUI open flag
      * 
-     * @return
+     * @return boolean GUI open flag
      */
     public boolean getIsOpen()
     {
@@ -1424,8 +1503,9 @@ public class CTCView extends JFrame
     }
     
     /**
+     * sets reference for GUI's simulator
      * 
-     * @param s
+     * @param s Simulator object referenced by the GUI
      */
     public void setSimulator(Simulator s)
     {

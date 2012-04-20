@@ -27,8 +27,8 @@ public class CTCModel
     private int occupancy; 
     private String[] trackControllers = {"A1", "A2", "A3"};
     private TrackParser parser;
-//    private Wayside [] greenTrackControllers;
-//    private Wayside [] redTrackControllers;
+//    private Wayside [] greenTrackControllers = new Wayside[9];
+//    private Wayside [] redTrackControllers = new Wayside[9];
     
     /**
      * 
@@ -285,6 +285,31 @@ public class CTCModel
 
     /**
      * 
+     */
+    public void run()
+    {
+        
+    }
+
+    /**
+     * 
+     * @return
+     */
+//    public Wayside [] getControllers(Line line)
+//    {
+//        switch(line)
+//        {
+//            case GREEN:
+//                return greenTrackControllers;
+//            case RED:
+//                return redTrackControllers;
+//            default
+//                return new Wayside []
+//        }
+//    }
+    
+    /**
+     * 
      * @return
      */
     public String [] getTrackIDs()
@@ -296,6 +321,69 @@ public class CTCModel
         }
         return s;
     }
+    
+    /**
+     * 
+     * @return
+     */
+    public String [] getTrackIDs(String dispatcherID)
+    {
+        String s[] = new String [trackControllers.length];
+        for(int i = 0; i < trackControllers.length; i++)
+        {
+            s[i] = trackControllers[i];
+        }
+        return s;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+//    public String [] getTrackIDs(ID selectedWaysideID)
+//    {
+//        Wayside w [];
+//        switch(selectedWaysideID.getLine())
+//        {
+//            case GREEN:
+//                w = greenTrackControllers;
+//            case RED:
+//                w = redTrackControllers;
+//        }  
+//        switch(selectedWaysideID.getSection())
+//        {
+//            case 'A':
+//                return w[0].getTrackIDs();
+//                break;
+//            case 'B':
+//                return w[1].getTrackIDs();
+//                break;
+//            case 'C':
+//                return w[2].getTrackIDs();
+//                break;
+//            case 'D':
+//                return w[3].getTrackIDs();
+//                break;
+//            case 'E':
+//                return w[4].getTrackIDs();
+//                break;
+//            case 'F':
+//                return w[5].getTrackIDs();
+//                break;
+//            case 'G':
+//                return w[6].getTrackIDs();
+//                break;
+//            case 'H':
+//                return w[7].getTrackIDs();
+//                break;
+//            case 'I':
+//                return w[8].getTrackIDs();
+//                break;
+//            case 'J':
+//                return w[9].getTrackIDs();
+//                break;
+//        }
+//    }
     
     /**
      * 

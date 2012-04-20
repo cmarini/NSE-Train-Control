@@ -1,8 +1,6 @@
 /*
 *	Program Name:	SimulatorRunner.java
 *	Lead Programmer:	Zachary Sweigart
-*	Description:	This file will run the main program for the NSE train
-*           Simulator, open the main GUI and initiate clock ticks
 *	Date Modified:	4/19/12
 */
 
@@ -20,23 +18,17 @@ import java.lang.Math;
 
 public class SimulatorRunner
 {
-    /**
-     * 
-     */
     public static final boolean DEBUG_MODE = true; // used to turn on/off debug print statements
     private static CTCView view;    // references the main GUI of the program
     private static Simulator s;     // used to initiate updates on clock ticks
     private static int clockRate = 60;  // holds the number of minutes equal to one hour in the simulation
     private static boolean isOpen;  // used to determine if the GUI has been closed
-    
-    /**
-     * 
-     * @param args
-     */
+
     public static void main(String[] args) 
     {
         s = new Simulator(DEBUG_MODE);
         view = new CTCView(DEBUG_MODE, s);
+        
         s.setView(view);
         s.setModel(view.getModel());
         isOpen = true;
@@ -60,7 +52,7 @@ public class SimulatorRunner
     */
     public static void sleep(long milliseconds) 
     {
-        Thread thread = new Thread();
+        Thread thread = new Thread(); // Creates a thread that is used to pause for a clock tick
         
         try 
         { 
@@ -68,7 +60,7 @@ public class SimulatorRunner
         }
         catch (Exception e) 
         {
-            
+            System.out.println("Thread pause error");
         }
     }
     
