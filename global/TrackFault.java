@@ -2,5 +2,5 @@ package global;
 
 public enum TrackFault
 {
-	BROKEN, POWER, CIRCUIT;
+	NONE, BROKEN, POWER, CIRCUIT;
 }

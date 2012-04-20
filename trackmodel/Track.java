@@ -2,24 +2,24 @@
 
 package trackmodel;
 
-import global.ID;
+import global.*;
 
 public class Track
 {
 	private double elevation;
-        private double grade;
+	private double grade;
 	private int speedLimit;
-        private int dispatchLimit;
+	private int dispatchLimit;
 	private boolean occupied;
-        private boolean open;
+	private boolean open;
 	private ID trackID;
-        private String trackInfo;
-	private int failure;
-        private int trafficLight;
-        private int blockLength;
-        protected Track A;
-        protected Track B;
-        protected boolean direction = true;
+	private String trackInfo;
+	private TrackFault failure;
+	private int trafficLight;
+	private int blockLength;
+	protected Track A;
+	protected Track B;
+	protected boolean direction = true;
 	
 	//Track module constructor	
 	public Track(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
@@ -30,16 +30,16 @@ public class Track
 		dispatchLimit = speedLimit;
 		occupied = false;
 		trackID = trkID;
-		failure = 0;
+		failure = TrackFault.NONE;
 		trafficLight = 0;
-                blockLength = blkLen;
+		blockLength = blkLen;
 		open = true;
 	}
 	
-	public void setFailure(int fail) // set track to fail (set value to 1)
+	public void setFailure(TrackFault f) // set track to fail (set value to 1)
 	{
-		trackInfo = "info: track failed";
-		failure = fail;
+		trackInfo = "info: track failed (" + f + ")";
+		failure = f;
 	}
 	
 	public void setDispatchLimit(int dLimit) // set dispatcher speed limit
@@ -51,19 +51,19 @@ public class Track
 	public void setFix() // call this method to fix track
 	{
 		trackInfo = "info: track fixed";
-		failure = 0;
+		failure = TrackFault.NONE;
 	}
 	
 	public void setOccupied(boolean iOccupy, Track from) // set block to occupied
 	{
-                if(from.equals(B))
-                {
-                    direction = true;
-                }
-                else
-                {
-                    direction = false;
-                }
+		if(from.equals(B))
+		{
+			direction = true;
+		}
+		else
+		{
+			direction = false;
+		}
 		trackInfo = " info: track set to: "+iOccupy;
 		occupied = iOccupy;
 	}
@@ -80,31 +80,39 @@ public class Track
 		trafficLight = lightState;
 	}
         
-        public void setNext(Track t)
-        {
-            A = t;
-        }
-        
-        public void setPrev(Track t)
-        {
-            B = t;
-        }
+	public void setNext(Track t)
+	{
+		A = t;
+	}
+
+	public void setPrev(Track t)
+	{
+		B = t;
+	}
 	
 //---------------------------------------------------------------------------------------	
 	
-        public Track getNext()
-        {
-            if(direction)
-            {
-                return A;
-            }
-            else
-            {
-                return B;
-            }
-        }
+	public boolean isOccupied()
+	{
+		return occupied;
+	}
+	
+	public Track getNext()
+	{
+		/*
+		if(direction)
+		{
+			return A;
+		}
+		else
+		{
+			return B;
+		}
+		*/
+		return (direction ? A : B);
+	}
         
-        public int getSpeedLimit() // returns track speed limit
+	public int getSpeedLimit() // returns track speed limit
 	{
 		trackInfo = "info: sent speed limit: "+speedLimit;
 		return speedLimit;
@@ -116,7 +124,7 @@ public class Track
 		return elevation;
 	}
 	
-	public ID getTrackID() // returns track ID
+	public ID getID() // returns track ID
 	{
 		trackInfo = "info: sent track ID: "+trackID;
 		return trackID;
@@ -133,8 +141,8 @@ public class Track
 		return trackInfo;
 	}
         
-        public int getBlockLength()
-        {
-            return blockLength;
-        }
+	public int getBlockLength()
+	{
+		return blockLength;
+	}
 }
