@@ -332,7 +332,8 @@ public class CTCView extends JFrame
          */
         private JComboBox clockCombo= new JComboBox(clockRates);    // used to create a dropdown which holds the options for setting the clock rate 
         private JLabel trackSectionLabel = new JLabel("Display track secion: ");    // labels the dropdown for selecting the section to paint
-        private final String trackSections [] = {"", "Green Line", "Green A", "Green B", "Green C", "Green D", "Red Line"};
+        private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", 
+            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line"};
         /*
          * Holds the possible options for displaying the system
          */
@@ -418,7 +419,7 @@ public class CTCView extends JFrame
                 {
                     System.out.println("CTC View: track section selected: " + trackCombo.getSelectedItem().toString());
                 }
-                map.setSection(trackCombo.getSelectedItem().toString());
+                map.setTrackSection(trackCombo.getSelectedItem().toString());
                 map.repaint();
             }
             
@@ -641,7 +642,7 @@ public class CTCView extends JFrame
         /*
          * labels the track combo box select
          */
-        private final String trackSections [] = {"", "Green Line", "Green A", "Green B", "Green C", "Green D"};
+        private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", "Green D"};
         /*
          * holds all of the sections that can be displayed
          */
@@ -713,7 +714,7 @@ public class CTCView extends JFrame
                 {
                     System.out.println("CTC View: track section selected: " + trackCombo.getSelectedItem().toString());
                 }
-                map.setSection(trackCombo.getSelectedItem().toString());
+                map.setTrackSection(trackCombo.getSelectedItem().toString());
                 map.repaint();
             }
             
@@ -1283,7 +1284,7 @@ public class CTCView extends JFrame
                 JComboBox cb = (JComboBox)event.getSource();
                 lineSelectedIndex = (int)cb.getSelectedIndex();
                 String id = (String)cb.getSelectedItem();
-                if(id.equals("Green Line"))
+                if(id.equals("Green Line "))
                 {
                     selectedLine = Line.GREEN;
                 }
