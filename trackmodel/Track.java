@@ -10,6 +10,7 @@ public class Track
 	private double grade;
 	private int speedLimit;
 	private int dispatchLimit;
+	private int authority;
 	private boolean occupied;
 	private boolean open;
 	private ID trackID;
@@ -34,6 +35,7 @@ public class Track
 		trafficLight = 0;
 		blockLength = blkLen;
 		open = true;
+		authority = 0;
 	}
 	
 	public void setFailure(TrackFault f) // set track to fail (set value to 1)
@@ -44,8 +46,14 @@ public class Track
 	
 	public void setDispatchLimit(int dLimit) // set dispatcher speed limit
 	{
-		trackInfo = "info: dispatcher limit set to: "+dLimit;
+		trackInfo = "info: dispatcher limit set to: " + dLimit;
 		dispatchLimit = dLimit;
+	}
+	
+	public void setAuthority(int auth) // set authority
+	{
+		trackInfo = "info: authority set to: " + auth;
+		authority = auth;
 	}
 	
 	public void setFix() // call this method to fix track
@@ -64,19 +72,19 @@ public class Track
 		{
 			direction = false;
 		}
-		trackInfo = " info: track set to: "+iOccupy;
+		trackInfo = " info: track set to: " + iOccupy;
 		occupied = iOccupy;
 	}
 	
 	public void setOpen(boolean iOpen) // set track to open
 	{
-		trackInfo = "info: track set to: "+iOpen;
+		trackInfo = "info: track set to: " + iOpen;
 		open = iOpen;
 	}
 	
 	public void setTrafficLight(int lightState) // set traffic light
 	{
-		trackInfo = "info: traffic light set to: "+lightState;
+		trackInfo = "info: traffic light set to: " + lightState;
 		trafficLight = lightState;
 	}
         
@@ -116,13 +124,19 @@ public class Track
         
 	public int getSpeedLimit() // returns track speed limit
 	{
-		trackInfo = "info: sent speed limit: "+speedLimit;
+		trackInfo = "info: sent speed limit: " + speedLimit;
 		return speedLimit;
+	}
+        
+	public int getAuthority() // returns authority
+	{
+		trackInfo = "info: sent speed limit: " + authority;
+		return authority;
 	}
 
 	public double getElevation() // returns elevation
 	{
-		trackInfo = "info: sent elevation: "+elevation;
+		trackInfo = "info: sent elevation: " + elevation;
 		return elevation;
 	}
 	
