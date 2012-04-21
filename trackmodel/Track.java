@@ -99,17 +99,19 @@ public class Track
 	
 	public Track getNext()
 	{
-		/*
-		if(direction)
-		{
-			return A;
-		}
-		else
-		{
-			return B;
-		}
-		*/
 		return (direction ? A : B);
+	}
+	
+	public Track getNext(boolean dir)
+	{
+		direction = dir;
+		return getNext();
+	}
+		
+	
+	public boolean getDirection()
+	{
+		return direction;
 	}
         
 	public int getSpeedLimit() // returns track speed limit
