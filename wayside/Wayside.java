@@ -7,21 +7,21 @@ import trainmodel.*;
 
 abstract class Wayside implements WaysideInterface, Runnable
 {
-	private List<Track> track;
-	private ID id;
+	protected List<Track> track;
+	protected ID id;
 	
-	private boolean trainDir;
+	protected boolean direction;
 	
-	public Wayside nextL;
-	public Wayside nextR;
-	public Wayside prevL;
-	public Wayside prevR;
+	protected Wayside nextL;
+	protected Wayside nextR;
+	protected Wayside prevL;
+	protected Wayside prevR;
 	
-	public Wayside(ID id)
+	public Wayside(ID waysideID)
 	{
-		this.id = id;
-		this.track = new ArrayList<Track>();
-		this.trainDir = true;
+		id = waysideID;
+		track = new ArrayList<Track>();
+		direction = true;
 	}
 	
 	public void run()
@@ -37,21 +37,22 @@ abstract class Wayside implements WaysideInterface, Runnable
 	 */
 	abstract void runLogic();
 	
-	abstract void trainIncFrom(Wayside w);
+	//abstract void trainIncFrom(Wayside w);
 	
-	/*
-	 * Think this should set something in the track, not directly on the 
-	 * train model/controller
-	 */
 	public void setAuthority(ID trackID, int authority)
 	{
-		/* VALIDATE */
-		/* Find specified train */
-		/* set train's authority */
+		/* Possible performance improvement if tracks are also hashed by ID */
+		Track t;
+		if((authority < 0) || ((t = findTrack(trackID)) == null))
+		{
+			return;
+		}
+		t.setAuthority(authority);
 	}
 	
 	public void setDispatchLimit(ID trackID, int speed)
 	{
+		/* Possible performance improvement if tracks are also hashed by ID */
 		Track t;
 		if((speed < 0) || ((t = findTrack(trackID)) == null))
 		{
@@ -60,7 +61,7 @@ abstract class Wayside implements WaysideInterface, Runnable
 		t.setDispatchLimit(speed);
 	}
 	
-	private Track findTrack(ID trackID)
+	protected Track findTrack(ID trackID)
 	{
 		/* Scan track section for ID */
 		for (Track t : track)
@@ -72,16 +73,7 @@ abstract class Wayside implements WaysideInterface, Runnable
 		}
 		return null;
 	}
-	
-	/* 
-	 * Not sure if this should return a Train or trainID.
-	 * This may not even be needed at all.
-	 */
-	private Train findTrain(String trainID)
-	{
-		/* Scan track section for specified train ID */
-	}
-	
+
 	public boolean hasTrain()
 	{
 		/* Scan track for any train */
@@ -89,10 +81,64 @@ abstract class Wayside implements WaysideInterface, Runnable
 		{
 			if (t.isOccupied())
 			{
+				direction = t.getDirection();
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public boolean clearToReceiveFrom(Wayside w)
+	{
+		if (!hasTrain())
+		{
+			return true;
+		}
+		if (nextLeft().equals(w) || nextRight().equals(w))
+		{
+			return false;
+		}
+		if (!track.get(trackStart()).isOccupied())
+		{
+			return true;
+		}
+		return false;
+	}
+	
+	protected void spreadAuthority(int auth)
+	{
+		int dir = direction ? -1 : 1;
+		for (int i = trackStart(); i < trackEnd(); i += dir)
+		{
+			track.get(i).setAuthority(auth);
+			auth++;
+			/* Make sure a possible second train only has
+			 * authority up to the first train */
+			if (track.get(i).isOccupied())
+			{
+				auth = -1;
+			}
+		}
+	}
+	
+	protected Wayside nextLeft()
+	{
+		return (direction ? nextL : prevL);
+	}
+	
+	protected Wayside nextRight()
+	{
+		return (direction ? nextR : prevR);
+	}
+	
+	protected int trackStart()
+	{
+		return direction ? 0 : track.size();
+	}
+	
+	protected int trackEnd()
+	{
+		return direction ? track.size() : 0;
 	}
 	
 	public void addTrack(Track t)
@@ -100,22 +146,22 @@ abstract class Wayside implements WaysideInterface, Runnable
 		track.add(t);
 	}
 	
-	public void addWaysideNextLeft(Wayside w)
+	public void setWaysideNextLeft(Wayside w)
 	{
 		nextL = w;
 	}
 	
-	public void addWaysideNextRight(Wayside w)
+	public void setWaysideNextRight(Wayside w)
 	{
 		nextR = w;
 	}
 	
-	public void addWaysidePrevLeft(Wayside w)
+	public void setWaysidePrevLeft(Wayside w)
 	{
 		prevL = w;
 	}
 	
-	public void addWaysidePrevRight(Wayside w)
+	public void setWaysidePrevRight(Wayside w)
 	{
 		prevR = w;
 	}
@@ -125,8 +171,14 @@ abstract class Wayside implements WaysideInterface, Runnable
 		return id;
 	}
 
+	public boolean equals(Wayside w)
+	{
+		return id.equals(w.getID());
+	}
+
 	public String toString()
 	{
 		return id.toString();
 	}
+	
 }

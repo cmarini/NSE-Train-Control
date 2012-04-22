@@ -13,15 +13,17 @@ interface WaysideInterface
 	
 	boolean hasTrain();
 	
+	boolean clearToReceiveFrom(Wayside w);
+	
 	void addTrack(Track t);
 	
-	void addWaysideNextLeft(Wayside w);
+	void setWaysideNextLeft(Wayside w);
 	
-	void addWaysideNextRight(Wayside w);
+	void setWaysideNextRight(Wayside w);
 	
-	void addWaysidePrevLeft(Wayside w);
+	void setWaysidePrevLeft(Wayside w);
 	
-	void addWaysidePrevRight(Wayside w);
+	void setWaysidePrevRight(Wayside w);
 	
 	ID getID();
 }

@@ -1,41 +1,30 @@
 package wayside;
 
+import global.*;
+import trackmodel.*;
+
 public class WaysideA extends Wayside
 {
-	public Wayside(ID id)
+	public WaysideA(ID id)
 	{
 		super(id);
 	}
 
-	private void runLogic()
+	void runLogic()
 	{
-		if (b.hasTrain())
+		if (nextLeft().clearToReceiveFrom(this))
 		{
 			/* Stop train at the end of this section */
-			spreadAuthorityFrom(0);
+			spreadAuthority(0);
 		}
 		else
 		/* Clear to send to next wayside */
 		{
+			/* Set next track piece's switch RIGHT */
+			Switch s = (Switch) track.get(trackEnd()).getNext(direction);
+			s.setSwitchState(Switch.SwitchState.RIGHT);
 			/* Let train continue to next section */
-			b.trainIncFrom(this);
-			spreadAuthorityFrom(1);
+			spreadAuthority(1);
 		}
 	}
-
-	private void spreadAuthorityFrom(int auth)
-	{
-		for (int i = i; i < track.length(); i++)
-		{
-			track.get(i).setAuthority(auth);
-			auth++;
-			/* Make sure a possible second train only has
-			 * authority up to the first train */
-			if (track.get(i).hasTrain())
-			{
-				auth = -1;
-			}
-		}
-	}
-	
 }
