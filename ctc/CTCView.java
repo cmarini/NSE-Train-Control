@@ -1193,7 +1193,7 @@ public class CTCView extends JFrame
         private int speedLimit; // holds the speed limit of the selected track block
         private double elevation;  // holds the elevation of the selected track block
         private double grade;  // holds the grade of the selected track block
-        private int blockSize;  // holds the block size of the selected track block
+        private double blockSize;  // holds the block size of the selected track block
         private String trackType;  // holds the track type of the selected track block
         //private int passengersBoarding; // holds the number of passengers boarding of the selected track block
         //private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block

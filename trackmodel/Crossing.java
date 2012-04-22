@@ -8,7 +8,7 @@ public class Crossing extends Track
 	private String cInfo;
 	
 	// crossing constructor
-	public Crossing(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID) 
+	public Crossing(double iElevate, double iGrade, int spLimit, double blkLen, ID trkID) 
 	{
 		super (iElevate, iGrade, spLimit, blkLen, trkID);		
 	}

@@ -13,7 +13,7 @@ public class Transponder extends Track
         private Type transponderType;
 	
 	// Transponder constructor
-	public Transponder(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
+	public Transponder(double iElevate, double iGrade, int spLimit, double blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

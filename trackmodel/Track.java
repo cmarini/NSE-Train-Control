@@ -17,13 +17,13 @@ public class Track
 	private String trackInfo;
 	private TrackFault failure;
 	private int trafficLight;
-	private int blockLength;
+	private double blockLength;
 	protected Track A;
 	protected Track B;
 	protected boolean direction = true;
 	
 	//Track module constructor	
-	public Track(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
+	public Track(double iElevate, double iGrade, int spLimit, double blkLen, ID trkID)
 	{
 		elevation = iElevate;
 		grade = iGrade;
@@ -157,7 +157,7 @@ public class Track
 		return trackInfo;
 	}
         
-	public int getBlockLength()
+	public double getBlockLength()
 	{
 		return blockLength;
 	}

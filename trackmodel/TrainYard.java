@@ -10,7 +10,7 @@ public class TrainYard extends Track
 	private String yInfo;
 	
 	// constructor for TrainYard constructor
-	public TrainYard(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
+	public TrainYard(double iElevate, double iGrade, int spLimit, double blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

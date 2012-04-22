@@ -11,7 +11,7 @@ public class Station extends Track
 	private int passengerCount;
 	
 	// Station constructor
-	public Station(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
+	public Station(double iElevate, double iGrade, int spLimit, double blkLen, ID trkID)
 	{
 		super(iElevate, iGrade, spLimit, blkLen, trkID);
 	}

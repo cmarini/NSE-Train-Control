@@ -81,7 +81,7 @@ public class CTCModel
             double elevation = parser.getElevation();
             double grade = parser.getGrade();
             int speedLimit = parser.getSpeedLimit();
-            int blockLength = parser.getBlock();
+            double blockLength = parser.getLength();
             TrackType type = parser.getTrackType();
             char waysideChar = parser.getSection();
             boolean linkback = parser.isLinkback();
@@ -97,23 +97,23 @@ public class CTCModel
             
             if(type.equals(TrackType.CROSSING))
             {
-                t = new Crossing(elevation, grade, blockLength, speedLimit, idNum);
+                t = new Crossing(elevation, grade, speedLimit, blockLength, idNum);
             }
             else
             {
                 if(type.equals(TrackType.STATION) || type.equals(TrackType.SWITCHTY))
                 {
-                    t = new Station(elevation, grade, blockLength, speedLimit, idNum);
+                    t = new Station(elevation, grade, speedLimit, blockLength, idNum);
                 }
                 else
                 {
                     if(type.equals(TrackType.SWITCH))
                     {
-                        t = new Switch(elevation, grade, blockLength, speedLimit, idNum);
+                        t = new Switch(elevation, grade, speedLimit, blockLength, idNum);
                     }
                     else
                     {
-                        t = new Track(elevation, grade, blockLength, speedLimit, idNum);
+                        t = new Track(elevation, grade, speedLimit, blockLength, idNum);
                     }
                 }
             }
