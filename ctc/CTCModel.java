@@ -22,9 +22,6 @@ public class CTCModel
 {
     private static boolean debugMode;
     private static int clockRate = 60;
-    private int throughput;
-    private int capacity;
-    private int occupancy; 
     private TrackParser parser;
     private Wayside [] greenTrackControllers = {
         (new WaysideA(new ID(Line.GREEN, 'A', -1))), 
@@ -400,45 +397,6 @@ public class CTCModel
             trackIDs[i] = trackBlocks.get(i).getID().getSection() + "" + trackBlocks.get(i).getID().getUnit();
         }
         return trackIDs;
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getThroughput()
-    {
-        if(debugMode)
-        {
-            System.out.println("CTC Model: throughput: " + throughput);
-        }
-        return throughput;
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getCapacity()
-    {
-        if(debugMode)
-        {
-            System.out.println("CTC Model: capacity: " + capacity);
-        }
-        return capacity;
-    }
-    
-    /**
-     * 
-     * @return
-     */
-    public int getOccupancy()
-    {
-        if(debugMode)
-        {
-            System.out.println("CTC Model: occupancy: " + occupancy);
-        }
-        return occupancy;
     }
     
     /**

@@ -35,6 +35,7 @@ public class CTCView extends JFrame
     private int trainSelectedIndex = 0; // used to hold the location of the currently selected train
     private int dispatcherSelectedIndex = 0;    // used to hold the location of the currently selected train block on the dipatcher screen
     //private int dispatcherSelectedTrainIndex = 0;
+    private int clockSelectedIndex = 8;
     private static CTCModel model = new CTCModel(); // references the model of the system 
     private static CTCControl control = new CTCControl(model);  // references the control that passes messages to the system
     private static Simulator sim;   // references the simulator for the system
@@ -122,7 +123,7 @@ public class CTCView extends JFrame
         runMenu.add(runCancel);
         setJMenuBar(menuBar);
         
-        mainPanel = new MainPanel();
+        mainPanel = new MainPanel(8);
         dispatcherPanel = new DispatcherPanel();
         trainPanel= new TrainPanel();
         trackPanel = new TrackPanel();
@@ -249,7 +250,7 @@ public class CTCView extends JFrame
             {
                 System.out.println("CTC View: View Main menu item clicked");
             }
-            ((MainPanel)panel).initialize();
+            //((MainPanel)panel).initialize();
         }
         else
         {
@@ -269,7 +270,7 @@ public class CTCView extends JFrame
                     {
                         System.out.println("CTC View: View Operator menu item clicked");
                     }
-                    ((OperatorPanel)panel).initialize();
+                    //((OperatorPanel)panel).initialize();
                 }  
                 else
                 {
@@ -279,7 +280,7 @@ public class CTCView extends JFrame
                         {
                             System.out.println("CTC View: View Add/Modify Train menu item clicked");
                         }
-                        ((TrainPanel)panel).initialize();
+                        //((TrainPanel)panel).initialize();
                     }
                     else
                     {
@@ -289,7 +290,7 @@ public class CTCView extends JFrame
                             {
                                 System.out.println("CTC View: View View/Modify Track menu item clicked");
                             }
-                            ((TrackPanel)panel).initialize();
+                            //((TrackPanel)panel).initialize();
                         } 
                         else
                         {
@@ -299,7 +300,7 @@ public class CTCView extends JFrame
                                 {
                                     System.out.println("CTC View: View Metrics menu item clicked");
                                 }
-                                ((MetricsPanel)panel).initialize();
+                                //((MetricsPanel)panel).initialize();
                             }   
                         }
                     }
@@ -336,7 +337,9 @@ public class CTCView extends JFrame
     {
         private MapPanel map = new MapPanel(model, ""); // references the panel that paints the system
         private JLabel clockLabel = new JLabel("Clock Rate (1 hr = )"); // labels the dropdown for selecting clock rate
-        private final String clockRates [] = {"5 minutes", "6 minutes", "10 minutes", "15 minutes", "20 minutes", "30 minutes", "40 minutes", "45 minutes", "60 minutes", "90 minutes", "120 minutes"};
+        private final String clockRates [] = {"5 minutes", "6 minutes", 
+            "10 minutes", "15 minutes", "20 minutes", "30 minutes", 
+            "40 minutes", "45 minutes", "60 minutes", "90 minutes", "120 minutes"};
         /*
          * Holds the possible options for setting the clock rate
          */
@@ -356,18 +359,33 @@ public class CTCView extends JFrame
             this.setLayout(new GridBagLayout());
             initialize();
         }
+        
+        MainPanel(int index)
+        {
+            clockSelectedIndex = index;
+            this.setLayout(new GridBagLayout());
+            initialize();
+        }
 
         private void initialize()
         {
             map.setDebugMode(debugMode);
+                        
+            if(clockCombo.getActionListeners().length <= 0)
+            {
+                clockCombo.addActionListener(clockComboListener);
+            }
+            if(trackCombo.getActionListeners().length <= 0)
+            {
+                trackCombo.addActionListener(trackComboListener);
+            }
+            clockCombo.setSelectedIndex(clockSelectedIndex);
+            
             addComponent(this, map, 0, 0, 4, 1, 1.0, 1.0, insets2, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             addComponent(this, clockLabel, 0, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, clockCombo, 1, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             addComponent(this, trackSectionLabel, 2, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, trackCombo, 3, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            clockCombo.addActionListener(clockComboListener);
-            trackCombo.addActionListener(trackComboListener);
-            clockCombo.setSelectedItem("60 minutes");
         }
         
         
@@ -376,8 +394,8 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JComboBox cb = (JComboBox)event.getSource();
-                int index = (int)cb.getSelectedIndex();
-                switch(index)
+                int clockSelectedIndex = (int)cb.getSelectedIndex();
+                switch(clockSelectedIndex)
                 {
                     case 0:
                         clockRate = 5;
@@ -681,8 +699,14 @@ public class CTCView extends JFrame
             send = new JButton("Send");
             operatorSpeed.setColumns(10);
             
-            send.addActionListener(buttonClick);
-            trackCombo.addActionListener(trackComboListener);
+            if(send.getActionListeners().length <= 0)
+            {
+                send.addActionListener(buttonClick);
+            }
+            if(trackCombo.getActionListeners().length <= 0)
+            {
+                trackCombo.addActionListener(trackComboListener);
+            }
             
             addComponent(this, map, 0, 0, 6, 1, 1.0, 1.0, insets, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             addComponent(this, trainID, 0, 1, 1, 1, 0, 0, insets2, GridBagConstraints.EAST, GridBagConstraints.NONE);
@@ -715,9 +739,17 @@ public class CTCView extends JFrame
                         }
                         else
                         {
-                            sendOperatorCommands();
+                            if(trains.getSelectedIndex() <= 0)
+                            {
+                                    JOptionPane.showMessageDialog(OperatorPanel.this, "Please select a train", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                            else
+                            {
+                                sendOperatorCommands();
+                            }
                         }
                     }
+                    
                     catch(NumberFormatException p)
                     {
                         JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -1166,16 +1198,18 @@ public class CTCView extends JFrame
         private JLabel gradeLabel = new JLabel("Grade");    // labels the grade for the selected track block
         private JLabel blockSizeLabel = new JLabel("Block Size");   // labels the block size for the selected track block
         private JLabel trackTypeLabel = new JLabel("Track Type");   // labels the track type for the selected track block
-        private JLabel passengersBoardingLabel = new JLabel("Passengers Boarding");
+        //private JLabel passengersBoardingLabel = new JLabel("Passengers Boarding");
         /*
          * labels the number of passengers boarding if the bloc is a station
          */
-        private JLabel passengersDisembarkingLabel = new JLabel("Passengers Disembarking");
+        //private JLabel passengersDisembarkingLabel = new JLabel("Passengers Disembarking");
         /*
          * labels the number of passengers disembarking if the block is a station
          */
+        private JLabel openStateLabel = new JLabel("Open State");
+        private JLabel failureStateLabel = new JLabel("Failure State");
         private JComboBox line; // holds the lines to be selected
-        private JComboBox controller;   // holds the waysides to be selected
+        private JComboBox controller = new JComboBox();   // holds the waysides to be selected
         private JComboBox track = new JComboBox();    // holds the track blocks to be selected
         private JComboBox failType = new JComboBox(failureTypes);   // displays the track block failure types
         private JTextField speedLimitField = new JTextField();  // displays the speed limit for the selected block
@@ -1185,6 +1219,8 @@ public class CTCView extends JFrame
         private JTextField trackTypeField = new JTextField();   // displays the track type for the selected block
         //private JTextField passengersBoardingField = new JTextField();  // displays the passengers boarding for the selected block
         //private JTextField passengersDisembarkingField = new JTextField();  // displays the passengers disembarking for the selected block
+        private JTextField openStateField = new JTextField();
+        private JTextField failureStateField = new JTextField();
         private JButton closeButton = new JButton("Close"); // sends close signal to the selected track block
         private JButton openButton = new JButton("Open");   // sends open signal to the selected track block
         private JButton breakButton = new JButton("Break"); // sends break signal to the selected track block
@@ -1195,6 +1231,8 @@ public class CTCView extends JFrame
         private double grade;  // holds the grade of the selected track block
         private double blockSize;  // holds the block size of the selected track block
         private String trackType;  // holds the track type of the selected track block
+        private String openState; 
+        private String failureState; 
         //private int passengersBoarding; // holds the number of passengers boarding of the selected track block
         //private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
         private String trackIDs[] = new String [0];  // holds the ids of the track blocks in the system
@@ -1208,8 +1246,15 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
+            int controllerTemp = controllerSelectedIndex;
+            int blockTemp = blockSelectedIndex;
             line = new JComboBox();
             Line l;
+            
+            closeButton.setEnabled(false);
+            openButton.setEnabled(false);
+            breakButton.setEnabled(false);
+            fixButton.setEnabled(false);
             
             for(int i = 0; i < lines.length; i++)
             {
@@ -1226,13 +1271,17 @@ public class CTCView extends JFrame
                     l = Line.RED;
             }
             
-            controller = new JComboBox();
-            controller.addItem("");
             controllerIDs = model.getWaysides(l);
+            if(controllerIDs.length != 0)
+            {
+                controller.removeAllItems();
+            }
+            controller.addItem("");
             for(int i = 0; i < controllerIDs.length; i++)
             {
                 controller.addItem(controllerIDs[i]);
             }
+            controllerSelectedIndex = controllerTemp;
             controller.setSelectedIndex(controllerSelectedIndex);
              
             trackIDs = model.getTrackIDs(selectedWaysideID);
@@ -1247,21 +1296,34 @@ public class CTCView extends JFrame
             }
             if(trackIDs.length != 0)
             {
+                blockSelectedIndex = blockTemp;
                 track.setSelectedIndex(blockSelectedIndex);
+                closeButton.setEnabled(true);
+                openButton.setEnabled(true);
+                breakButton.setEnabled(true);
+                fixButton.setEnabled(true);
             }
             
-            closeButton = new JButton("Close");
-            openButton = new JButton("Open");
-            breakButton = new JButton("Break");
-            fixButton = new JButton("Fix");
             if(track.getActionListeners().length == 0)
             {
                 track.addActionListener(trackComboListener);
             }
-            closeButton.addActionListener(closeButtonListener);
-            openButton.addActionListener(openButtonListener);
-            breakButton.addActionListener(breakButtonListener);
-            fixButton.addActionListener(fixButtonListener);
+            if(closeButton.getActionListeners().length == 0)
+            {
+                closeButton.addActionListener(closeButtonListener);
+            }
+            if(openButton.getActionListeners().length == 0)
+            {
+                openButton.addActionListener(openButtonListener);
+            }
+            if(breakButton.getActionListeners().length == 0)
+            {
+                breakButton.addActionListener(breakButtonListener);
+            }
+            if(fixButton.getActionListeners().length == 0)
+            {
+                fixButton.addActionListener(fixButtonListener);
+            }
             if(line.getActionListeners().length == 0)
             {
                 line.addActionListener(lineComboListener);
@@ -1276,6 +1338,8 @@ public class CTCView extends JFrame
             gradeField.setColumns(10);
             blockSizeField.setColumns(10);
             trackTypeField.setColumns(10);
+            openStateField.setColumns(10);
+            failureStateField.setColumns(10);
             //passengersBoardingField.setColumns(10);
             //passengersDisembarkingField.setColumns(10);
             
@@ -1284,24 +1348,20 @@ public class CTCView extends JFrame
             gradeField.setText(grade + "");
             blockSizeField.setText(blockSize + "");
             trackTypeField.setText(trackType);
+            openStateField.setText(openState + "");
+            failureStateField.setText(failureState + "");
             
             speedLimitField.setEditable(false);
             elevationField.setEditable(false);
             gradeField.setEditable(false);
             blockSizeField.setEditable(false);
             trackTypeField.setEditable(false);
+            openStateField.setEditable(false);
+            failureStateField.setEditable(false);
             //passengersBoardingField.setEditable(false);
             //passengersDisembarkingField.setEditable(false);
             track.setEditable(false);
-            
-            speedLimitField.setText(""+speedLimit);
-            elevationField.setText(""+elevation);
-            gradeField.setText(""+grade);
-            blockSizeField.setText(""+blockSize);
-            trackTypeField.setText(""+trackType);
-            //passengersBoardingField.setText(""+passengersBoarding);
-            //passengersDisembarkingField.setText(""+passengersDisembarking);
-            
+                        
             addComponent(this, lineLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, line, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
             addComponent(this, controllerLabel, 0, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
@@ -1322,11 +1382,15 @@ public class CTCView extends JFrame
             //addComponent(this, passengersBoardingField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             //addComponent(this, passengersDisembarkingLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             //addComponent(this, passengersDisembarkingField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, closeButton, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, openButton, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, breakButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, failType, 1, 10, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, fixButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openStateLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openStateField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, failureStateLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failureStateField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, closeButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, breakButton, 0, 12, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failType, 1, 12, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, fixButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
         }
         
         ActionListener lineComboListener = new ActionListener()
@@ -1335,6 +1399,8 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 lineSelectedIndex = (int)cb.getSelectedIndex();
+                controllerSelectedIndex = 0;
+                blockSelectedIndex = 0;
                 String id = (String)cb.getSelectedItem();
                 if(id.equals("Green Line "))
                 {
@@ -1361,12 +1427,15 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 controllerSelectedIndex = (int)cb.getSelectedIndex();
-                char id = cb.getSelectedItem().toString().charAt(0);
-                selectedWaysideID = new ID(selectedLine, id, -1);
-                initialize();
-                if(CTCView.getDebugMode())
+                if(controllerSelectedIndex > 0)
                 {
-                    System.out.println("Track section " + id + " selected");
+                    char id = cb.getSelectedItem().toString().charAt(0);
+                    selectedWaysideID = new ID(selectedLine, id, -1);
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track section " + id + " selected");
+                    }
                 }
             }
         };
@@ -1385,7 +1454,31 @@ public class CTCView extends JFrame
                     speedLimit = t.getSpeedLimit();
                     elevation = t.getElevation();
                     grade = t.getGrade();  
-                    blockSize = t.getBlockLength();  
+                    blockSize = t.getBlockLength();
+                    
+                    if(t.isOpen())
+                    {
+                        openState = "Open";
+                    }
+                    else
+                    {
+                        openState = "Closed";
+                    }
+                    
+                    switch(t.isFailed())
+                    {
+                        case BROKEN:
+                            failureState = "Broken Rail";
+                            break;
+                        case POWER:
+                            failureState = "Power Failure";
+                            break;
+                        case CIRCUIT:
+                            failureState = "Circuit Failure";
+                        default:
+                            failureState = "N/A";
+                            break;
+                    }
 
                     if(t instanceof Station)
                     { 
@@ -1429,13 +1522,16 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String id = (String)trackIDs[blockSelectedIndex - 1];
-                //Track t = model.getTrack();
-                //track.close();
-                //initialize();
-                if(CTCView.getDebugMode())
+                if(blockSelectedIndex > 0)
                 {
-                    System.out.println("Track " + id + " closed");
+                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    Track t = model.getTrack(id);
+                    t.setOpen(false);
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track " + id.toString() + " closed");
+                    }
                 }
             }
         };
@@ -1444,13 +1540,16 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String id = (String)trackIDs[blockSelectedIndex - 1];
-                //Track t = model.getTrack();
-                //t.open();
-                //initialize();
-                if(CTCView.getDebugMode())
+                if(blockSelectedIndex > 0)
                 {
-                    System.out.println("Track " + id + " opened");
+                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    Track t = model.getTrack(id);
+                    t.setOpen(true);
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track " + id + " opened");
+                    }
                 }
             }
         };
@@ -1459,14 +1558,30 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String id = (String)trackIDs[blockSelectedIndex - 1];
-                String type = (String)failType.getSelectedItem();
-                //Track t = model.getTrack();
-                //t.fail(type);
-                //initialize();
-                if(CTCView.getDebugMode())
+                if(blockSelectedIndex > 0)
                 {
-                    System.out.println("Track " + id + " broken: " + type);
+                    int type = failType.getSelectedIndex();
+                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    Track t = model.getTrack(id);
+                    switch(type)
+                    {
+                        case 0:
+                            t.setFailure(TrackFault.BROKEN);
+                            break;
+                        case 1:
+                            t.setFailure(TrackFault.POWER);
+                            break;
+                        case 2:
+                            t.setFailure(TrackFault.CIRCUIT);
+                            break;
+                        default:
+                            t.setFailure(TrackFault.NONE);
+                    }
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track " + id + " broken: " + type);
+                    }
                 }
             }
         };
@@ -1475,13 +1590,17 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                String id = (String)trackIDs[blockSelectedIndex - 1];
-                //Track t = model.getTrack();
-                //t.fix();
-                //initialize();
-                if(CTCView.getDebugMode())
+                if(blockSelectedIndex > 0)
                 {
-                    System.out.println("Track " + id + " fixed");
+                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    Track t = model.getTrack(id);
+                    t.setOpen(false);
+                    t.setFix();
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track " + id + " fixed");
+                    }
                 }
             }
         };
@@ -1521,9 +1640,9 @@ public class CTCView extends JFrame
             capacityField.setEditable(false);
             occupancyField.setEditable(false);
             
-            throughputField.setText("" + model.getThroughput());
-            capacityField.setText("" + model.getCapacity());
-            occupancyField.setText("" + model.getOccupancy());
+            throughputField.setText("" + sim.getThroughput());
+            capacityField.setText("" + sim.getCapacity());
+            occupancyField.setText("" + sim.getOccupancy());
             
             addComponent(this, throughputLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, throughputField, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);

@@ -27,6 +27,7 @@ public class Simulator
     private static int clockRate = 60;  // used to determine when clock ticks will occur 
     //private static TrainController [] trainControllers;   // references all train controllers currently in the system
     private static String TrainIDs[] = {"G000001", "G000002", "R000001"};   // holds the train ids for all train controllers
+    private int throughput;
     
     /**
      * Creates a new Simulator object and sets the debugMode flag
@@ -163,5 +164,45 @@ public class Simulator
         return trainIDs;*/
     }
       
+    /**
+     * 
+     * @return
+     */
+    public int getThroughput()
+    {
+        if(debugMode)
+        {
+            System.out.println("Simulator: throughput: " + throughput);
+        }
+        return throughput;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public int getCapacity()
+    {
+        int capacity = 0;
+        if(debugMode)
+        {
+            System.out.println("Simulator: capacity: " + capacity);
+        }
+        return capacity;
+    }
+    
+    /**
+     * 
+     * @return
+     */
+    public int getOccupancy()
+    {
+        int occupancy = 0;
+        if(debugMode)
+        {
+            System.out.println("Simulator: occupancy: " + occupancy);
+        }
+        return occupancy;
+    }
      
 }

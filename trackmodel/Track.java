@@ -104,6 +104,16 @@ public class Track
 	{
 		return occupied;
 	}
+        
+        public boolean isOpen()
+	{
+		return open;
+	}
+        
+        public TrackFault isFailed()
+	{
+		return failure;
+	}
 	
 	public Track getNext()
 	{
