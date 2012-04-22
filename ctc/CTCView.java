@@ -52,7 +52,7 @@ public class CTCView extends JFrame
     private ID selectedDispatcherTrainID;
     private Line dispatcherLine;
     private ID dispatcherWaysideID;
-    private Dispatcher [] dispatchers = new Dispatcher [18];
+    private Dispatcher [] dispatchers = new Dispatcher [10];
     
     /**
      * creates a new CTCView object and initializes debug mode to false
@@ -87,6 +87,7 @@ public class CTCView extends JFrame
         intialize();
         debugMode = d;
         control.setDebugMode(debugMode);
+        control.setSimulator(s);
         model.setDebugMode(debugMode);
     }
 
@@ -137,7 +138,15 @@ public class CTCView extends JFrame
         runCancel.addActionListener(new MenuActionCancelDemo());
         
         dispatchers[0] = (new Dispatcher("sweigartz", "password", Line.GREEN, (new ID(Line.GREEN, 'A', -1))));
-        dispatchers[1] = (new Dispatcher("marinic", "password", Line.GREEN, (new ID(Line.GREEN, 'Z', -1))));
+        dispatchers[1] = (new Dispatcher("dgreenb", "password", Line.GREEN, (new ID(Line.GREEN, 'B', -1))));
+        dispatchers[2] = (new Dispatcher("dgreenc", "password", Line.GREEN, (new ID(Line.GREEN, 'C', -1))));
+        dispatchers[3] = (new Dispatcher("dgreend", "password", Line.GREEN, (new ID(Line.GREEN, 'D', -1))));
+        dispatchers[4] = (new Dispatcher("dgreene", "password", Line.GREEN, (new ID(Line.GREEN, 'E', -1))));
+        dispatchers[5] = (new Dispatcher("dgreenf", "password", Line.GREEN, (new ID(Line.GREEN, 'F', -1))));
+        dispatchers[6] = (new Dispatcher("dgreeng", "password", Line.GREEN, (new ID(Line.GREEN, 'G', -1))));
+        dispatchers[7] = (new Dispatcher("dgreenh", "password", Line.GREEN, (new ID(Line.GREEN, 'H', -1))));
+        dispatchers[8] = (new Dispatcher("dgreeni", "password", Line.GREEN, (new ID(Line.GREEN, 'I', -1))));
+        dispatchers[9] = (new Dispatcher("marinic", "password", Line.GREEN, (new ID(Line.GREEN, 'J', -1))));
     }
     
     private class MenuActionRunDemo implements ActionListener
@@ -249,7 +258,7 @@ public class CTCView extends JFrame
                 {
                     System.out.println("CTC View: View Dispatcher menu item clicked");
                 }
-                ((DispatcherPanel)panel).initialize();
+                //((DispatcherPanel)panel).initialize();
             }
             else
             {
@@ -333,7 +342,7 @@ public class CTCView extends JFrame
         private JComboBox clockCombo= new JComboBox(clockRates);    // used to create a dropdown which holds the options for setting the clock rate 
         private JLabel trackSectionLabel = new JLabel("Display track secion: ");    // labels the dropdown for selecting the section to paint
         private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", 
-            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line"};
+            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line "};
         /*
          * Holds the possible options for displaying the system
          */
@@ -407,7 +416,6 @@ public class CTCView extends JFrame
                     System.out.println("CTC View: Clock rate set to : " + clockRate);
                 }
                 sim.setClockRate(clockRate);
-                model.setClockRate(clockRate);
             }
         };
         
@@ -462,10 +470,24 @@ public class CTCView extends JFrame
         private void initialize()
         {           
             map.setDebugMode(debugMode);
-            trackIDs = model.getTrackIDs(dispatcherID);
+            
+            if(dispatcherLoggedin != null)
+            {
+                map.setTrackSection(dispatcherLoggedin.getWayside());
+            }
+            
+            if(dispatcherLoggedin != null)
+            {
+                trackIDs = model.getTrackIDs(dispatcherLoggedin.getWayside());
+            }
+            else
+            {
+                trackIDs = new String[0];
+            }
+            
             trainIDs = sim.getTrainIDs();
             
-            track = new JComboBox();
+            track.removeAllItems();
             track.addItem("");
             for(int i = 0; i < trackIDs.length; i++)
             {
@@ -486,11 +508,7 @@ public class CTCView extends JFrame
             {
                 System.out.println("CTC View: Dispatcher ID: " + dispatcherLoggedin.getUserName());
             }
-            
-            if(dispatcherLoggedin != null)
-            {
-                map.setTrackSection(dispatcherLoggedin.getWayside().toString());
-            }
+           
             sendSetpoint = new JButton("Send Setpoint"); 
             sendAuthority = new JButton("Send Authority"); 
             
@@ -642,7 +660,8 @@ public class CTCView extends JFrame
         /*
          * labels the track combo box select
          */
-        private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", "Green D"};
+        private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", 
+            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line "};
         /*
          * holds all of the sections that can be displayed
          */
@@ -1204,7 +1223,7 @@ public class CTCView extends JFrame
             }
             controller.setSelectedIndex(controllerSelectedIndex);
              
-            trackIDs = model.getTrackIDs();
+            //trackIDs = model.getTrackIDs(model.getWayside());
             //trackIDs = model.getTrackIDs(selectedWaysideID);
             track = new JComboBox();
             track.addItem("");

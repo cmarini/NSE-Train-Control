@@ -5,7 +5,7 @@ import global.*;
 import trackmodel.*;
 import trainmodel.*;
 
-abstract class Wayside implements WaysideInterface, Runnable
+public abstract class Wayside implements WaysideInterface, Runnable
 {
 	protected List<Track> track;
 	protected ID id;
@@ -61,7 +61,7 @@ abstract class Wayside implements WaysideInterface, Runnable
 		t.setDispatchLimit(speed);
 	}
 	
-	protected Track findTrack(ID trackID)
+	public Track findTrack(ID trackID)
 	{
 		/* Scan track section for ID */
 		for (Track t : track)
@@ -145,6 +145,11 @@ abstract class Wayside implements WaysideInterface, Runnable
 	{
 		track.add(t);
 	}
+        
+        public ArrayList <Track> getTrackBlocks()
+        {
+            return (ArrayList)track;
+        }
 	
 	public void setWaysideNextLeft(Wayside w)
 	{

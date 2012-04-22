@@ -1,11 +1,12 @@
 /*
 *	Program Name:	CTCControl.java
 *	Lead Programmer:	Zachary Sweigart
-*	Description:	
 *	Date Modified:	4/19/12
 */
 
 package ctc;
+
+import simulator.*;
 
 /**
  * This file contains the specification for the CTCControl which passes messages
@@ -21,6 +22,7 @@ public class CTCControl
     private int operatorSpeed;  // speed sent by the operator
     private boolean operatorBrake;  // brake signal sent by the operator
     private CTCModel model; // reference to the model
+    private Simulator sim;  // reference to the simulator
     
     CTCControl(CTCModel m)
     {
@@ -38,9 +40,19 @@ public class CTCControl
     }
     
     /**
+     * sets the reference to the simulator
+     * 
+     * @param s Simulator reference
+     */
+    public void setSimulator(Simulator s)
+    {
+        sim = s;
+    }
+    
+    /**
      * send the dispatcher speed to the specified track block
      * 
-     * @param sp
+     * @param sp integer setpoint from the dispatcher
      */
     public void setDispatcherSpeed(int sp)
     {
@@ -52,8 +64,9 @@ public class CTCControl
     }
  
     /**
+     * send the dispatcher authority to the specified track block
      * 
-     * @param auth
+     * @param auth integer authority from the dispatcher
      */
     public void setDispatcherAuthority(int auth)
     {        
@@ -65,9 +78,10 @@ public class CTCControl
     }
     
     /**
+     * send the operator commands to the specified train
      * 
-     * @param sp
-     * @param b
+     * @param sp integer speed
+     * @param b boolean brake signal
      */
     public void setOperatorCommands(int sp, boolean b)
     {

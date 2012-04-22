@@ -1,7 +1,6 @@
 /*
 *	Program Name:	CTCModel.java
 *	Lead Programmer:	Zachary Sweigart
-*	Description:	
 *	Date Modified:	4/19/12
 */
 
@@ -12,11 +11,12 @@ import global.*;
 import java.io.IOException;
 import trackmodel.*;
 import java.util.Stack;
-//import wayside.*;
+import wayside.*;
+import java.util.ArrayList;
 
 /**
  * 
- * @author AM
+ * @author Zachary Swiegart
  */
 public class CTCModel 
 {
@@ -25,10 +25,19 @@ public class CTCModel
     private int throughput;
     private int capacity;
     private int occupancy; 
-    private String[] trackControllers = {"A1", "A2", "A3"};
     private TrackParser parser;
-//    private Wayside [] greenTrackControllers = new Wayside[9];
-//    private Wayside [] redTrackControllers = new Wayside[9];
+    private Wayside [] greenTrackControllers = {
+        (new WaysideA(new ID(Line.GREEN, 'A', -1))), 
+        (new WaysideB(new ID(Line.GREEN, 'B', -1))), 
+        (new WaysideC(new ID(Line.GREEN, 'C', -1))), 
+        (new WaysideD(new ID(Line.GREEN, 'D', -1))), 
+        (new WaysideE(new ID(Line.GREEN, 'E', -1))), 
+        (new WaysideF(new ID(Line.GREEN, 'F', -1))), 
+        (new WaysideG(new ID(Line.GREEN, 'G', -1))),
+        (new WaysideH(new ID(Line.GREEN, 'H', -1))),
+        (new WaysideI(new ID(Line.GREEN, 'I', -1))),
+        (new WaysideJ(new ID(Line.GREEN, 'J', -1)))};
+    private Wayside [] redTrackControllers = new Wayside[9];
     
     /**
      * 
@@ -62,8 +71,10 @@ public class CTCModel
         char previous = '.';
         boolean prevLinkBack = false;
         Track prev = null;
-        Track t;
+        Track t = null;
         Stack switches = new Stack();
+        boolean first = true;
+        Track firstBlock = null;
         
         while (parser.next())
         {
@@ -107,6 +118,12 @@ public class CTCModel
                 }
             }
             
+            if(first)
+            {
+                firstBlock = t;
+                first = false;
+            }
+            
             if(prev == null)
             {
                 prev = t;
@@ -117,32 +134,42 @@ public class CTCModel
                     switches.push(t);
                 }
                 
-//                if(idNum.getLine().equals(Line.GREEN))
-//                {
-//                    switch (idNum.getSection())
-//                    {
-//                        case 'A':
-//                            greenTrackControllers[0].setTrack(t);
-//                        case 'B':
-//                            greenTrackControllers[1].setTrack(t);
-//                        case 'C':
-//                            greenTrackControllers[2].setTrack(t);
-//                        case 'D':
-//                            greenTrackControllers[3].setTrack(t);
-//                        case 'E':
-//                            greenTrackControllers[4].setTrack(t);
-//                        case 'F':
-//                            greenTrackControllers[5].setTrack(t);
-//                        case 'G':
-//                            greenTrackControllers[6].setTrack(t);
-//                        case 'H':
-//                            greenTrackControllers[7].setTrack(t);
-//                        case 'I':
-//                            greenTrackControllers[8].setTrack(t);
-//                        case 'J':
-//                            greenTrackControllers[9].setTrack(t);    
-//                    }
-//                }
+                if(idNum.getLine().equals(Line.GREEN))
+                {
+                    switch (idNum.getSection())
+                    {
+                        case 'A':
+                            greenTrackControllers[0].addTrack(t);
+                            break;
+                        case 'B':
+                            greenTrackControllers[1].addTrack(t);
+                            break;
+                        case 'C':
+                            greenTrackControllers[2].addTrack(t);
+                            break;
+                        case 'D':
+                            greenTrackControllers[3].addTrack(t);
+                            break;
+                        case 'E':
+                            greenTrackControllers[4].addTrack(t);
+                            break;
+                        case 'F':
+                            greenTrackControllers[5].addTrack(t);
+                            break;
+                        case 'G':
+                            greenTrackControllers[6].addTrack(t);
+                            break;
+                        case 'H':
+                            greenTrackControllers[7].addTrack(t);
+                            break;
+                        case 'I':
+                            greenTrackControllers[8].addTrack(t);
+                            break;
+                        case 'J':
+                            greenTrackControllers[9].addTrack(t); 
+                            break;
+                    }
+                }
 //                else
 //                {
 //                    switch (id.getSection())
@@ -177,32 +204,42 @@ public class CTCModel
                     switches.push(t);
                 }
                 
-//                if(idNum.getLine().equals(Line.GREEN))
-//                {
-//                    switch (idNum.getSection())
-//                    {
-//                        case 'A':
-//                            greenTrackControllers[0].setTrack(t);
-//                        case 'B':
-//                            greenTrackControllers[1].setTrack(t);
-//                        case 'C':
-//                            greenTrackControllers[2].setTrack(t);
-//                        case 'D':
-//                            greenTrackControllers[3].setTrack(t);
-//                        case 'E':
-//                            greenTrackControllers[4].setTrack(t);
-//                        case 'F':
-//                            greenTrackControllers[5].setTrack(t);
-//                        case 'G':
-//                            greenTrackControllers[6].setTrack(t);
-//                        case 'H':
-//                            greenTrackControllers[7].setTrack(t);
-//                        case 'I':
-//                            greenTrackControllers[8].setTrack(t);
-//                        case 'J':
-//                            greenTrackControllers[9].setTrack(t);    
-//                    }
-//                }
+                if(idNum.getLine().equals(Line.GREEN))
+                {
+                    switch (idNum.getSection())
+                    {
+                        case 'A':
+                            greenTrackControllers[0].addTrack(t);
+                            break;
+                        case 'B':
+                            greenTrackControllers[1].addTrack(t);
+                            break;
+                        case 'C':
+                            greenTrackControllers[2].addTrack(t);
+                            break;
+                        case 'D':
+                            greenTrackControllers[3].addTrack(t);
+                            break;
+                        case 'E':
+                            greenTrackControllers[4].addTrack(t);
+                            break;
+                        case 'F':
+                            greenTrackControllers[5].addTrack(t);
+                            break;
+                        case 'G':
+                            greenTrackControllers[6].addTrack(t);
+                            break;
+                        case 'H':
+                            greenTrackControllers[7].addTrack(t);
+                            break;
+                        case 'I':
+                            greenTrackControllers[8].addTrack(t);
+                            break;
+                        case 'J':
+                            greenTrackControllers[9].addTrack(t);    
+                            break;
+                    }
+                }
 //                else
 //                {
 //                    switch (id.getSection())
@@ -253,6 +290,11 @@ public class CTCModel
                 }
             }
         }
+        if(firstBlock != null && t != null)
+        {
+            firstBlock.setPrev(t);
+            t.setNext(firstBlock);
+        }
     }
     
     /**
@@ -263,26 +305,7 @@ public class CTCModel
     {
         debugMode = d;
     }
-    
-    /**
-     * 
-     * @param c
-     */
-    public void setClockRate(int c)
-    {
-        clockRate = c;
-        
-//        for(int i = 0; i < greenTrackControllers.length; i++)
-//        {
-//            greenTrackControllers[i].setClockRate(clockRate);
-//        }
-//        
-//        for(int i = 0; i < redTrackControllers.length; i++)
-//        {
-//            redTrackControllers[i].setClockRate(clockRate);
-//        }
-    }
-
+   
     /**
      * 
      */
@@ -295,95 +318,77 @@ public class CTCModel
      * 
      * @return
      */
-//    public Wayside [] getControllers(Line line)
-//    {
-//        switch(line)
-//        {
-//            case GREEN:
-//                return greenTrackControllers;
-//            case RED:
-//                return redTrackControllers;
-//            default
-//                return new Wayside []
-//        }
-//    }
-    
-    /**
-     * 
-     * @return
-     */
-    public String [] getTrackIDs()
+    public Wayside [] getControllers(Line line)
     {
-        String s[] = new String [trackControllers.length];
-        for(int i = 0; i < trackControllers.length; i++)
+        switch(line)
         {
-            s[i] = trackControllers[i];
+            case GREEN:
+                return greenTrackControllers;
+            case RED:
+                return redTrackControllers;
+            default:
+                return null;
         }
-        return s;
     }
-    
+        
     /**
      * 
      * @return
      */
-    public String [] getTrackIDs(String dispatcherID)
+    public String [] getTrackIDs(ID selectedWaysideID)
     {
-        String s[] = new String [trackControllers.length];
-        for(int i = 0; i < trackControllers.length; i++)
+        Wayside w [] = null;
+        ArrayList <Track> trackBlocks = null;
+        String trackIDs[];
+        switch(selectedWaysideID.getLine())
         {
-            s[i] = trackControllers[i];
+            case GREEN:
+                w = greenTrackControllers;
+                break;
+            case RED:
+                w = redTrackControllers;
+                break;
+        }  
+        switch(selectedWaysideID.getSection())
+        {
+            case 'A':
+                trackBlocks = w[0].getTrackBlocks();
+                break;
+            case 'B':
+                trackBlocks = w[1].getTrackBlocks();
+                break;
+            case 'C':
+                trackBlocks = w[2].getTrackBlocks();
+                break;
+            case 'D':
+                trackBlocks = w[3].getTrackBlocks();
+                break;
+            case 'E':
+                trackBlocks = w[4].getTrackBlocks();
+                break;
+            case 'F':
+                trackBlocks = w[5].getTrackBlocks();
+                break;
+            case 'G':
+                trackBlocks = w[6].getTrackBlocks();
+                break;
+            case 'H':
+                trackBlocks = w[7].getTrackBlocks();
+                break;
+            case 'I':
+                trackBlocks = w[8].getTrackBlocks();
+                break;
+            case 'J':
+                trackBlocks = w[9].getTrackBlocks();
+                break;
         }
-        return s;
+        trackIDs = new String[trackBlocks.size()];
+        for(int i = 0; i < trackBlocks.size(); i++)
+        {
+            trackIDs[i] = trackBlocks.get(i).getID().getSection() + "" + trackBlocks.get(i).getID().getUnit();
+        }
+        return trackIDs;
     }
-    
-    /**
-     * 
-     * @return
-     */
-//    public String [] getTrackIDs(ID selectedWaysideID)
-//    {
-//        Wayside w [];
-//        switch(selectedWaysideID.getLine())
-//        {
-//            case GREEN:
-//                w = greenTrackControllers;
-//            case RED:
-//                w = redTrackControllers;
-//        }  
-//        switch(selectedWaysideID.getSection())
-//        {
-//            case 'A':
-//                return w[0].getTrackIDs();
-//                break;
-//            case 'B':
-//                return w[1].getTrackIDs();
-//                break;
-//            case 'C':
-//                return w[2].getTrackIDs();
-//                break;
-//            case 'D':
-//                return w[3].getTrackIDs();
-//                break;
-//            case 'E':
-//                return w[4].getTrackIDs();
-//                break;
-//            case 'F':
-//                return w[5].getTrackIDs();
-//                break;
-//            case 'G':
-//                return w[6].getTrackIDs();
-//                break;
-//            case 'H':
-//                return w[7].getTrackIDs();
-//                break;
-//            case 'I':
-//                return w[8].getTrackIDs();
-//                break;
-//            case 'J':
-//                return w[9].getTrackIDs();
-//                break;
-//        }
-//    }
     
     /**
      * 
@@ -428,49 +433,50 @@ public class CTCModel
      * 
      * @return
      */
-//    public Track [] getWaysideTrack(Line l, int i)
-//    {
-//        if(l.equals(Line.GREEN))
-//        {
-//            return greenTrackControllers[i].getTrack();
-//        }
-//        else
-//        {
-//            if(l.equals(Line.RED))
-//            {
-//                return redTrackControllers[i].getTrack();
-//            }
-//        }
-//    }
+    public ArrayList <Track> getWaysideTrack(Line l, int i)
+    {
+        if(l.equals(Line.GREEN))
+        {
+            return greenTrackControllers[i].getTrackBlocks();
+        }
+        else
+        {
+            if(l.equals(Line.RED))
+            {
+                return redTrackControllers[i].getTrackBlocks();
+            }
+        }
+        return null;
+    }
     
-//    public Track getTrack(ID id)
-//    {
-//        if(id.getLine().equals(Line.GREEN))
-//        {
-//            switch (id.getSection())
-//            {
-//                case 'A':
-//                    return greenTrackControllers[0].getTrack(id.getUnit());
-//                case 'B':
-//                    return greenTrackControllers[1].getTrack(id.getUnit());
-//                case 'C':
-//                    return greenTrackControllers[2].getTrack(id.getUnit());
-//                case 'D':
-//                    return greenTrackControllers[3].getTrack(id.getUnit());
-//                case 'E':
-//                    return greenTrackControllers[4].getTrack(id.getUnit());
-//                case 'F':
-//                    return greenTrackControllers[5].getTrack(id.getUnit());
-//                case 'G':
-//                    return greenTrackControllers[6].getTrack(id.getUnit());
-//                case 'H':
-//                    return greenTrackControllers[7].getTrack(id.getUnit());
-//                case 'I':
-//                    return greenTrackControllers[8].getTrack(id.getUnit());
-//                case 'J':
-//                    return greenTrackControllers[9].getTrack(id.getUnit());    
-//            }
-//        }
+    public Track getTrack(ID id)
+    {
+        if(id.getLine().equals(Line.GREEN))
+        {
+            switch (id.getSection())
+            {
+                case 'A':
+                    return greenTrackControllers[0].findTrack(id);
+                case 'B':
+                    return greenTrackControllers[1].findTrack(id);
+                case 'C':
+                    return greenTrackControllers[2].findTrack(id);
+                case 'D':
+                    return greenTrackControllers[3].findTrack(id);
+                case 'E':
+                    return greenTrackControllers[4].findTrack(id);
+                case 'F':
+                    return greenTrackControllers[5].findTrack(id);
+                case 'G':
+                    return greenTrackControllers[6].findTrack(id);
+                case 'H':
+                    return greenTrackControllers[7].findTrack(id);
+                case 'I':
+                    return greenTrackControllers[8].findTrack(id);
+                case 'J':
+                    return greenTrackControllers[9].findTrack(id);    
+            }
+        }
 //        else
 //        {
 //            switch (id.getSection())
@@ -497,6 +503,7 @@ public class CTCModel
 //                    return redTrackControllers[9].getTrack(id.getUnit());    
 //            }
 //        }
-//    }
+        return null;
+    }
     
 }

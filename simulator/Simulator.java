@@ -85,7 +85,6 @@ public class Simulator
 //            trainControllers[i].run()
 //        }
 //
-        model.setClockRate(clockRate);
         model.run();
         
         if(demoMode)

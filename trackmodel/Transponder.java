@@ -9,7 +9,8 @@ public class Transponder extends Track
 		UNDERGROUND, STATION;
 	}
 	
-	private String transponderName, transponderType, tInfo;
+	private String transponderName, tInfo;
+        private Type transponderType;
 	
 	// Transponder constructor
 	public Transponder(double iElevate, double iGrade, int spLimit, int blkLen, ID trkID)
@@ -33,6 +34,6 @@ public class Transponder extends Track
 	public String getStationName() // returns station name
 	{
 		tInfo = "info: sent transponder name";
-		return stationName;
+		return transponderName;
 	}
 }
