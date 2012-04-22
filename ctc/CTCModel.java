@@ -340,6 +340,12 @@ public class CTCModel
         Wayside w [] = null;
         ArrayList <Track> trackBlocks = null;
         String trackIDs[];
+        
+        if(selectedWaysideID == null)
+        {
+            return new String[0];
+        }
+        
         switch(selectedWaysideID.getLine())
         {
             case GREEN:
@@ -348,7 +354,13 @@ public class CTCModel
             case RED:
                 w = redTrackControllers;
                 break;
-        }  
+        } 
+        
+        if(w == null || w[0] == null)
+        {
+            return new String[0];
+        }
+        
         switch(selectedWaysideID.getSection())
         {
             case 'A':
@@ -447,6 +459,31 @@ public class CTCModel
             }
         }
         return null;
+    }
+    
+    public String [] getWaysides(Line l)
+    {
+        Wayside [] w;
+        String [] waysideStrings;
+        switch(l)
+        {
+            case GREEN:
+                w = greenTrackControllers;
+                break;
+            default:
+                w = redTrackControllers;
+        }
+        if(w == null || w[0] == null)
+        {
+            return new String[0];
+        }
+        waysideStrings = new String[w.length];
+        for(int i = 0; i < w.length; i++)
+        {
+            waysideStrings[i] = w[i].getID().getSection() + "";
+        }
+
+        return waysideStrings;
     }
     
     public Track getTrack(ID id)

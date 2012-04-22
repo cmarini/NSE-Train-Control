@@ -16,6 +16,7 @@ import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
 import global.*;
+import trackmodel.*;
 
 /**
  * This file contains the specification for the CTCView object which defines the
@@ -47,7 +48,7 @@ public class CTCView extends JFrame
     private TrackPanel trackPanel;  // used to create the dispaly for the view/modify track screen
     private MetricsPanel metricsPanel;  // used to create the dispaly for the view metrics screen
     private SplashPanel splashPanel = new SplashPanel();    // used to create the dispaly for the splash screen
-    private Line selectedLine;
+    private Line selectedLine = Line.GREEN;
     private ID selectedWaysideID;
     private ID selectedDispatcherTrainID;
     private Line dispatcherLine;
@@ -1175,27 +1176,27 @@ public class CTCView extends JFrame
          */
         private JComboBox line; // holds the lines to be selected
         private JComboBox controller;   // holds the waysides to be selected
-        private JComboBox track;    // holds the track blocks to be selected
+        private JComboBox track = new JComboBox();    // holds the track blocks to be selected
         private JComboBox failType = new JComboBox(failureTypes);   // displays the track block failure types
         private JTextField speedLimitField = new JTextField();  // displays the speed limit for the selected block
         private JTextField elevationField = new JTextField();   // displays the elevation for the selected block
         private JTextField gradeField = new JTextField();   // displays the grade for the selected block
         private JTextField blockSizeField = new JTextField();   // displays the block size for the selected block
         private JTextField trackTypeField = new JTextField();   // displays the track type for the selected block
-        private JTextField passengersBoardingField = new JTextField();  // displays the passengers boarding for the selected block
-        private JTextField passengersDisembarkingField = new JTextField();  // displays the passengers disembarking for the selected block
+        //private JTextField passengersBoardingField = new JTextField();  // displays the passengers boarding for the selected block
+        //private JTextField passengersDisembarkingField = new JTextField();  // displays the passengers disembarking for the selected block
         private JButton closeButton = new JButton("Close"); // sends close signal to the selected track block
         private JButton openButton = new JButton("Open");   // sends open signal to the selected track block
         private JButton breakButton = new JButton("Break"); // sends break signal to the selected track block
         private JButton fixButton = new JButton("Fix"); // sends fix signal to the selected track block
         private Insets insets = new Insets(5,20,0,20);  // insets for all display components
         private int speedLimit; // holds the speed limit of the selected track block
-        private int elevation;  // holds the elevation of the selected track block
-        private int grade;  // holds the grade of the selected track block
+        private double elevation;  // holds the elevation of the selected track block
+        private double grade;  // holds the grade of the selected track block
         private int blockSize;  // holds the block size of the selected track block
-        private int trackType;  // holds the track type of the selected track block
-        private int passengersBoarding; // holds the number of passengers boarding of the selected track block
-        private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
+        private String trackType;  // holds the track type of the selected track block
+        //private int passengersBoarding; // holds the number of passengers boarding of the selected track block
+        //private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
         private String trackIDs[] = new String [0];  // holds the ids of the track blocks in the system
         private String controllerIDs [] = new String [0];    // holds the ids of the controllers in the system
                 
@@ -1208,57 +1209,89 @@ public class CTCView extends JFrame
         private void initialize()
         {
             line = new JComboBox();
+            Line l;
+            
             for(int i = 0; i < lines.length; i++)
             {
                 line.addItem(lines[i]);
             }
             line.setSelectedIndex(lineSelectedIndex);
             
+            switch(lineSelectedIndex)
+            {
+                case 0:
+                    l = Line.GREEN;
+                    break;
+                default:
+                    l = Line.RED;
+            }
+            
             controller = new JComboBox();
             controller.addItem("");
-            //controllerIDs = model.getControllers()
+            controllerIDs = model.getWaysides(l);
             for(int i = 0; i < controllerIDs.length; i++)
             {
-                //controller.addItem(controllerIDs[i]);
+                controller.addItem(controllerIDs[i]);
             }
             controller.setSelectedIndex(controllerSelectedIndex);
              
-            //trackIDs = model.getTrackIDs(model.getWayside());
-            //trackIDs = model.getTrackIDs(selectedWaysideID);
-            track = new JComboBox();
+            trackIDs = model.getTrackIDs(selectedWaysideID);
+            if(trackIDs.length != 0)
+            {
+                track.removeAllItems();
+            }
             track.addItem("");
             for(int i = 0; i < trackIDs.length; i++)
             {
                 track.addItem(trackIDs[i]);
             }
-            track.setSelectedIndex(blockSelectedIndex);
+            if(trackIDs.length != 0)
+            {
+                track.setSelectedIndex(blockSelectedIndex);
+            }
             
             closeButton = new JButton("Close");
             openButton = new JButton("Open");
             breakButton = new JButton("Break");
             fixButton = new JButton("Fix");
-            
-            track.addActionListener(trackComboListener);
+            if(track.getActionListeners().length == 0)
+            {
+                track.addActionListener(trackComboListener);
+            }
             closeButton.addActionListener(closeButtonListener);
             openButton.addActionListener(openButtonListener);
             breakButton.addActionListener(breakButtonListener);
             fixButton.addActionListener(fixButtonListener);
+            if(line.getActionListeners().length == 0)
+            {
+                line.addActionListener(lineComboListener);
+            }
+            if(controller.getActionListeners().length == 0)
+            {
+                controller.addActionListener(controllerComboListener);
+            }
                         
             speedLimitField.setColumns(10);
             elevationField.setColumns(10);
             gradeField.setColumns(10);
             blockSizeField.setColumns(10);
             trackTypeField.setColumns(10);
-            passengersBoardingField.setColumns(10);
-            passengersDisembarkingField.setColumns(10);
+            //passengersBoardingField.setColumns(10);
+            //passengersDisembarkingField.setColumns(10);
+            
+            speedLimitField.setText(speedLimit + "");
+            elevationField.setText(elevation + "");
+            gradeField.setText(grade + "");
+            blockSizeField.setText(blockSize + "");
+            trackTypeField.setText(trackType);
             
             speedLimitField.setEditable(false);
             elevationField.setEditable(false);
             gradeField.setEditable(false);
             blockSizeField.setEditable(false);
             trackTypeField.setEditable(false);
-            passengersBoardingField.setEditable(false);
-            passengersDisembarkingField.setEditable(false);
+            //passengersBoardingField.setEditable(false);
+            //passengersDisembarkingField.setEditable(false);
             track.setEditable(false);
             
             speedLimitField.setText(""+speedLimit);
@@ -1266,8 +1299,8 @@ public class CTCView extends JFrame
             gradeField.setText(""+grade);
             blockSizeField.setText(""+blockSize);
             trackTypeField.setText(""+trackType);
-            passengersBoardingField.setText(""+passengersBoarding);
-            passengersDisembarkingField.setText(""+passengersDisembarking);
+            //passengersBoardingField.setText(""+passengersBoarding);
+            //passengersDisembarkingField.setText(""+passengersDisembarking);
             
             addComponent(this, lineLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, line, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
@@ -1285,15 +1318,15 @@ public class CTCView extends JFrame
             addComponent(this, blockSizeField, 1, 6, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             addComponent(this, trackTypeLabel, 0, 7, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, trackTypeField, 1, 7, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, passengersBoardingLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, passengersBoardingField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, passengersDisembarkingLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, passengersDisembarkingField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, closeButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, openButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, breakButton, 0, 12, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, failType, 1, 12, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, fixButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            //addComponent(this, passengersBoardingLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            //addComponent(this, passengersBoardingField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            //addComponent(this, passengersDisembarkingLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            //addComponent(this, passengersDisembarkingField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, closeButton, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openButton, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, breakButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failType, 1, 10, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, fixButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
         }
         
         ActionListener lineComboListener = new ActionListener()
@@ -1317,7 +1350,7 @@ public class CTCView extends JFrame
                 initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + id + " selected");
+                    System.out.println("Line:  " + id + " selected");
                 }
             }
         };
@@ -1328,12 +1361,12 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 controllerSelectedIndex = (int)cb.getSelectedIndex();
-                char id = (char)cb.getSelectedItem();
-                ID selectedWaysideID = new ID(selectedLine, id, -1);
+                char id = cb.getSelectedItem().toString().charAt(0);
+                selectedWaysideID = new ID(selectedLine, id, -1);
                 initialize();
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("Track " + id + " selected");
+                    System.out.println("Track section " + id + " selected");
                 }
             }
         };
@@ -1344,15 +1377,50 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 blockSelectedIndex = (int)cb.getSelectedIndex();
-                String id = (String)cb.getSelectedItem();
-                int trackIDval = Integer.parseInt(id);
-                ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDval);
-                //Track t = model.getTrack(trackselectedID);
-                //get all track properties
-                initialize();
-                if(CTCView.getDebugMode())
+                if(blockSelectedIndex > 0)
                 {
-                    System.out.println("Track " + id + " selected");
+                    int trackIDVal = blockSelectedIndex - 1;
+                    ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDVal);
+                    Track t = model.getTrack(trackselectedID);
+                    speedLimit = t.getSpeedLimit();
+                    elevation = t.getElevation();
+                    grade = t.getGrade();  
+                    blockSize = t.getBlockLength();  
+
+                    if(t instanceof Station)
+                    { 
+                        trackType = "Station";  
+                    }
+                    else
+                    {
+                        if(t instanceof Crossing)
+                        {
+                            trackType = "Crossing";
+                        }
+                        else
+                        {
+                            if(t instanceof Switch)
+                            {
+                                trackType = "Switch";
+                            }
+                            else
+                            {
+                                if(t instanceof Tunnel)
+                                {
+                                    trackType = "Tunnel";
+                                }
+                                else
+                                {
+                                    trackType = "Track Block";
+                                }
+                            }
+                        }
+                    }
+                    initialize();
+                    if(CTCView.getDebugMode())
+                    {
+                        System.out.println("Track " + trackselectedID.getSection() + trackselectedID.getUnit() + " selected");
+                    }
                 }
             }
         };
