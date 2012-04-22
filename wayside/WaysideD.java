@@ -39,6 +39,6 @@ public class WaysideD extends Wayside
 				spreadAuthority(1);
 			}
 		}
-	}
 	*/
+	}
 }
