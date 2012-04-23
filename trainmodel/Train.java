@@ -37,6 +37,7 @@ public class Train
 		// get int power
 		// get track info
 		//
+            return 0.0;
 	}
 
 	public void setLights()
@@ -71,7 +72,7 @@ public class Train
 
 	public String getTransponderInfo()
 	{
-
+            return "A";
 	}
 
 	public void updateTrack()
