@@ -4,9 +4,12 @@ import java.util.*;
 import global.*;
 import trackmodel.*;
 import trainmodel.*;
+import java.util.logging.*;
 
 public abstract class Wayside implements WaysideInterface, Runnable
 {
+	final static Logger log = Logger.getLogger(Wayside.class.getName());
+	
 	protected List<Track> track;
 	protected ID id;
 	
@@ -22,6 +25,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 		id = waysideID;
 		track = new ArrayList<Track>();
 		direction = true;
+		log.info(logPrefix() + "Created");
 	}
 	
 	public void run()
@@ -37,24 +41,32 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	 */
 	abstract void runLogic();
 	
-	//abstract void trainIncFrom(Wayside w);
-	
-	public void setAuthority(ID trackID, int authority)
+	public void setAuthority(ID trackID, int auth)
 	{
 		/* Possible performance improvement if tracks are also hashed by ID */
 		Track t;
-		if((authority < 0) || ((t = findTrack(trackID)) == null))
+		if (auth < 0)
+		{
+			log.warning(logPrefix() + "Invalid authority " + auth);
+			return;
+		}
+		if ((t = findTrack(trackID)) == null)
 		{
 			return;
 		}
-		t.setAuthority(authority);
+		t.setAuthority(auth);
 	}
 	
 	public void setDispatchLimit(ID trackID, int speed)
 	{
 		/* Possible performance improvement if tracks are also hashed by ID */
 		Track t;
-		if((speed < 0) || ((t = findTrack(trackID)) == null))
+		if (speed < 0)
+		{
+			log.warning(logPrefix() + "Invalid speed " + speed);
+			return;
+		}
+		if ((t = findTrack(trackID)) == null)
 		{
 			return;
 		}
@@ -63,7 +75,6 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	
 	public Track findTrack(ID trackID)
 	{
-		/* Scan track section for ID */
 		for (Track t : track)
 		{
 			if (t.getID().equals(trackID))
@@ -71,17 +82,22 @@ public abstract class Wayside implements WaysideInterface, Runnable
 				return t;
 			}
 		}
+		log.warning(logPrefix() + "Cannot find track " + trackID);
 		return null;
 	}
 
 	public boolean hasTrain()
 	{
-		/* Scan track for any train */
 		for (Track t : track)
 		{
 			if (t.isOccupied())
 			{
-				direction = t.getDirection();
+				boolean dir = t.getDirection();
+				if (direction != dir)
+				{
+					direction = dir;
+					log.fine(logPrefix() + "Direction changed to " + direction);
+				}
 				return true;
 			}
 		}
@@ -146,10 +162,10 @@ public abstract class Wayside implements WaysideInterface, Runnable
 		track.add(t);
 	}
         
-        public ArrayList <Track> getTrackBlocks()
-        {
-            return (ArrayList)track;
-        }
+	public ArrayList <Track> getTrackBlocks()
+	{
+		return (ArrayList)track;
+	}
 	
 	public void setWaysideNextLeft(Wayside w)
 	{
@@ -184,6 +200,11 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	public String toString()
 	{
 		return id.toString();
+	
 	}
 	
+	private String logPrefix()
+	{
+		return "Wayside " + id.toString() + ": ";
+	}
 }
