@@ -26,7 +26,7 @@ public class Train
 	{
 		length = 32.2; //m
 		trainLine = line;
-		mass = 40.9 * 2000; // lbs
+		mass = 40.9 * 2000 + crew * 175; // lbs
                 height = 3.42; //m
                 width = 2.65; //m
 		crewCount = crew;
@@ -36,7 +36,7 @@ public class Train
 		cabinLights = false;
 		maxTrainSpeed = 70; // km/h
 		//maxPower = // ???
-		occupancy = crewCount; // how many crew members?
+		occupancy = 0; // just passengers
 		trainId = id;
 		transponder = false;
                 failures = new boolean [3];
