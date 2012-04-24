@@ -8,6 +8,9 @@ package simulator;
 
 import ctc.CTCView;
 import ctc.CTCModel;
+import global.*;
+import traincontroller.*;
+import java.util.ArrayList;
 
 /**
  * This file contains the specification of the simulator object which handles
@@ -25,7 +28,7 @@ public class Simulator
     private static CTCView view;    // references the main gui of the program   
     private static CTCModel model;  // references the model of the system used by the gui
     private static int clockRate = 60;  // used to determine when clock ticks will occur 
-    //private static TrainController [] trainControllers;   // references all train controllers currently in the system
+    private static ArrayList <TrainController> trainControllers = new <TrainController> ArrayList();   // references all train controllers currently in the system
     private static String TrainIDs[] = {"G000001", "G000002", "R000001"};   // holds the train ids for all train controllers
     private int throughput;
     
@@ -120,31 +123,32 @@ public class Simulator
         }
     }
     
-    
-//        public TrainController getTrainController(String TrainID)
-//        {
-//            loc = trainControllers.length;
-//            for(int i = 0; i < trainControllers.length; i++)
-//            {
-//                if(trainControllers[i].getTrainID().equals(TrainID))
-//                {
-//                    break;    
-//                }
-//            }
-//            if(i < loc)
-//            {
-//                return trainControllers[i]
-//            }
-//            else
-//            {
-//                return null;
-//            }
-//        }
+    public TrainController getTrainController(String TrainID)
+    {
+        int loc = trainControllers.size();
+        int i;
+        for(i = 0; i < trainControllers.size(); i++)
+        {
+            if(trainControllers.get(i).getID().equals(TrainID))
+            {
+                break;    
+            }
+        }
+        if(i < loc)
+        {
+            return trainControllers.get(i);
+        }
+        else
+        {
+            return null;
+        }
+    }
      
-//     public void createTrain(int line, int crewCount, String trainID, int clockRate)
-//     {
-//          TrainController t = new TrainController(line, crewCount, trainID, clockRate);
-//     }
+     public void createTrain(Line line, int crewCount, int clockRate, String trainID)
+     {
+          TrainController t = new TrainController(line, crewCount, clockRate, trainID);
+          trainControllers.add(t);
+     }
     
     /**
      * Get all of the train ID values currently in the system
@@ -153,15 +157,14 @@ public class Simulator
      */
     public String [] getTrainIDs()
     {
-        return TrainIDs;
-        /*String trainIDs = new String [trainControllers.length];
+        String trainIDs [] = new String [trainControllers.size()];
      
-        for(int i = 0; i < trainControllers.length; i++)
+        for(int i = 0; i < trainControllers.size(); i++)
         {
-            trainIDs[i] = trainControllers[i].getTrainID().toString();
+            trainIDs[i] = trainControllers.get(i).getID();
         }
 
-        return trainIDs;*/
+        return trainIDs;
     }
       
     /**
@@ -184,6 +187,12 @@ public class Simulator
     public int getCapacity()
     {
         int capacity = 0;
+        
+        for(int i = 0; i < trainControllers.size(); i++)
+        {
+            capacity += trainControllers.get(i).getCapacity();
+        }
+        
         if(debugMode)
         {
             System.out.println("Simulator: capacity: " + capacity);
@@ -198,6 +207,11 @@ public class Simulator
     public int getOccupancy()
     {
         int occupancy = 0;
+        
+        for(int i = 0; i < trainControllers.size(); i++)
+        {
+            occupancy += trainControllers.get(i).getOccupancy();
+        }
         if(debugMode)
         {
             System.out.println("Simulator: occupancy: " + occupancy);

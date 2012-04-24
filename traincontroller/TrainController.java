@@ -1,15 +1,17 @@
 package traincontroller;
 
 import trainmodel.*;
+import global.*;
 
 public class TrainController implements Runnable
 { 
     public Train T;
     public GreenSchedule G;
     public RedSchedule R;
-    private String ID;
+    private String id;
     public boolean stopped;
     public boolean onSchedule;
+    private boolean braking;
     public double setPoint;
     public double currentSpeed; //Speed returned by Train Model 
     public double operatorSpeed; //Speed entered by user 
@@ -23,18 +25,20 @@ public class TrainController implements Runnable
     private double d;      //setPoint - currentSpeed
     private double v;      //velocity - used in calcPower 
     private static int clockRate;
-    private int scheduleLine;
+    private Line scheduleLine;
     private int crew;
     private int ran = 1; //Initailizes the initial power to 60
 
 //add a clockrate 1ms * 60/Rate rates - time given  function to let CTC set the clock rate
 // constructor - line int, crew count int, id string, clock rate intger  Train - Train T = new Train and whatever his constructor is 
-    public TrainController(int line, int crewCount, int clock, String id) {
+    public TrainController(Line line, int crewCount, int clock, String idVal) 
+    {
         scheduleLine = line;
         clockRate = clock;
         crew = crewCount;
-        ID = id;
-        Train T = new Train(scheduleLine, crew, ID);
+        id = idVal;
+        braking = false;
+        //Train T = new Train(scheduleLine, crew, ID);
     }
 
     public void run() 
@@ -42,6 +46,33 @@ public class TrainController implements Runnable
         System.out.println("Inside TrainControllers Run Method.");
         updateTrain();
         updateSchedule();
+    }
+    
+    public String getID()
+    {
+        return id;
+    }
+    
+    public int getCapacity()
+    {
+        //return T.getCapacity();
+        return 0;
+    }
+    
+    public int getOccupancy()
+    {
+        //return T.getOccupancy();
+        return 0;
+    }
+    
+    public void setBraking(boolean b)
+    {
+        braking = b;
+    }
+    
+    public boolean getBraking()
+    {
+        return braking;
     }
 
     public double calcPower(double currentSpeed, double operatorSpeed, double waysideSpeed) 
@@ -57,11 +88,11 @@ public class TrainController implements Runnable
             ran++;
         }
 
-        if (scheduleLine == 1) 
+        if (scheduleLine.equals(Line.GREEN)) 
         {
             onSchedule = G.onSchedule();
         } 
-        else if (scheduleLine == 2) 
+        else if (scheduleLine.equals(Line.RED)) 
         {
             onSchedule = R.onSchedule();
         }
@@ -120,12 +151,12 @@ public class TrainController implements Runnable
     public void updateSchedule() 
     {
         System.out.println("Inside TrainControllers updateSchedule Method.");
-        scheduleLine = T.getLine();
-        if (scheduleLine == 1) 
+        //scheduleLine = T.getLine();
+        if (scheduleLine.equals(Line.GREEN)) 
         {
             G.greenSchedule();
         } 
-        else if (scheduleLine == 2) 
+        else if (scheduleLine.equals(Line.RED)) 
         {
             R.redSchedule();
         }
