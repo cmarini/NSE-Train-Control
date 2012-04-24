@@ -12,6 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.FocusListener;
+import java.awt.event.FocusEvent;
 import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -869,9 +871,9 @@ public class CTCView extends JFrame
         private JCheckBox headlightCheck = new JCheckBox(); // displays the headlight state of the train selected
         private JCheckBox cabinLightCheck = new JCheckBox();    // displays the cabin light state of the train selected
         private JCheckBox doorCheck = new JCheckBox();  // displays the door state of the train selected
-        private JCheckBox brakeFailCheck;   // displays the brake failure state of the train selected
-        private JCheckBox engineFailCheck;  // displays the engine failure state of the train selected
-        private JCheckBox signalPickupFailCheck;    // displays the signal pickup state of the train selected
+        private JCheckBox brakeFailCheck = new JCheckBox();   // displays the brake failure state of the train selected
+        private JCheckBox engineFailCheck = new JCheckBox();  // displays the engine failure state of the train selected
+        private JCheckBox signalPickupFailCheck = new JCheckBox();    // displays the signal pickup state of the train selected
         private JButton emergencyBrakeButton;   // sends emergency brake signal to the current train
         private JButton addTrainButton; // creates and adds a new train to the system
         private JButton removeTrainButton;  // removes selected train from the system
@@ -942,11 +944,7 @@ public class CTCView extends JFrame
             emergencyBrakeButton = new JButton("Emergency Brake");
             addTrainButton = new JButton("Add Train");
             removeTrainButton = new JButton("Remove Train");
-            
-            brakeFailCheck = new JCheckBox();
-            engineFailCheck = new JCheckBox();
-            signalPickupFailCheck = new JCheckBox();
-            
+                        
             if(emergencyBrakeButton.getActionListeners().length <= 0)
             {
                 emergencyBrakeButton.addActionListener(emergencyBrakeButtonListener);
@@ -979,6 +977,10 @@ public class CTCView extends JFrame
             {
                 trainIDField.addActionListener(trainIDFieldListener);
             }
+            if(trainIDField.getFocusListeners().length <= 2)
+            {
+                trainIDField.addFocusListener(trainIDFocusListener);
+            }
             if(trainIDField.getKeyListeners().length <= 0)
             {
                 trainIDField.addKeyListener(trainIDKeyListener);
@@ -986,6 +988,10 @@ public class CTCView extends JFrame
             if(crewCountField.getActionListeners().length <= 0)
             {
                 crewCountField.addActionListener(crewFieldListener);
+            }
+            if(crewCountField.getFocusListeners().length <= 2)
+            {
+                crewCountField.addFocusListener(crewFocusListener);
             }
             if(crewCountField.getKeyListeners().length <= 0)
             {
@@ -1038,12 +1044,25 @@ public class CTCView extends JFrame
             {
                 messageField.setText("" + message);
             }
+           
             cabinLightCheck.setSelected(cabinLights);
             headlightCheck.setSelected(headlights);
             doorCheck.setSelected(doors);
-            brakeFailCheck.setSelected(brakeFailure);
             engineFailCheck.setSelected(engineFailure);
+            brakeFailCheck.setSelected(brakeFailure);
             signalPickupFailCheck.setSelected(signalFailure);
+            /*if((engineFailCheck.isSelected() && !engineFailure) || (!engineFailCheck.isSelected() && engineFailure))
+            {
+                engineFailCheck.doClick();
+            }
+            if((brakeFailCheck.isSelected() && !brakeFailure) || (!brakeFailCheck.isSelected() && brakeFailure))
+            {
+                brakeFailCheck.doClick();
+            }
+            if((signalPickupFailCheck.isSelected() && !signalFailure) || (!signalPickupFailCheck.isSelected() && signalFailure))
+            {
+                signalPickupFailCheck.doClick();
+            }*/
                        
             addComponent(this, currentTrainsLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, currentTrains, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
@@ -1091,6 +1110,28 @@ public class CTCView extends JFrame
             
         }
         
+        FocusListener trainIDFocusListener = new FocusListener()
+        {
+            public void focusLost(FocusEvent event)
+            {
+                
+            }
+            public void focusGained(FocusEvent event)
+            {
+                trainIDField.setText("          ");
+                enteredTrainID = "";
+                try
+                {
+                    trainIDField.commitEdit();
+                    trainIDField.grabFocus();
+                }
+                catch(Exception e)
+                {
+
+                }
+            }
+        };
+        
         ActionListener trainIDFieldListener = new ActionListener()
         {
             public void actionPerformed(ActionEvent event)
@@ -1122,6 +1163,28 @@ public class CTCView extends JFrame
             public void keyTyped(KeyEvent event)
             {
                 
+            }
+        };
+        
+        FocusListener crewFocusListener = new FocusListener()
+        {
+            public void focusLost(FocusEvent event)
+            {
+                
+            }
+            public void focusGained(FocusEvent event)
+            {
+                crewCountField.setText("0");
+                crewCount = 0;
+                try
+                {
+                    crewCountField.commitEdit();
+                    crewCountField.grabFocus();
+                }
+                catch(Exception e)
+                {
+
+                }
             }
         };
         
@@ -1328,7 +1391,6 @@ public class CTCView extends JFrame
                                 System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
                             } 
                         }
-                        initialize();
                     }
                 }
             }
@@ -1362,7 +1424,6 @@ public class CTCView extends JFrame
                                 System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
                             } 
                         }
-                        initialize();
                     }
                 }
             }
@@ -1396,7 +1457,6 @@ public class CTCView extends JFrame
                                 System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
                             } 
                         }
-                        initialize();
                     }
                 }
             }
@@ -1517,7 +1577,6 @@ public class CTCView extends JFrame
             {
                 track.removeAllItems();
             }
-            track.addItem("");
             for(int i = 0; i < trackIDs.length; i++)
             {
                 track.addItem(trackIDs[i]);
@@ -1655,6 +1714,7 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 controllerSelectedIndex = (int)cb.getSelectedIndex();
+                blockSelectedIndex = 0;
                 if(controllerSelectedIndex > 0)
                 {
                     char id = cb.getSelectedItem().toString().charAt(0);
@@ -1665,6 +1725,16 @@ public class CTCView extends JFrame
                         System.out.println("Track section " + id + " selected");
                     }
                 }
+                else
+                {
+                    selectedWaysideID = new ID(selectedLine, ' ', -1);
+                    track.removeAllItems();
+                    track.addItem("");
+                    track.setSelectedIndex(0);
+                    trackIDs = new String[0];
+                    blockSelectedIndex = 0;
+                    initialize();
+                }
             }
         };
         
@@ -1674,16 +1744,16 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 blockSelectedIndex = (int)cb.getSelectedIndex();
-                if(blockSelectedIndex > 0)
+                int trackIDVal = blockSelectedIndex;
+                ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDVal);
+                Track t = model.getTrack(trackselectedID);
+                if(t != null)
                 {
-                    int trackIDVal = blockSelectedIndex - 1;
-                    ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDVal);
-                    Track t = model.getTrack(trackselectedID);
                     speedLimit = t.getSpeedLimit();
                     elevation = t.getElevation();
                     grade = t.getGrade();  
                     blockSize = t.getBlockLength();
-                    
+
                     if(t.isOpen())
                     {
                         openState = "Open";
@@ -1692,7 +1762,7 @@ public class CTCView extends JFrame
                     {
                         openState = "Closed";
                     }
-                    
+
                     switch(t.isFailed())
                     {
                         case BROKEN:
@@ -1743,7 +1813,17 @@ public class CTCView extends JFrame
                         System.out.println("Track " + trackselectedID.getSection() + trackselectedID.getUnit() + " selected");
                     }
                 }
+                else
+                {
+                    speedLimit = 0;
+                    elevation = 0;
+                    grade = 0;
+                    blockSize = 0;
+                    openState = null;
+                    failureState = null;
+                }
             }
+            
         };
         
         ActionListener closeButtonListener = new ActionListener()
@@ -1752,7 +1832,15 @@ public class CTCView extends JFrame
             {
                 if(blockSelectedIndex > 0)
                 {
-                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    ID id;
+                    if(track.getSelectedItem().toString().length() == 2)
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    }
+                    else
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,3)));
+                    }
                     Track t = model.getTrack(id);
                     t.setOpen(false);
                     initialize();
@@ -1770,7 +1858,15 @@ public class CTCView extends JFrame
             {
                 if(blockSelectedIndex > 0)
                 {
-                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    ID id;
+                    if(track.getSelectedItem().toString().length() == 2)
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    }
+                    else
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,3)));
+                    }
                     Track t = model.getTrack(id);
                     t.setOpen(true);
                     initialize();
@@ -1789,7 +1885,15 @@ public class CTCView extends JFrame
                 if(blockSelectedIndex > 0)
                 {
                     int type = failType.getSelectedIndex();
-                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    ID id;
+                    if(track.getSelectedItem().toString().length() == 2)
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    }
+                    else
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,3)));
+                    }
                     Track t = model.getTrack(id);
                     switch(type)
                     {
@@ -1820,9 +1924,16 @@ public class CTCView extends JFrame
             {
                 if(blockSelectedIndex > 0)
                 {
-                    ID id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    ID id;
+                    if(track.getSelectedItem().toString().length() == 2)
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,2)));
+                    }
+                    else
+                    {
+                        id = new ID(selectedLine, controller.getSelectedItem().toString().charAt(0), Integer.parseInt(track.getSelectedItem().toString().substring(1,3)));
+                    }
                     Track t = model.getTrack(id);
-                    t.setOpen(false);
                     t.setFix();
                     initialize();
                     if(CTCView.getDebugMode())

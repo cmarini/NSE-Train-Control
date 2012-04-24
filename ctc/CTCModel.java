@@ -390,6 +390,8 @@ public class CTCModel
             case 'J':
                 trackBlocks = w[9].getTrackBlocks();
                 break;
+            default:
+                return new String [0];
         }
         trackIDs = new String[trackBlocks.size()];
         for(int i = 0; i < trackBlocks.size(); i++)
