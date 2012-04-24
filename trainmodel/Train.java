@@ -17,7 +17,12 @@ public class Train
 	private boolean headLights; // false = off, true = on
 	private boolean cabinLights; // false = off, true = on
 	private String trainId;
-	private boolean transponder;
+        public boolean transponder;
+	public double powerCmd;
+	public double velocity;
+	public double oldVelocity;
+	public double grade;
+	public double time;
         private double height;
         private double width;
 	private boolean [] failures;
@@ -47,11 +52,20 @@ public class Train
 
 	public double calcVelocity()
 	{
-		// get int power
-		// get track info
-		//
-            return 0.0;
+		velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
+		oldVelocity = velocity;
+		return velocity;
 	}
+        
+        public void setPower(double pwr)
+        {
+            powerCmd = pwr;
+        }
+        
+        public void setClockRate(int cr)
+        {
+            time = cr;
+        }
         
         public double calcAcceleration()
         {
