@@ -1830,7 +1830,7 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                if(blockSelectedIndex > 0)
+                if(blockSelectedIndex >= 0)
                 {
                     ID id;
                     if(track.getSelectedItem().toString().length() == 2)
@@ -1856,7 +1856,7 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                if(blockSelectedIndex > 0)
+                if(blockSelectedIndex >= 0)
                 {
                     ID id;
                     if(track.getSelectedItem().toString().length() == 2)
@@ -1882,7 +1882,7 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                if(blockSelectedIndex > 0)
+                if(blockSelectedIndex >= 0)
                 {
                     int type = failType.getSelectedIndex();
                     ID id;
@@ -1922,7 +1922,7 @@ public class CTCView extends JFrame
         {
             public void actionPerformed(ActionEvent event)
             {
-                if(blockSelectedIndex > 0)
+                if(blockSelectedIndex >= 0)
                 {
                     ID id;
                     if(track.getSelectedItem().toString().length() == 2)
