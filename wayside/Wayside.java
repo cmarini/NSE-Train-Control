@@ -1,14 +1,14 @@
 package wayside;
 
 import java.util.*;
+import java.util.logging.*;
 import global.*;
 import trackmodel.*;
 import trainmodel.*;
-import java.util.logging.*;
 
 public abstract class Wayside implements WaysideInterface, Runnable
 {
-	final static Logger log = Logger.getLogger(Wayside.class.getName());
+	final static Logger log = Logger.getLogger("Log");
 	
 	protected List<Track> track;
 	protected ID id;
@@ -25,7 +25,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 		id = waysideID;
 		track = new ArrayList<Track>();
 		direction = true;
-		log.info(logPrefix() + "Created");
+		log.config(logPrefix() + "Created");
 	}
 	
 	public void run()
@@ -160,6 +160,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	public void addTrack(Track t)
 	{
 		track.add(t);
+		log.config(logPrefix() + "Track " + t.getID() + " added");
 	}
         
 	public ArrayList <Track> getTrackBlocks()
@@ -203,7 +204,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	
 	}
 	
-	private String logPrefix()
+	protected String logPrefix()
 	{
 		return "Wayside " + id.toString() + ": ";
 	}
