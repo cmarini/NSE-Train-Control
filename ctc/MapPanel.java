@@ -259,6 +259,10 @@ public class MapPanel extends JPanel
     public void setTrackSection(String tc)
     {
         trackSection = setSection(tc);
+        if(debugMode)
+        {
+            System.out.println("Map Panel: section selected: " + trackSection);
+        }
     }
     
     /**
@@ -268,6 +272,10 @@ public class MapPanel extends JPanel
     public void setTrackSection(ID tc)
     {
         trackSection = tc;
+        if(debugMode)
+        {
+            System.out.println("Map Panel: section selected: " + trackSection);
+        }
     }
     
     /**
@@ -314,11 +322,6 @@ public class MapPanel extends JPanel
                         return (new ID(Line.RED, ' ', -1));
                 }
             }
-        
-            if(debugMode)
-            {
-                System.out.println("Map Panel: section selected: " + trackSection);
-            }
         }
         
         return null;
@@ -330,7 +333,7 @@ public class MapPanel extends JPanel
         
         if(debugMode)
         {
-            System.out.println("Track section: " + trackSection + " being painted");
+            System.out.println("Map Panel: Track section: " + trackSection + " being painted");
         }
         
         if(trackSection != null)

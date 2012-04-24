@@ -10,8 +10,8 @@ import simulator.Simulator;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -35,6 +35,7 @@ public class CTCView extends JFrame
     private int controllerSelectedIndex = 0; // used to hold the location of the currently selected wayside
     private int blockSelectedIndex = 0; // used to hold the location of the currently selected train block
     private int trainSelectedIndex = 0; // used to hold the location of the currently selected train
+    private int operatorTrainSelectedIndex = 0;
     private int dispatcherSelectedIndex = 0;    // used to hold the location of the currently selected train block on the dipatcher screen
     //private int dispatcherSelectedTrainIndex = 0;
     private int clockSelectedIndex = 8;
@@ -46,7 +47,7 @@ public class CTCView extends JFrame
     private boolean demoMode = false;   // used to determine if demo mode is active
     private MainPanel mainPanel;    // used to create the dispaly for the main screen
     private DispatcherPanel dispatcherPanel;    // used to create the dispaly for the dispatcher screen
-    private OperatorPanel operatorPanel = new OperatorPanel();  // used to create the dispaly for the operator screen
+    private OperatorPanel operatorPanel;  // used to create the dispaly for the operator screen
     private TrainPanel trainPanel;  // used to create the dispaly for the add/modify train screen
     private TrackPanel trackPanel;  // used to create the dispaly for the view/modify track screen
     private MetricsPanel metricsPanel;  // used to create the dispaly for the view metrics screen
@@ -130,6 +131,7 @@ public class CTCView extends JFrame
         trainPanel= new TrainPanel();
         trackPanel = new TrackPanel();
         metricsPanel = new MetricsPanel();
+        operatorPanel = new OperatorPanel();
         
         fileClose.addActionListener(new MenuActionClose());
         viewMain.addActionListener(new MenuOpenScreen(mainPanel));
@@ -272,7 +274,7 @@ public class CTCView extends JFrame
                     {
                         System.out.println("CTC View: View Operator menu item clicked");
                     }
-                    //((OperatorPanel)panel).initialize();
+                    ((OperatorPanel)panel).initialize();
                 }  
                 else
                 {
@@ -282,7 +284,7 @@ public class CTCView extends JFrame
                         {
                             System.out.println("CTC View: View Add/Modify Train menu item clicked");
                         }
-                        //((TrainPanel)panel).initialize();
+                        ((TrainPanel)panel).initialize();
                     }
                     else
                     {
@@ -302,7 +304,7 @@ public class CTCView extends JFrame
                                 {
                                     System.out.println("CTC View: View Metrics menu item clicked");
                                 }
-                                //((MetricsPanel)panel).initialize();
+                                ((MetricsPanel)panel).initialize();
                             }   
                         }
                     }
@@ -370,9 +372,7 @@ public class CTCView extends JFrame
         }
 
         private void initialize()
-        {
-            map.setDebugMode(debugMode);
-                        
+        {                        
             if(clockCombo.getActionListeners().length <= 0)
             {
                 clockCombo.addActionListener(clockComboListener);
@@ -448,6 +448,7 @@ public class CTCView extends JFrame
                 {
                     System.out.println("CTC View: track section selected: " + trackCombo.getSelectedItem().toString());
                 }
+                map.setDebugMode(CTCView.getDebugMode());
                 map.setTrackSection(trackCombo.getSelectedItem().toString());
                 map.repaint();
             }
@@ -565,10 +566,6 @@ public class CTCView extends JFrame
                     try
                     {
                         int set = Integer.parseInt(setpoint.getText());
-                        if(CTCView.getDebugMode() && dispatcherSelectedIndex > 0)
-                        {
-                            System.out.println("CTC View: Setpoint value: " + set + " sent to " + trackIDs[dispatcherSelectedIndex - 1]);
-                        }
                         if(set < 0 || set > 70)
                         {
                             JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
@@ -577,11 +574,15 @@ public class CTCView extends JFrame
                         {
                             if(dispatcherSelectedIndex == 0)
                             {
-                               JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid train selection, please select the train to send the setpoint", "Input Error", JOptionPane.ERROR_MESSAGE); 
+                               JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid track selection, please select the track to send the setpoint", "Input Error", JOptionPane.ERROR_MESSAGE); 
                             }
                             else
                             {
-                            control.setDispatcherSpeed(set);
+                                if(CTCView.getDebugMode() && dispatcherSelectedIndex > 0)
+                                {
+                                    System.out.println("CTC View: Setpoint value: " + set + " sent to " + trackIDs[dispatcherSelectedIndex - 1]);
+                                }
+                                control.setDispatcherSpeed(set, dispatcherLoggedin.getLine(), dispatcherLoggedin.getWayside().getSection(), Integer.parseInt(trackIDs[dispatcherSelectedIndex - 1].substring(1,2)));
                             }
                         }
                     }
@@ -612,7 +613,7 @@ public class CTCView extends JFrame
                             }
                             else
                             {
-                                control.setDispatcherAuthority(auth);
+                                control.setDispatcherAuthority(auth, dispatcherLoggedin.getLine(), dispatcherLoggedin.getWayside().getSection(), Integer.parseInt(trackIDs[dispatcherSelectedIndex - 1].substring(1,2)));
                             }
                         }
                     }
@@ -687,7 +688,8 @@ public class CTCView extends JFrame
          * holds all of the sections that can be displayed
          */
         private JComboBox trackCombo = new JComboBox(trackSections);    // displays all the track sections that can be displayed  
-
+        private String [] trainIDs;
+        
         OperatorPanel()
         {
             this.setLayout(new GridBagLayout());
@@ -696,6 +698,19 @@ public class CTCView extends JFrame
 
         private void initialize()
         {
+            trainIDs = sim.getTrainIDs();
+            
+            if(trainIDs.length != 0)
+            {
+                trains.removeAllItems();
+            }
+            trains.addItem("");
+            for(int i = 0; i < trainIDs.length; i++)
+            {
+                trains.addItem(trainIDs[i]);
+            }
+            trains.setSelectedIndex(trainSelectedIndex);
+            
             map.setDebugMode(debugMode);
             map.setTrackSection("");
             send = new JButton("Send");
@@ -708,6 +723,10 @@ public class CTCView extends JFrame
             if(trackCombo.getActionListeners().length <= 0)
             {
                 trackCombo.addActionListener(trackComboListener);
+            }
+            if(trains.getActionListeners().length <= 0)
+            {
+                trains.addActionListener(trainComboListener);
             }
             
             addComponent(this, map, 0, 0, 6, 1, 1.0, 1.0, insets, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
@@ -773,6 +792,20 @@ public class CTCView extends JFrame
             }
             
         };
+        
+        ActionListener trainComboListener = new ActionListener()
+        {
+            public void actionPerformed(ActionEvent event)
+            {
+                JComboBox cb = (JComboBox)event.getSource();
+                String id = (String)cb.getSelectedItem();
+                operatorTrainSelectedIndex = (int)cb.getSelectedIndex();
+                if(CTCView.getDebugMode())
+                {
+                    System.out.println("CTC View: Train selected " + id);
+                }
+            }
+        };
 
         public void sendOperatorCommands()
         {
@@ -780,7 +813,7 @@ public class CTCView extends JFrame
             {
                 System.out.println("CTC View: Commands sent, speed: " + operatorSpeed.getText() + " , brake: " + brake.isSelected());
             }
-            control.setOperatorCommands(Integer.parseInt(operatorSpeed.getText()), brake.isSelected());
+            control.setOperatorCommands(Integer.parseInt(operatorSpeed.getText()), brake.isSelected(), trainIDs[operatorTrainSelectedIndex - 1]);
         }
         
         public void paintComponent(Graphics g)
@@ -795,9 +828,9 @@ public class CTCView extends JFrame
     private class TrainPanel extends JPanel
     {
         private String [] lines = {"Green", "Red"}; // holds the different lines in the system
-        private String [] trainYards = {"", "Train Yard 1"};    // holds the train yards in the system
+        //private String [] trainYards = {"", "Train Yard 1"};    // holds the train yards in the system
         private JLabel currentTrainsLabel = new JLabel("Current Trains");   // labels the combo box for the train ids
-        private JLabel trainYardSelectLabel = new JLabel("Add new train from train yard: ");
+       // private JLabel trainYardSelectLabel = new JLabel("Add new train from train yard: ");
         /*
          * labels the train yard selection combo box
          */
@@ -820,7 +853,7 @@ public class CTCView extends JFrame
         private JLabel signalPickupFailLabel = new JLabel("Signal Pickup Failure"); // labels the signal pickup failure check box
         private JLabel trainIDLabel = new JLabel("Train ID");   // labels the train ID dropdown 
         private JComboBox currentTrains = new JComboBox();;    // displays the ids of the trains in the system
-        private JComboBox trainYard = new JComboBox(trainYards);    // displays the train yard ids in the system
+        //private JComboBox trainYard = new JComboBox(trainYards);    // displays the train yard ids in the system
         private JComboBox line = new JComboBox(lines);  // displays the lines in the system
         private JTextField heightField = new JTextField();  // displays the height of the train selected
         private JTextField widthField = new JTextField();   // displays the width of the train selected
@@ -883,7 +916,7 @@ public class CTCView extends JFrame
             {
                 currentTrains.addItem(trainIDs[i]);
             }
-            //currentTrains.setSelectedIndex(trainSelectedIndex);
+            currentTrains.setSelectedIndex(trainSelectedIndex);
             line.setSelectedIndex(lineIndex);
             
             try
@@ -898,7 +931,7 @@ public class CTCView extends JFrame
             
             try
             {
-                format = new MaskFormatter("##");
+                format = new MaskFormatter("#");
                 crewCountField = new JFormattedTextField(format);
             }
             catch(ParseException e)
@@ -946,17 +979,17 @@ public class CTCView extends JFrame
             {
                 trainIDField.addActionListener(trainIDFieldListener);
             }
-            if(trainIDField.getPropertyChangeListeners().length <= 2)
+            if(trainIDField.getKeyListeners().length <= 0)
             {
-                trainIDField.addPropertyChangeListener(trainIDFieldPropertyListener);
+                trainIDField.addKeyListener(trainIDKeyListener);
             }
             if(crewCountField.getActionListeners().length <= 0)
             {
                 crewCountField.addActionListener(crewFieldListener);
             }
-            if(crewCountField.getPropertyChangeListeners().length <= 2)
+            if(crewCountField.getKeyListeners().length <= 0)
             {
-                crewCountField.addPropertyChangeListener(crewFieldPropertyListener);
+                crewCountField.addKeyListener(crewKeyListener);
             }
             
             heightField.setColumns(10);
@@ -991,10 +1024,10 @@ public class CTCView extends JFrame
             numCarsField.setText("" + numCars);
             lengthField.setText("" + length);
             massField.setText("" + mass);
-            crewCountField.setText("" + crewCount);
             passengerCountField.setText("" + passCount);
             currentSpeedField.setText("" + currentSpeed);
             currentAccelerationField.setText("" + currentAcceleration);
+            crewCountField.setText("" + crewCount);
             trainIDField.setText("");
             
             if(message == null)
@@ -1014,8 +1047,8 @@ public class CTCView extends JFrame
                        
             addComponent(this, currentTrainsLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, currentTrains, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, trainYardSelectLabel, 2, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, trainYard, 3, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            //addComponent(this, trainYardSelectLabel, 2, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            //addComponent(this, trainYard, 3, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
             addComponent(this, trainIDLabel, 2, 1, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, trainIDField, 3, 1, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             addComponent(this, lineLabel, 0, 2, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
@@ -1071,16 +1104,24 @@ public class CTCView extends JFrame
             }
         };
         
-        PropertyChangeListener trainIDFieldPropertyListener = new PropertyChangeListener()
+        KeyListener trainIDKeyListener = new KeyListener()
         {
-            public void propertyChange(PropertyChangeEvent event)
+            public void keyReleased(KeyEvent event)
             {
                 JFormattedTextField jft = (JFormattedTextField)event.getSource();
-                enteredTrainID = (String)jft.getValue();
+                enteredTrainID = (String)jft.getText();
                 if(CTCView.getDebugMode())
                 {
                     System.out.println("CTC View: Train ID entered " + enteredTrainID);
                 }
+            }
+            public void keyPressed(KeyEvent event)
+            {
+                
+            }
+            public void keyTyped(KeyEvent event)
+            {
+                
             }
         };
         
@@ -1104,14 +1145,14 @@ public class CTCView extends JFrame
             }
         };
         
-        PropertyChangeListener crewFieldPropertyListener = new PropertyChangeListener()
+        KeyListener crewKeyListener = new KeyListener()
         {
-            public void propertyChange(PropertyChangeEvent event)
+            public void keyReleased(KeyEvent event)
             {
                 JFormattedTextField jft = (JFormattedTextField)event.getSource();
                 try
                 {
-                    crewCount = Integer.parseInt(jft.getValue().toString());
+                    crewCount = Integer.parseInt(jft.getText().toString());
                 }
                 catch(Exception e)
                 {
@@ -1119,8 +1160,16 @@ public class CTCView extends JFrame
                 }
                 if(CTCView.getDebugMode())
                 {
-                    System.out.println("CTC View: Crew Count entered " + enteredTrainID);
+                    System.out.println("CTC View: Crew Count entered " + crewCount);
                 }
+            }
+            public void keyPressed(KeyEvent event)
+            {
+                
+            }
+            public void keyTyped(KeyEvent event)
+            {
+                
             }
         };
         
@@ -1136,24 +1185,47 @@ public class CTCView extends JFrame
                     System.out.println("CTC View: Train selected " + id);
                 }
                 TrainController tc = sim.getTrainController(id);
-                Train t = tc.getTrain();
-                height = t.getHeight();
-                width = t.getWidth();
-                numCars = 1;
-                length = t.getLength();
-                mass = t.getMass();
-                crewCount = t.getCrew();
-                passCount = t.getOccupancy();
-                currentSpeed = t.calcVelocity();
-                currentAcceleration = t.calcAcceleration();
-                message = tc.getMessage();
-                cabinLights = t.getCabinLights();
-                headlights = t.getHeadLights();
-                doors = t.getDoors();
-                brakeFailure = t.getFailures()[0];
-                engineFailure = t.getFailures()[1];
-                signalFailure = t.getFailures()[2];
-                initialize();
+                if(tc != null)
+                {
+                    Train t = tc.getTrain();
+                    height = t.getHeight();
+                    width = t.getWidth();
+                    numCars = 1;
+                    length = t.getLength();
+                    mass = t.getMass();
+                    crewCount = t.getCrew();
+                    passCount = t.getOccupancy();
+                    currentSpeed = t.calcVelocity();
+                    currentAcceleration = t.calcAcceleration();
+                    message = tc.getMessage();
+                    cabinLights = t.getCabinLights();
+                    headlights = t.getHeadLights();
+                    doors = t.getDoors();
+                    brakeFailure = t.getFailures()[0];
+                    engineFailure = t.getFailures()[1];
+                    signalFailure = t.getFailures()[2];
+                    initialize();
+                }
+                else
+                {
+                    height = 0;
+                    width = 0;
+                    numCars = 0;
+                    length = 0;
+                    mass = 0;
+                    crewCount = 0;
+                    passCount = 0;
+                    currentSpeed = 0;
+                    currentAcceleration = 0;
+                    message = "";
+                    cabinLights = false;
+                    headlights = false;
+                    doors = false;
+                    brakeFailure = false;
+                    engineFailure = false;
+                    signalFailure = false;
+                    initialize();
+                }
             }
         };
         
@@ -1192,9 +1264,24 @@ public class CTCView extends JFrame
                         l = Line.RED;
                     }
                 }
-                sim.createTrain(l, crewCount, clockRate, enteredTrainID);
-                Train t = sim.getTrainController(enteredTrainID).getTrain();
-                initialize();
+                if(enteredTrainID != null)
+                {
+                    if(sim.getTrainController(enteredTrainID) == null)
+                    {
+                        sim.createTrain(l, crewCount, clockRate, enteredTrainID);
+                        Train t = sim.getTrainController(enteredTrainID).getTrain();
+                        crewCount = 0;
+                        initialize();
+                    }
+                    else
+                    {
+                        JOptionPane.showMessageDialog(TrainPanel.this, "Train ID already in use", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    } 
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(TrainPanel.this, "Train ID error, please enter or re-enter the Train ID", "Input Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         };
                         
@@ -1218,26 +1305,32 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String id = trainIDs[trainSelectedIndex - 1];
-                TrainController tc = sim.getTrainController(id);
-                Train t = tc.getTrain();
-                if(cb.isSelected())
+                if(trainSelectedIndex > 0)
                 {
-                    t.setFailure(0);
-                    if(CTCView.getDebugMode())
+                    String id = trainIDs[trainSelectedIndex - 1];
+                    TrainController tc = sim.getTrainController(id);
+                    if(tc != null)
                     {
-                        System.out.println("CTC View: Train: " + id + " sent brake failure command");
-                    } 
+                        Train t = tc.getTrain();
+                        if(cb.isSelected())
+                        {
+                            t.setFailure(0);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent brake failure command");
+                            } 
+                        }
+                        else
+                        {
+                            t.fixFailure(0);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
+                            } 
+                        }
+                        initialize();
+                    }
                 }
-                else
-                {
-                    t.fixFailure(0);
-                    if(CTCView.getDebugMode())
-                    {
-                        System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
-                    } 
-                }
-                initialize();
             }
         };
         
@@ -1246,26 +1339,32 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String id = trainIDs[trainSelectedIndex - 1];
-                TrainController tc = sim.getTrainController(id);
-                Train t = tc.getTrain();
-                if(cb.isSelected())
+                if(trainSelectedIndex > 0)
                 {
-                    t.setFailure(1);
-                    if(CTCView.getDebugMode())
+                    String id = trainIDs[trainSelectedIndex - 1];
+                    TrainController tc = sim.getTrainController(id);
+                    if(tc != null)
                     {
-                        System.out.println("CTC View: Train: " + id + " sent brake failure command");
-                    } 
+                        Train t = tc.getTrain();
+                        if(cb.isSelected())
+                        {
+                            t.setFailure(1);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent brake failure command");
+                            } 
+                        }
+                        else
+                        {
+                            t.fixFailure(1);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
+                            } 
+                        }
+                        initialize();
+                    }
                 }
-                else
-                {
-                    t.fixFailure(1);
-                    if(CTCView.getDebugMode())
-                    {
-                        System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
-                    } 
-                }
-                initialize();
             }
         };
                 
@@ -1274,26 +1373,32 @@ public class CTCView extends JFrame
             public void actionPerformed(ActionEvent event)
             {
                 JCheckBox cb = (JCheckBox)event.getSource();
-                String id = trainIDs[trainSelectedIndex - 1];
-                TrainController tc = sim.getTrainController(id);
-                Train t = tc.getTrain();
-                if(cb.isSelected())
+                if(trainSelectedIndex > 0)
                 {
-                    t.setFailure(2);
-                    if(CTCView.getDebugMode())
+                    String id = trainIDs[trainSelectedIndex - 1];
+                    TrainController tc = sim.getTrainController(id);
+                    if(tc != null)
                     {
-                        System.out.println("CTC View: Train: " + id + " sent brake failure command");
-                    } 
+                        Train t = tc.getTrain();
+                        if(cb.isSelected())
+                        {
+                            t.setFailure(2);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent brake failure command");
+                            } 
+                        }
+                        else
+                        {
+                            t.fixFailure(2);
+                            if(CTCView.getDebugMode())
+                            {
+                                System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
+                            } 
+                        }
+                        initialize();
+                    }
                 }
-                else
-                {
-                    t.fixFailure(2);
-                    if(CTCView.getDebugMode())
-                    {
-                        System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
-                    } 
-                }
-                initialize();
             }
         };
         

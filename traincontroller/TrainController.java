@@ -39,7 +39,7 @@ public class TrainController implements Runnable
         crew = crewCount;
         id = idVal;
         braking = false;
-        Train train = new Train(scheduleLine, crew, id);
+        train = new Train(scheduleLine, crew, id);
         message = "";
     }
 

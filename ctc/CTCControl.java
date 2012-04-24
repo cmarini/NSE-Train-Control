@@ -7,6 +7,9 @@
 package ctc;
 
 import simulator.*;
+import global.*;
+import trackmodel.*;
+import trainmodel.*;
 
 /**
  * This file contains the specification for the CTCControl which passes messages
@@ -17,10 +20,6 @@ import simulator.*;
 public class CTCControl 
 {
     private static boolean debugMode;   // sets the debug mode flag
-    private int authority;  // authority sent be the dispatcher
-    private int setpoint;   // setpoint sent by the dispatcher
-    private int operatorSpeed;  // speed sent by the operator
-    private boolean operatorBrake;  // brake signal sent by the operator
     private CTCModel model; // reference to the model
     private Simulator sim;  // reference to the simulator
     
@@ -54,12 +53,13 @@ public class CTCControl
      * 
      * @param sp integer setpoint from the dispatcher
      */
-    public void setDispatcherSpeed(int sp)
+    public void setDispatcherSpeed(int sp, Line l, char wayside, int unit)
     {
-        setpoint = sp;
+        Track t = model.getTrack(new ID(l, wayside, unit));
+        t.setDispatchLimit(sp);
         if(debugMode)
         {
-            System.out.println("CTC Control: Dispatcher speed set to: " + setpoint);
+            System.out.println("CTC Control: Dispatcher speed set to: " + sp + " for block: " + t.getID().toString());
         }
     }
  
@@ -68,12 +68,13 @@ public class CTCControl
      * 
      * @param auth integer authority from the dispatcher
      */
-    public void setDispatcherAuthority(int auth)
-    {        
-        authority = auth;
+    public void setDispatcherAuthority(int auth, Line l, char wayside, int unit)
+    {     
+        Track t = model.getTrack(new ID(l, wayside, unit));
+        t.setAuthority(auth);
         if(debugMode)
         {
-            System.out.println("CTC Control: Dispatcher authority set to: " + authority);
+            System.out.println("CTC Control: Dispatcher authority set to: " + auth + " for block: " + t.getID().toString());
         }
     }
     
@@ -83,13 +84,12 @@ public class CTCControl
      * @param sp integer speed
      * @param b boolean brake signal
      */
-    public void setOperatorCommands(int sp, boolean b)
+    public void setOperatorCommands(int sp, boolean b, String trainID)
     {
-        operatorSpeed = sp;
-        operatorBrake = b;
+        Train t = sim.getTrainController(trainID).getTrain();
         if(debugMode)
         {
-            System.out.println("CTC Control: Operator Speed : " + operatorSpeed + " Brake: " + operatorBrake);
+            System.out.println("CTC Control: Operator Speed : " + sp + " Brake: " + b + " to train: " + trainID);
         }
     }
 }

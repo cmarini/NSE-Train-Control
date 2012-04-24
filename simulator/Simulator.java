@@ -74,6 +74,10 @@ public class Simulator
     public void setClockRate(int c)
     {
         clockRate = c;
+        if(debugMode)
+        {
+            System.out.println("Simulator: ClockRate set to: " + clockRate);
+        }
     }
     
     /**
@@ -210,7 +214,7 @@ public class Simulator
         
         for(int i = 0; i < trainControllers.size(); i++)
         {
-            occupancy += trainControllers.get(i).getTrain().getOccupancy();
+            occupancy = occupancy + trainControllers.get(i).getTrain().getOccupancy() + trainControllers.get(i).getTrain().getCrew();
         }
         if(debugMode)
         {
