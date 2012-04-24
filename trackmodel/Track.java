@@ -3,9 +3,11 @@
 package trackmodel;
 
 import global.*;
+import java.util.logging.*;
 
 public class Track
 {
+	final static Logger log = Logger.getLogger("Log");
 	private double elevation;
 	private double grade;
 	private int speedLimit;
@@ -36,30 +38,35 @@ public class Track
 		blockLength = blkLen;
 		open = true;
 		authority = 0;
+		log.config("Track " + trackID + ": Created");
 	}
 	
 	public void setFailure(TrackFault f) // set track to fail (set value to 1)
 	{
 		trackInfo = "info: track failed (" + f + ")";
 		failure = f;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setDispatchLimit(int dLimit) // set dispatcher speed limit
 	{
 		trackInfo = "info: dispatcher limit set to: " + dLimit;
 		dispatchLimit = dLimit;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setAuthority(int auth) // set authority
 	{
 		trackInfo = "info: authority set to: " + auth;
 		authority = auth;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setFix() // call this method to fix track
 	{
 		trackInfo = "info: track fixed";
 		failure = TrackFault.NONE;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setOccupied(boolean iOccupy, Track from) // set block to occupied
@@ -74,18 +81,21 @@ public class Track
 		}
 		trackInfo = " info: track set to: " + iOccupy;
 		occupied = iOccupy;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setOpen(boolean iOpen) // set track to open
 	{
 		trackInfo = "info: track set to: " + iOpen;
 		open = iOpen;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
 	public void setTrafficLight(int lightState) // set traffic light
 	{
 		trackInfo = "info: traffic light set to: " + lightState;
 		trafficLight = lightState;
+		log.info("Track " + trackID + ": " + trackInfo);
 	}
         
 	public void setNext(Track t)
@@ -105,12 +115,12 @@ public class Track
 		return occupied;
 	}
         
-        public boolean isOpen()
+	public boolean isOpen()
 	{
 		return open;
 	}
         
-        public TrackFault isFailed()
+	public TrackFault isFailed()
 	{
 		return failure;
 	}
@@ -126,7 +136,6 @@ public class Track
 		return getNext();
 	}
 		
-	
 	public boolean getDirection()
 	{
 		return direction;
