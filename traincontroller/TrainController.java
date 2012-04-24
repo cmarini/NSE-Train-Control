@@ -5,17 +5,17 @@ import global.*;
 
 public class TrainController implements Runnable
 { 
-    public Train T;
-    public GreenSchedule G;
-    public RedSchedule R;
+    private Train train;
+    private GreenSchedule G;
+    private RedSchedule R;
     private String id;
-    public boolean stopped;
-    public boolean onSchedule;
+    private boolean stopped;
+    private boolean onSchedule;
     private boolean braking;
-    public double setPoint;
-    public double currentSpeed; //Speed returned by Train Model 
-    public double operatorSpeed; //Speed entered by user 
-    public double waysideSpeed; //Speed sent by the wayside 
+    private double setPoint;
+    private double currentSpeed; //Speed returned by Train Model 
+    private double operatorSpeed; //Speed entered by user 
+    private double waysideSpeed; //Speed sent by the wayside 
     private static double maxPower = 120; //kW
     private double power; //power sent to the  train
     private double init_power = 60; //kW
@@ -28,9 +28,10 @@ public class TrainController implements Runnable
     private Line scheduleLine;
     private int crew;
     private int ran = 1; //Initailizes the initial power to 60
+    private String message;
 
 //add a clockrate 1ms * 60/Rate rates - time given  function to let CTC set the clock rate
-// constructor - line int, crew count int, id string, clock rate intger  Train - Train T = new Train and whatever his constructor is 
+// constructor - line int, crew count int, id string, clock rate intger  Train - Train train = new Train and whatever his constructor is 
     public TrainController(Line line, int crewCount, int clock, String idVal) 
     {
         scheduleLine = line;
@@ -38,7 +39,8 @@ public class TrainController implements Runnable
         crew = crewCount;
         id = idVal;
         braking = false;
-        //Train T = new Train(scheduleLine, crew, ID);
+        Train train = new Train(scheduleLine, crew, id);
+        message = "";
     }
 
     public void run() 
@@ -48,23 +50,21 @@ public class TrainController implements Runnable
         updateSchedule();
     }
     
+    public Train getTrain()
+    {
+        return train;
+    }
+    
     public String getID()
     {
         return id;
     }
     
-    public int getCapacity()
+    public String getMessage()
     {
-        //return T.getCapacity();
-        return 0;
+        return message;
     }
-    
-    public int getOccupancy()
-    {
-        //return T.getOccupancy();
-        return 0;
-    }
-    
+        
     public void setBraking(boolean b)
     {
         braking = b;
@@ -78,7 +78,7 @@ public class TrainController implements Runnable
     public double calcPower(double currentSpeed, double operatorSpeed, double waysideSpeed) 
     {
 
-        double T = 0;      //Sample period of train model = 60/clockrate/1000 
+        double train = 0;      //Sample period of train model = 60/clockrate/1000 
         double Kp = 2;     //proportional gain (Guess value)
         double Ki = 1;     //integral (Guess value)
 
@@ -108,9 +108,9 @@ public class TrainController implements Runnable
 
         if (power < maxPower) 
         {
-            T = (60 / clockRate) * .001;
+            train = (60 / clockRate) * .001;
             d = setPoint - currentSpeed;
-            v = prev_v + (T / 2) * (d + prev_d);
+            v = prev_v + (train / 2) * (d + prev_d);
         } 
         else if (power >= maxPower) 
         {
@@ -131,18 +131,18 @@ public class TrainController implements Runnable
         String info;
         power = calcPower(currentSpeed, operatorSpeed, waysideSpeed); //power sent to train 
 
-        //if (T.getTransponder()) 
+        //if (train.getTransponder()) 
         {
-            info = T.getTransponderInfo();
+            info = train.getTransponderInfo();
             if (info.equals("tunnel")) 
             {
-                T.setLights();
+                train.setHeadLights();
             }
             if (info.equals("station") && trainStopped()) 
             {
-                T.openDoors();
+                train.openDoors();
                 //After clock rate of 60secs close doors 
-                T.closeDoors();
+                train.closeDoors();
             }
         }
         return power;
@@ -151,7 +151,7 @@ public class TrainController implements Runnable
     public void updateSchedule() 
     {
         System.out.println("Inside TrainControllers updateSchedule Method.");
-        //scheduleLine = T.getLine();
+        //scheduleLine = train.getLine();
         if (scheduleLine.equals(Line.GREEN)) 
         {
             G.greenSchedule();
@@ -165,7 +165,7 @@ public class TrainController implements Runnable
     public boolean trainStopped() 
     {
         System.out.println("Inside TrainControllers Stopped Method.");
-        //velocity = T.getVelocity();
+        //velocity = train.getVelocity();
         if (velocity == 0) {
             stopped = true;
         } 
@@ -186,5 +186,10 @@ public class TrainController implements Runnable
     {
         System.out.println("Inside TrainControllers setClockRate Method.");
         clock = clockRate;
+    }
+    
+    public void remove()
+    {
+        
     }
 }

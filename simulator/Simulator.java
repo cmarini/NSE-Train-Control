@@ -146,8 +146,8 @@ public class Simulator
      
      public void createTrain(Line line, int crewCount, int clockRate, String trainID)
      {
-          TrainController t = new TrainController(line, crewCount, clockRate, trainID);
-          trainControllers.add(t);
+          TrainController tc = new TrainController(line, crewCount, clockRate, trainID);
+          trainControllers.add(tc);
      }
     
     /**
@@ -190,7 +190,7 @@ public class Simulator
         
         for(int i = 0; i < trainControllers.size(); i++)
         {
-            capacity += trainControllers.get(i).getCapacity();
+            capacity += trainControllers.get(i).getTrain().getCapacity();
         }
         
         if(debugMode)
@@ -210,7 +210,7 @@ public class Simulator
         
         for(int i = 0; i < trainControllers.size(); i++)
         {
-            occupancy += trainControllers.get(i).getOccupancy();
+            occupancy += trainControllers.get(i).getTrain().getOccupancy();
         }
         if(debugMode)
         {

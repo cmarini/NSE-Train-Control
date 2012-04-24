@@ -1,9 +1,11 @@
 package trainmodel;
 
+import global.*;
+
 public class Train
 {
 	private double length;
-	private int trainLine;
+	private Line trainLine;
 	private double mass;
 	private int crewCount;
 	private int maxCapacity;
@@ -12,24 +14,35 @@ public class Train
 	private int maxTrainSpeed;
 	private int maxPower;
 	private boolean doors; // false = close, true = open
-	private boolean lights; // false = off, true = on
+	private boolean headLights; // false = off, true = on
+	private boolean cabinLights; // false = off, true = on
 	private String trainId;
 	private boolean transponder;
+        private double height;
+        private double width;
+	private boolean [] failures;
 
-	public Train(int line, int crew, String id)
+	public Train(Line line, int crew, String id)
 	{
 		length = 32.2; //m
 		trainLine = line;
-		mass = 40.9; // tons, what do we want?
+		mass = 40.9 * 2000; // lbs
+                height = 3.42; //m
+                width = 2.65; //m
 		crewCount = crew;
 		maxCapacity =  222 + crewCount;
 		distTraveled = 0; // meters
-		lights = false;
+		headLights = false;
+		cabinLights = false;
 		maxTrainSpeed = 70; // km/h
 		//maxPower = // ???
 		occupancy = crewCount; // how many crew members?
 		trainId = id;
 		transponder = false;
+                failures = new boolean [3];
+                failures[0] = false;
+                failures[1] = false;
+                failures[2] = false;
 	}
 
 	public double calcVelocity()
@@ -39,10 +52,65 @@ public class Train
 		//
             return 0.0;
 	}
+        
+        public double calcAcceleration()
+        {
+            return 0.0;
+        }
+        
+        public double getMass()
+        {
+            return mass + occupancy * 175;
+        }
+        
+        public double getLength()
+        {
+            return length;
+        }
+        
+        public double getWidth()
+        {
+            return width;
+        }
+        
+        public int getCapacity()
+        {
+            return maxCapacity;
+        }
+        
+        public int getOccupancy()
+        {
+            return occupancy;
+        }
+        
+        public int getCrew()
+        {
+            return crewCount;
+        }
+        
+        public double getHeight()
+        {
+            return height;
+        }
+        
+        public boolean getHeadLights()
+        {
+            return headLights;
+        }
 
-	public void setLights()
+	public void setHeadLights()
 	{
-		lights = !lights;
+		headLights = !headLights;
+	}
+        
+        public boolean getCabinLights()
+        {
+            return cabinLights;
+        }
+
+	public void setCabinLights()
+	{
+		cabinLights = !cabinLights;
 	}
 
 	public void openDoors()
@@ -55,15 +123,20 @@ public class Train
 		doors = false;
 	}
 
-	public int getOccupancy()
-	{
-		return occupancy;
-	}
-
-	public int getLine()
+        public boolean getDoors()
+        {
+            return doors;
+        }
+        
+	public Line getLine()
 	{
 		return trainLine;
 	}
+        
+        public boolean [] getFailures()
+        {
+            return failures;
+        }
 
 	public boolean hasTransponder()
 	{
@@ -74,6 +147,16 @@ public class Train
 	{
             return "A";
 	}
+        
+        public void setFailure(int i)
+        {
+            failures[i] = true;
+        }
+        
+        public void fixFailure(int i)
+        {
+            failures[i] = false;
+        }
 
 	public void updateTrack()
 	{

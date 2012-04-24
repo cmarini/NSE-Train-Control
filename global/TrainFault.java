@@ -2,5 +2,5 @@ package global;
 
 public enum TrainFault
 {
-	ENGINE, BREAK, SIGNAL;
+	ENGINE, BRAKE, SIGNAL, NONE;
 }
