@@ -20,12 +20,22 @@ public class Train
         public boolean transponder;
 	public double powerCmd;
 	public double velocity;
+	public double acceleration;
 	public double oldVelocity;
 	public double grade;
 	public double time;
         private double height;
         private double width;
 	private boolean [] failures;
+	public Track trackPiece;
+	public Track prevTrack;
+	public String transName;
+	public String transType;
+	public double emerBrake;
+	public double servBrake;
+	public double blockLength;
+	public double distInBlock;
+	public double remainder;
 
 	public Train(Line line, int crew, String id)
 	{
@@ -40,7 +50,6 @@ public class Train
 		headLights = false;
 		cabinLights = false;
 		maxTrainSpeed = 70; // km/h
-		//maxPower = // ???
 		occupancy = 0; // just passengers
 		trainId = id;
 		transponder = false;
@@ -48,79 +57,111 @@ public class Train
                 failures[0] = false;
                 failures[1] = false;
                 failures[2] = false;
+        emerBrake = false;
+        servBrake = false;
+        distInBlock = length;
 	}
 
-	public double calcVelocity()
+	public void calcVelocity()
 	{
+		if emerBrake
+		{
+			velocity = 0.0;
+		}
+		else if servBrake
+		{
+			velocity = 0.0;
+		}
+		else
+		{
+			velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
+			oldVelocity = velocity;
+		}
 		velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
 		oldVelocity = velocity;
+		//return velocity;
+	}
+
+	public void setServiceBrake(boolean bR)
+	{
+		emerBrake = bR;
+	}
+
+	public void setEmergencyBrake(boolean bR)
+	{
+		servBrake = bR;
+	}
+
+	public double getVelocity()
+	{
 		return velocity;
 	}
-        
-        public void setPower(double pwr)
-        {
-            powerCmd = pwr;
-        }
-        
-        public void setClockRate(int cr)
-        {
-            time = cr;
-        }
-        
-        public double calcAcceleration()
-        {
-            return 0.0;
-        }
-        
-        public double getMass()
-        {
-            return mass + occupancy * 175;
-        }
-        
-        public double getLength()
-        {
-            return length;
-        }
-        
-        public double getWidth()
-        {
-            return width;
-        }
-        
-        public int getCapacity()
-        {
-            return maxCapacity;
-        }
-        
-        public int getOccupancy()
-        {
-            return occupancy;
-        }
-        
-        public int getCrew()
-        {
-            return crewCount;
-        }
-        
-        public double getHeight()
-        {
-            return height;
-        }
-        
-        public boolean getHeadLights()
-        {
-            return headLights;
-        }
+
+	public void setPower(double pwr)
+	{
+		powerCmd = pwr;
+	}
+
+	public void setClockRate(int cr)
+	{
+		time = cr;
+	}
+
+	public double calcAcceleration()
+	{
+		acceleration = powerCmd/(oldVelocity*mass);
+		return acceleration;
+	}
+
+	public double getMass()
+	{
+		return mass + occupancy * 175;
+	}
+
+	public double getLength()
+	{
+		return length;
+	}
+
+	public double getWidth()
+	{
+		return width;
+	}
+
+	public int getCapacity()
+	{
+		return maxCapacity;
+	}
+
+	public int getOccupancy()
+	{
+		return occupancy;
+	}
+
+	public int getCrew()
+	{
+		return crewCount;
+	}
+
+	public double getHeight()
+	{
+		return height;
+	}
+
+	public boolean getHeadLights()
+	{
+		return headLights;
+	}
 
 	public void setHeadLights()
 	{
 		headLights = !headLights;
 	}
-        
-        public boolean getCabinLights()
-        {
-            return cabinLights;
-        }
+
+	public boolean getCabinLights()
+	{
+		return cabinLights;
+	}
 
 	public void setCabinLights()
 	{
@@ -137,20 +178,20 @@ public class Train
 		doors = false;
 	}
 
-        public boolean getDoors()
-        {
-            return doors;
-        }
-        
+	public boolean getDoors()
+	{
+		return doors;
+	}
+
 	public Line getLine()
 	{
 		return trainLine;
 	}
-        
-        public boolean [] getFailures()
-        {
-            return failures;
-        }
+
+	public boolean [] getFailures()
+	{
+		return failures;
+	}
 
 	public boolean hasTransponder()
 	{
@@ -159,27 +200,87 @@ public class Train
 
 	public String getTransponderInfo()
 	{
-            return "A";
+		return transType;
 	}
-        
-        public void setFailure(int i)
-        {
-            failures[i] = true;
-        }
-        
-        public void fixFailure(int i)
-        {
-            failures[i] = false;
-        }
+
+	public String getName()
+	{
+		return transName;
+	}
+
+	public void setFailure(int i)
+	{
+		failures[i] = true;
+	}
+
+	public void fixFailure(int i)
+	{
+		failures[i] = false;
+	}
 
 	public void updateTrack()
 	{
-		// set occupied
-		// set unoccupied
-		// give reference to yourself
-		// get grade info getGrade()
-		// check for transponder and set var transponder
-		// get transponder info if it exists
+		distTraveled = distTraveled + velocity * time;
+		distInBlock = distInBlock + velocity * time;
+		remainder = length - distInBlock;
+		calcVelocity();
+
+		if (remainder < 0)
+		{
+			prevTrack.setUnoccupied();
+		}
+
+		if (distInBlock > blockLength)
+		{
+			setOccupied(true, trackPiece)
+			trackPiece = trackPiece.getNext();
+			trackPiece.setOccupied(prevTrack);
+			distInBlock = distInBlock - blockLength;
+			blockSpeed = trackPiece.getSpeedLimit();
+			blockAuthority = trackPiece.getAuthority();
+			grade = trackPiece.getGrade();
+			blockLength = trackPiece.getBlockLength();
+
+			if (trackPiece instanceof Transponder)
+			{
+				transName = trackPiece.getTransponderName();
+				transType = trackPiece.getTransponderType();
+			}
+
+
+		}
+
+	}
+
+	public void setTrack(Track T)
+	{
+		trackPiece = T;
+		//updateTrack();
+	}
+
+	public Track getTrack()
+	{
+		return trackPiece;
+	}
+
+	public double getDistance()
+	{
+		return distTraveled;
+	}
+
+	public int getSpeedLimit()
+	{
+		return blockSpeed;
+	}
+
+	public int getAuthority()
+	{
+		return blockAuthority;
+	}
+
+	public void setPassengers(int pass)
+	{
+		occupancy = pass;
 	}
 
 
