@@ -596,9 +596,9 @@ public class CTCView extends JFrame
                             }
                             
                             int set = Integer.parseInt(setpoint.getText());
-                            if(set < 0 || set >= t.getSpeedInheritLimit())
+                            if(set < 0 || set > t.getInherentSpeedLimit())
                             {
-                                JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and " + t.getSpeedInheritLimit() + " for this block", "Input Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and " + t.getInherentSpeedLimit() + " for this block", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                             else
                             {
@@ -620,7 +620,7 @@ public class CTCView extends JFrame
                     try
                     {
                         int auth = Integer.parseInt(authority.getText());
-                        if(auth < 0 || auth >= 10)
+                        if(auth < 0 || auth > 10)
                         {
                             JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 10", "Input Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -930,7 +930,7 @@ public class CTCView extends JFrame
         {
             trainIDs = sim.getTrainIDs();
             
-            if(trainIDs.length != 0)
+            if(trainIDs.length != 0 || currentTrains.getItemCount() > 0)
             {
                 currentTrains.removeAllItems();
             }
@@ -1348,26 +1348,33 @@ public class CTCView extends JFrame
                         l = Line.RED;
                     }
                 }
-                if(enteredTrainID != null)
+                if(enteredTrainID != null && enteredTrainID.equals(""))
                 {
-                    if(sim.getTrainController(enteredTrainID) == null)
+                    if(enteredTrainID.equals("          "))
                     {
-                        boolean success = sim.createTrain(l, crewCount, clockRate, enteredTrainID);
-                        if(success)
+                        if(sim.getTrainController(enteredTrainID) == null)
                         {
-                            Train t = sim.getTrainController(enteredTrainID).getTrain();
-                            crewCount = 0;
-                            initialize();
+                            boolean success = sim.createTrain(l, crewCount, clockRate, enteredTrainID);
+                            if(success)
+                            {
+                                Train t = sim.getTrainController(enteredTrainID).getTrain();
+                                crewCount = 0;
+                                initialize();
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(TrainPanel.this, "Max number of train on " + l.toString() + " line", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            }
                         }
                         else
                         {
-                            JOptionPane.showMessageDialog(TrainPanel.this, "Max number of train on " + l.toString() + " line", "Input Error", JOptionPane.ERROR_MESSAGE);
-                        }
+                            JOptionPane.showMessageDialog(TrainPanel.this, "Train ID already in use", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        } 
                     }
                     else
                     {
-                        JOptionPane.showMessageDialog(TrainPanel.this, "Train ID already in use", "Input Error", JOptionPane.ERROR_MESSAGE);
-                    } 
+                        JOptionPane.showMessageDialog(TrainPanel.this, "Train ID error, please enter or re-enter the Train ID", "Input Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 else
                 {
@@ -1442,7 +1449,7 @@ public class CTCView extends JFrame
                             t.setFailure(1);
                             if(CTCView.getDebugMode())
                             {
-                                System.out.println("CTC View: Train: " + id + " sent brake failure command");
+                                System.out.println("CTC View: Train: " + id + " sent engine failure command");
                             } 
                         }
                         else
@@ -1450,7 +1457,7 @@ public class CTCView extends JFrame
                             t.fixFailure(1);
                             if(CTCView.getDebugMode())
                             {
-                                System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
+                                System.out.println("CTC View: Train: " + id + " sent fix engine failure command");
                             } 
                         }
                     }
@@ -1475,7 +1482,7 @@ public class CTCView extends JFrame
                             t.setFailure(2);
                             if(CTCView.getDebugMode())
                             {
-                                System.out.println("CTC View: Train: " + id + " sent brake failure command");
+                                System.out.println("CTC View: Train: " + id + " sent signal pick up failure command");
                             } 
                         }
                         else
@@ -1483,7 +1490,7 @@ public class CTCView extends JFrame
                             t.fixFailure(2);
                             if(CTCView.getDebugMode())
                             {
-                                System.out.println("CTC View: Train: " + id + " sent fix brake failure command");
+                                System.out.println("CTC View: Train: " + id + " sent fix signal pick up failure command");
                             } 
                         }
                     }
@@ -1751,7 +1758,6 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 controllerSelectedIndex = (int)cb.getSelectedIndex();
-                blockSelectedIndex = 0;
                 if(controllerSelectedIndex > 0)
                 {
                     char id = cb.getSelectedItem().toString().charAt(0);
@@ -1783,12 +1789,16 @@ public class CTCView extends JFrame
             {
                 JComboBox cb = (JComboBox)event.getSource();
                 blockSelectedIndex = (int)cb.getSelectedIndex();
+                if(blockSelectedIndex < 0)
+                {
+                    blockSelectedIndex = 0;
+                }
                 int trackIDVal = blockSelectedIndex;
                 ID trackselectedID = new ID(selectedLine, selectedWaysideID.getSection(), trackIDVal);
                 Track t = model.getTrack(trackselectedID);
                 if(t != null)
                 {
-                    speedLimit = t.getSpeedInheritLimit();
+                    speedLimit = t.getInherentSpeedLimit();
                     elevation = t.getElevation();
                     grade = t.getGrade();  
                     blockSize = t.getBlockLength();
@@ -1842,12 +1852,28 @@ public class CTCView extends JFrame
                                 }
                                 else
                                 {
-                                    trackType = "Track Block";
+                                    if(t != null)
+                                    {
+                                        trackType = "Track Block";
+                                    }
+                                    else
+                                    {
+                                        trackType = "";
+                                    }
                                 }
                             }
                         }
                     }
-                    initialize();
+                    
+                    speedLimitField.setText(speedLimit + "");
+                    elevationField.setText(elevation + "");
+                    gradeField.setText(grade + "");
+                    blockSizeField.setText(blockSize + "");
+                    trackTypeField.setText(trackType);
+                    openStateField.setText(openState + "");
+                    failureStateField.setText(failureState + "");
+                    lightStateField.setText(lightState + "");
+                    
                     if(CTCView.getDebugMode())
                     {
                         System.out.println("Track " + trackselectedID.getSection() + trackselectedID.getUnit() + " selected");

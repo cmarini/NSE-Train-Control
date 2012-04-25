@@ -114,7 +114,7 @@
         {
             /*if(removedTrains.get(j).getTrack().equals(model.getTrack(new ID(Line.GREEN, 'D', 27))))
             {
-                model.getWayside();
+                ((WaysideD)model.getWayside(Line.GREEN, 'D')).setSwitchToTrainYard();
             }*/
         }
 
