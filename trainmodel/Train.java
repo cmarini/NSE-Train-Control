@@ -1,6 +1,7 @@
 package trainmodel;
 
 import global.*;
+import trackmodel.*;
 
 public class Train
 {
@@ -17,23 +18,25 @@ public class Train
 	private boolean headLights; // false = off, true = on
 	private boolean cabinLights; // false = off, true = on
 	private String trainId;
-        public boolean transponder;
+	public boolean transponder;
 	public double powerCmd;
 	public double velocity;
 	public double acceleration;
 	public double oldVelocity;
 	public double grade;
 	public double time;
-        private double height;
-        private double width;
+	private double height;
+	private double width;
 	private boolean [] failures;
 	public Track trackPiece;
 	public Track prevTrack;
-	public String transName;
-	public String transType;
-	public double emerBrake;
-	public double servBrake;
+	public String stationName;
+	public Transponder.Type transType;
+	public boolean emerBrake;
+	public boolean servBrake;
 	public double blockLength;
+	public int blockSpeed;
+	public int blockAuthority;
 	public double distInBlock;
 	public double remainder;
 
@@ -42,8 +45,8 @@ public class Train
 		length = 32.2; //m
 		trainLine = line;
 		mass = 40.9 * 2000 + crew * 175; // lbs
-                height = 3.42; //m
-                width = 2.65; //m
+		height = 3.42; //m
+		width = 2.65; //m
 		crewCount = crew;
 		maxCapacity =  222 + crewCount;
 		distTraveled = 0; // meters
@@ -53,22 +56,22 @@ public class Train
 		occupancy = 0; // just passengers
 		trainId = id;
 		transponder = false;
-                failures = new boolean [3];
-                failures[0] = false;
-                failures[1] = false;
-                failures[2] = false;
-        emerBrake = false;
-        servBrake = false;
-        distInBlock = length;
+		failures = new boolean [3];
+		failures[0] = false;
+		failures[1] = false;
+		failures[2] = false;
+		emerBrake = false;
+		servBrake = false;
+		distInBlock = length;
 	}
 
 	public void calcVelocity()
 	{
-		if emerBrake
+		if (emerBrake)
 		{
 			velocity = oldVelocity - 2.73 * time;
 		}
-		else if servBrake
+		else if (servBrake)
 		{
 			velocity = oldVelocity - 1.2 * time;
 		}
@@ -198,14 +201,14 @@ public class Train
 		return transponder;
 	}
 
-	public String getTransponderInfo()
+	public Transponder.Type getTransponderInfo()
 	{
 		return transType;
 	}
 
-	public String getName()
+	public String getStationName()
 	{
-		return transName;
+		return stationName;
 	}
 
 	public void setFailure(int i)
@@ -232,7 +235,7 @@ public class Train
 
 		if (distInBlock > blockLength)
 		{
-			setOccupied(true, trackPiece)
+			trackPiece.setOccupied(trackPiece);
 			trackPiece = trackPiece.getNext();
 			trackPiece.setOccupied(prevTrack);
 			distInBlock = distInBlock - blockLength;
@@ -243,8 +246,9 @@ public class Train
 
 			if (trackPiece instanceof Transponder)
 			{
-				transName = trackPiece.getTransponderName();
-				transType = trackPiece.getTransponderType();
+				Transponder transponder = (Transponder) trackPiece;
+				stationName = transponder.getStationName();
+				transType = transponder.getType();
 			}
 
 
