@@ -70,18 +70,25 @@ public class Track
 		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
-	public void setOccupied(boolean iOccupy, Track from) // set block to occupied
+	public void setOccupied(Track from) // set block to occupied
 	{
-		if(from.equals(B))
-		{
-			direction = true;
-		}
-		else
+		if(from.equals(A)
 		{
 			direction = false;
 		}
-		trackInfo = " info: track set to: " + iOccupy;
-		occupied = iOccupy;
+		else
+		{
+			direction = true;
+		}
+		trackInfo = " info: track set to OCCUPIED";
+		occupied = true;
+		log.info("Track " + trackID + ": " + trackInfo);
+	}
+	
+	public void setUnoccupied()
+	{
+		trackInfo = " info: track set to UNOCCUPIED";
+		occupied = false;
 		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
@@ -136,7 +143,7 @@ public class Track
 		direction = dir;
 		return getNext();
 	}
-		
+	
 	public boolean getDirection()
 	{
 		return direction;
