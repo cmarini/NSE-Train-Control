@@ -7,7 +7,8 @@ import java.util.logging.*;
 
 public class Track
 {
-	final static Logger log = Logger.getLogger("Log");
+	final static Logger log = Logger.getLogger(Track.class.getName());
+	
 	private double elevation;
 	private double grade;
 	private int speedLimit;
