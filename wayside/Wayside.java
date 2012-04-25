@@ -8,7 +8,7 @@ import trainmodel.*;
 
 public abstract class Wayside implements WaysideInterface, Runnable
 {
-	final static Logger log = Logger.getLogger("Log");
+	final static Logger log = Logger.getLogger(Wayside.class.getName());
 	
 	protected List<Track> track;
 	protected ID id;
