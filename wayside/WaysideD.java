@@ -5,40 +5,50 @@ import trackmodel.*;
 
 public class WaysideD extends Wayside
 {
+	private boolean toTrainYard;
+	private boolean trainOnSwitch;
+		
 	public WaysideD(ID id)
 	{
 		super(id);
+		toTrainYard = false;
+		trainOnSwitch = false;
 	}
 
 	void runLogic()
 	{
-	/* 
-	 * Don't yet know the train/track implementation to
-	 * determine if a train is headed for the train yard.
-	 */
-	 
-	/*
 		Switch tySwitch = (Switch) track.get(trackEnd());
-		Train train = tySwitch.getTrain();
-		if ((train != null) && train.needsToGoToTrainYard())
+		if (toTrainYard)
 		{
 			tySwitch.setSwitchState(Switch.SwitchState.LEFT);
 			spreadAuthority(1);
+			if (tySwitch.isOccupied())
+			{
+				trainOnSwitch = true;
+			}
+			else if (trainOnSwitch)
+			{
+				trainOnSwitch = false;
+				toTrainYard = false;
+			}
 		}
 		else
 		{
 			tySwitch.setSwitchState(Switch.SwitchState.RIGHT);
 			if (nextRight().clearToReceiveFrom(this))
 			{
-				spreadAuthority(0);
+				spreadAuthority(1);
 			}
 			else
 			{
-				Switch s = (Switch) track.get(trackEnd()).getNext(direction);
-				s.setSwitchState(Switch.SwitchState.RIGHT);
-				spreadAuthority(1);
+				spreadAuthority(0);
 			}
 		}
-	*/
 	}
+	
+	public void setSwitchToTrainYard()
+	{
+		toTrainYard = true;
+	}
+		
 }
