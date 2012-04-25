@@ -142,10 +142,15 @@ public class Track
 		return direction;
 	}
         
-	public int getSpeedLimit() // returns track speed limit
+	public int getInherentSpeedLimit() // returns track speed limit
 	{
 		trackInfo = "info: sent speed limit: " + speedLimit;
 		return speedLimit;
+	}
+	
+	public int getSpeedLimit()
+	{
+		return dispatchLimit;
 	}
         
 	public int getAuthority() // returns authority
