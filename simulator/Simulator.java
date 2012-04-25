@@ -92,7 +92,7 @@
         for(int i = 0; i < trainControllers.size(); i++)
         {
             trainControllers.get(i).setclockRate(clockRate);
-            /*if(trainControllers.get(i).getTrain().getTrack())
+            if(trainControllers.get(i).getTrain().getTrack())
             {
                 switch(trainControllers.get(i).getTrain().getLine())
                 {
@@ -106,7 +106,7 @@
                         
                         break;
                 }
-            }*/
+            }
             trainControllers.get(i).run();
         }
         

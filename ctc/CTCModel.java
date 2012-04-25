@@ -34,7 +34,18 @@ public class CTCModel
         (new WaysideH(new ID(Line.GREEN, 'H', -1))),
         (new WaysideI(new ID(Line.GREEN, 'I', -1))),
         (new WaysideJ(new ID(Line.GREEN, 'J', -1)))};
-    private Wayside [] redTrackControllers = new Wayside[9];
+    private Wayside [] redTrackControllers = {
+        (new WaysideA(new ID(Line.RED, 'A', -1))), 
+        (new WaysideB(new ID(Line.RED, 'B', -1))), 
+        (new WaysideC(new ID(Line.RED, 'C', -1))), 
+        (new WaysideD(new ID(Line.RED, 'D', -1))), 
+        (new WaysideE(new ID(Line.RED, 'E', -1))), 
+        (new WaysideF(new ID(Line.RED, 'F', -1))), 
+        (new WaysideG(new ID(Line.RED, 'G', -1))),
+        (new WaysideH(new ID(Line.RED, 'H', -1))),
+        (new WaysideI(new ID(Line.RED, 'I', -1))),
+        (new WaysideJ(new ID(Line.RED, 'J', -1))),
+        (new WaysideJ(new ID(Line.RED, 'K', -1)))};;
     
     /**
      * 
@@ -43,7 +54,7 @@ public class CTCModel
     {
         try
         {
-            parser = new TrackParser("GreenLine.csv");
+            parser = new TrackParser("src/parser/GreenLine.csv");
             initializeTrack(parser);
         }
         catch(IOException e)
@@ -53,7 +64,7 @@ public class CTCModel
         
         try
         {
-            parser = new TrackParser("RedLine.csv");
+            parser = new TrackParser("src/parser/RedLine.csv");
             initializeTrack(parser);
         }
         catch(IOException e)
@@ -167,32 +178,45 @@ public class CTCModel
                             break;
                     }
                 }
-//                else
-//                {
-//                    switch (id.getSection())
-//                    {
-//                        case 'A':
-//                            return redTrackControllers[0].setTrack(t);
-//                        case 'B':
-//                            return redTrackControllers[1].setTrack(t);
-//                        case 'C':
-//                            return redTrackControllers[2].setTrack(t);
-//                        case 'D':
-//                            return redTrackControllers[3].setTrack(t);
-//                        case 'E':
-//                            return redTrackControllers[4].setTrack(t);
-//                        case 'F':
-//                            return redTrackControllers[5].setTrack(t);
-//                        case 'G':
-//                            return redTrackControllers[6].setTrack(t);
-//                        case 'H':
-//                            return redTrackControllers[7].setTrack(t);
-//                        case 'I':
-//                            return redTrackControllers[8].setTrack(t);
-//                        case 'J':
-//                            return redTrackControllers[9].setTrack(t);    
-//                    }
-//                }
+                else
+                {
+                    switch (idNum.getSection())
+                    {
+                        case 'A':
+                            redTrackControllers[0].addTrack(t);
+                            break;
+                        case 'B':
+                            redTrackControllers[1].addTrack(t);
+                            break;
+                        case 'C':
+                            redTrackControllers[2].addTrack(t);
+                            break;
+                        case 'D':
+                            redTrackControllers[3].addTrack(t);
+                            break;
+                        case 'E':
+                            redTrackControllers[4].addTrack(t);  
+                            break;
+                        case 'F':
+                            redTrackControllers[5].addTrack(t);  
+                            break;
+                        case 'G':
+                            redTrackControllers[6].addTrack(t);  
+                            break;
+                        case 'H':
+                            redTrackControllers[7].addTrack(t);  
+                            break;
+                        case 'I':
+                            redTrackControllers[8].addTrack(t);  
+                            break;
+                        case 'J':
+                            redTrackControllers[9].addTrack(t);  
+                            break;
+                        case 'K':
+                            redTrackControllers[10].addTrack(t);  
+                            break;
+                    }
+                }
             }
             else
             {
@@ -237,32 +261,45 @@ public class CTCModel
                             break;
                     }
                 }
-//                else
-//                {
-//                    switch (id.getSection())
-//                    {
-//                        case 'A':
-//                            redTrackControllers[0].setTrack(t);
-//                        case 'B':
-//                            redTrackControllers[1].setTrack(t);
-//                        case 'C':
-//                            redTrackControllers[2].setTrack(t);
-//                        case 'D':
-//                            redTrackControllers[3].setTrack(t);
-//                        case 'E':
-//                            redTrackControllers[4].setTrack(t);
-//                        case 'F':
-//                            redTrackControllers[5].setTrack(t);
-//                        case 'G':
-//                            redTrackControllers[6].setTrack(t);
-//                        case 'H':
-//                            redTrackControllers[7].setTrack(t);
-//                        case 'I':
-//                            redTrackControllers[8].setTrack(t);
-//                        case 'J':
-//                            redTrackControllers[9].setTrack(t);    
-//                    }
-//                } 
+                else
+                {
+                    switch (idNum.getSection())
+                    {
+                        case 'A':
+                            redTrackControllers[0].addTrack(t);
+                            break;
+                        case 'B':
+                            redTrackControllers[1].addTrack(t);
+                            break;
+                        case 'C':
+                            redTrackControllers[2].addTrack(t);
+                            break;
+                        case 'D':
+                            redTrackControllers[3].addTrack(t);
+                            break;
+                        case 'E':
+                            redTrackControllers[4].addTrack(t); 
+                            break;
+                        case 'F':
+                            redTrackControllers[5].addTrack(t);
+                            break;
+                        case 'G':
+                            redTrackControllers[6].addTrack(t);
+                            break;
+                        case 'H':
+                            redTrackControllers[7].addTrack(t);
+                            break;
+                        case 'I':
+                            redTrackControllers[8].addTrack(t);
+                            break;
+                        case 'J':
+                            redTrackControllers[9].addTrack(t);
+                            break;
+                        case 'K':
+                            redTrackControllers[10].addTrack(t); 
+                            break;
+                    }
+                } 
                 if(linkback)
                 {
                     if(!prevLinkBack)
@@ -287,6 +324,7 @@ public class CTCModel
                 }
             }
         }
+        t = (Switch)switches.pop();
         if(firstBlock != null && t != null)
         {
             firstBlock.setPrev(t);
@@ -390,6 +428,9 @@ public class CTCModel
             case 'J':
                 trackBlocks = w[9].getTrackBlocks();
                 break;
+            case 'K':
+                trackBlocks = w[10].getTrackBlocks();
+                break;
             default:
                 return new String [0];
         }
@@ -488,6 +529,18 @@ public class CTCModel
                     return redTrackControllers[3].findTrack(id);
                 case 'E':
                     return redTrackControllers[4].findTrack(id);
+                case 'F':
+                    return redTrackControllers[5].findTrack(id);
+                case 'G':
+                    return redTrackControllers[6].findTrack(id);
+                case 'H':
+                    return redTrackControllers[7].findTrack(id);
+                case 'I':
+                    return redTrackControllers[8].findTrack(id);
+                case 'J':
+                    return redTrackControllers[9].findTrack(id);
+                case 'K':
+                    return redTrackControllers[10].findTrack(id);
             }
         }
         return null;
@@ -535,6 +588,18 @@ public class CTCModel
                     return redTrackControllers[3];
                 case 'E':
                     return redTrackControllers[4];
+                case 'F':
+                    return redTrackControllers[5];
+                case 'G':
+                    return redTrackControllers[6];
+                case 'H':
+                    return redTrackControllers[7];
+                case 'I':
+                    return redTrackControllers[8];
+                case 'J':
+                    return redTrackControllers[9];
+                case 'K':
+                    return redTrackControllers[10];
             }
         }
         return null;
