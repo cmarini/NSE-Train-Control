@@ -70,8 +70,8 @@ public abstract class Wayside implements WaysideInterface, Runnable
 		{
 			return;
 		}
-		int limit = (t.getInherentSpeedLimit() < speed) ? t.getInherent() : speed;
-		t.setDispatchLimit(limitd);
+		int limit = (t.getInherentSpeedLimit() < speed) ? t.getInherentSpeedLimit() : speed;
+		t.setDispatchLimit(limit)
 	}
 	
 	public Track findTrack(ID trackID)
