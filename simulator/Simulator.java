@@ -29,6 +29,7 @@
     private static CTCModel model;  // references the model of the system used by the gui
     private static int clockRate = 60;  // used to determine when clock ticks will occur 
     private static ArrayList <TrainController> trainControllers = new <TrainController> ArrayList();   // references all train controllers currently in the system
+    private static ArrayList <TrainController> removedTrains = new <TrainController> ArrayList();
     private int throughput;
     private int greenLineTrainCount = 0;
     private int redLineTrainCount = 0;
@@ -91,7 +92,30 @@
         for(int i = 0; i < trainControllers.size(); i++)
         {
             trainControllers.get(i).setclockRate(clockRate);
+            /*if(trainControllers.get(i).getTrain().getTrack())
+            {
+                switch(trainControllers.get(i).getTrain().getLine())
+                {
+                    case GREEN:
+                        if(!model.getTrack(new ID(Line.GREEN, 'F', 0)).isOccupied())
+                        {
+                            trainControllers.get(i).getTrain().setTrack(model.getTrack(new ID(Line.GREEN, 'F', 0)));
+                        }
+                        break;
+                    case RED:
+                        
+                        break;
+                }
+            }*/
             trainControllers.get(i).run();
+        }
+        
+        for(int j = 0; j < removedTrains.size(); j++)
+        {
+            /*if(removedTrains.get(j).getTrack().equals(model.getTrack(new ID(Line.GREEN, 'D', 27))))
+            {
+                model.getWayside();
+            }*/
         }
 
         model.run();
@@ -252,6 +276,11 @@
             System.out.println("Simulator: occupancy: " + occupancy);
         }
         return occupancy;
+    }
+    
+    public void remove(TrainController t)
+    {
+        removedTrains.add(t);
     }
 
 }

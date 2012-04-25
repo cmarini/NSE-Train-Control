@@ -474,32 +474,69 @@ public class CTCModel
                     return greenTrackControllers[9].findTrack(id);    
             }
         }
-//        else
-//        {
-//            switch (id.getSection())
-//            {
-//                case 'A':
-//                    return redTrackControllers[0].getTrack(id.getUnit());
-//                case 'B':
-//                    return redTrackControllers[1].getTrack(id.getUnit());
-//                case 'C':
-//                    return redTrackControllers[2].getTrack(id.getUnit());
-//                case 'D':
-//                    return redTrackControllers[3].getTrack(id.getUnit());
-//                case 'E':
-//                    return redTrackControllers[4].getTrack(id.getUnit());
-//                case 'F':
-//                    return redTrackControllers[5].getTrack(id.getUnit());
-//                case 'G':
-//                    return redTrackControllers[6].getTrack(id.getUnit());
-//                case 'H':
-//                    return redTrackControllers[7].getTrack(id.getUnit());
-//                case 'I':
-//                    return redTrackControllers[8].getTrack(id.getUnit());
-//                case 'J':
-//                    return redTrackControllers[9].getTrack(id.getUnit());    
-//            }
-//        }
+        else
+        {
+            switch (id.getSection())
+            {
+                case 'A':
+                    return redTrackControllers[0].findTrack(id);
+                case 'B':
+                    return redTrackControllers[1].findTrack(id);
+                case 'C':
+                    return redTrackControllers[2].findTrack(id);
+                case 'D':
+                    return redTrackControllers[3].findTrack(id);
+                case 'E':
+                    return redTrackControllers[4].findTrack(id);
+            }
+        }
+        return null;
+    }
+    
+    public Wayside getWayside(Line l, char section)
+    {
+        if(l.equals(Line.GREEN))
+        {
+            switch (section)
+            {
+                case 'A':
+                    return greenTrackControllers[0];
+                case 'B':
+                    return greenTrackControllers[1];
+                case 'C':
+                    return greenTrackControllers[2];
+                case 'D':
+                    return greenTrackControllers[3];
+                case 'E':
+                    return greenTrackControllers[4];
+                case 'F':
+                    return greenTrackControllers[5];
+                case 'G':
+                    return greenTrackControllers[6];
+                case 'H':
+                    return greenTrackControllers[7];
+                case 'I':
+                    return greenTrackControllers[8];
+                case 'J':
+                    return greenTrackControllers[9];   
+            }
+        }
+        else
+        {
+            switch (section)
+            {
+                case 'A':
+                    return redTrackControllers[0];
+                case 'B':
+                    return redTrackControllers[1];
+                case 'C':
+                    return redTrackControllers[2];
+                case 'D':
+                    return redTrackControllers[3];
+                case 'E':
+                    return redTrackControllers[4];
+            }
+        }
         return null;
     }
     

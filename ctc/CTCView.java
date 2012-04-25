@@ -596,9 +596,9 @@ public class CTCView extends JFrame
                             }
                             
                             int set = Integer.parseInt(setpoint.getText());
-                            if(set < 0 || set >= t.getSpeedLimit())
+                            if(set < 0 || set >= t.getSpeedInheritLimit())
                             {
-                                JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and " + t.getSpeedLimit() + " for this block", "Input Error", JOptionPane.ERROR_MESSAGE);
+                                JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and " + t.getSpeedInheritLimit() + " for this block", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                             else
                             {
@@ -1387,6 +1387,7 @@ public class CTCView extends JFrame
                 }
                 TrainController tc = sim.getTrainController(id);
                 tc.remove();
+                sim.remove(tc);
                 initialize();
             }
         };
@@ -1787,7 +1788,7 @@ public class CTCView extends JFrame
                 Track t = model.getTrack(trackselectedID);
                 if(t != null)
                 {
-                    speedLimit = t.getSpeedLimit();
+                    speedLimit = t.getSpeedInheritLimit();
                     elevation = t.getElevation();
                     grade = t.getGrade();  
                     blockSize = t.getBlockLength();
