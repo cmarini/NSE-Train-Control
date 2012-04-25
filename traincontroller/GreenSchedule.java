@@ -1,6 +1,7 @@
 package traincontroller;
 
 import java.io.*;
+import java.util.logging.*;
 
 public class GreenSchedule 
 {
@@ -9,7 +10,7 @@ public class GreenSchedule
     private String currentStop;
     private String nextStop;
     private int stationCounter = 0;
-    private double currentTime; //actual time it took to get to the stop
+    private double currentTime; //actual time it took to get to the stop 
     private double dwellTime;
     private double timetoStation;
     private double clockrate;

@@ -1,6 +1,7 @@
 package traincontroller;
 
 import java.io.*;
+import java.util.logging.*;
 
 
 public class RedSchedule
