@@ -27,7 +27,7 @@ public class Station extends Track
 	{
 		Random randomGen = new Random();
 		
-		int passengerPlusMinus = randomGen.nextInt(1);
+		int passengerPlusMinus = randomGen.nextInt(2);
 		
 		if(passengerPlusMinus == 0)
 		{

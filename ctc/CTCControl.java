@@ -9,7 +9,7 @@ package ctc;
 import simulator.*;
 import global.*;
 import trackmodel.*;
-import trainmodel.*;
+import traincontroller.*;
 
 /**
  * This file contains the specification for the CTCControl which passes messages
@@ -86,7 +86,9 @@ public class CTCControl
      */
     public void setOperatorCommands(int sp, boolean b, String trainID)
     {
-        Train t = sim.getTrainController(trainID).getTrain();
+        TrainController t = sim.getTrainController(trainID);
+        t.setBraking(b);
+        //t.setOperator(sp);
         if(debugMode)
         {
             System.out.println("CTC Control: Operator Speed : " + sp + " Brake: " + b + " to train: " + trainID);

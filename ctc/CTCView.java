@@ -46,7 +46,7 @@ public class CTCView extends JFrame
     private static Simulator sim;   // references the simulator for the system
     private boolean isOpen = true;  // used to determine if the main GUI window is open
     private int clockRate = 60; // used to set the clock rate for the system
-    private boolean demoMode = false;   // used to determine if demo mode is active
+    private static boolean demoMode = false;   // used to determine if demo mode is active
     private MainPanel mainPanel;    // used to create the dispaly for the main screen
     private DispatcherPanel dispatcherPanel;    // used to create the dispaly for the dispatcher screen
     private OperatorPanel operatorPanel;  // used to create the dispaly for the operator screen
@@ -330,6 +330,16 @@ public class CTCView extends JFrame
     }
     
     /**
+     * return the state of the debug mode flag
+     * 
+     * @return a boolean representing the state of the debug mode flag
+     */
+    public static void setDemoMode(boolean b)
+    {
+        demoMode = b;
+    }
+    
+    /**
      * return the model
      * 
      * @return a CTCModel 
@@ -567,16 +577,28 @@ public class CTCView extends JFrame
                 {
                     try
                     {
-                        int set = Integer.parseInt(setpoint.getText());
-                        if(set < 0 || set > 70)
+                        if(dispatcherSelectedIndex == 0)
                         {
-                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid track selection, please select the track to send the setpoint", "Input Error", JOptionPane.ERROR_MESSAGE); 
                         }
                         else
                         {
-                            if(dispatcherSelectedIndex == 0)
+                            String selectedBlock = trackIDs[dispatcherSelectedIndex - 1];
+                            Track t;
+                            
+                            if(selectedBlock.length() == 2)
                             {
-                               JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid track selection, please select the track to send the setpoint", "Input Error", JOptionPane.ERROR_MESSAGE); 
+                                t = model.getTrack(new ID(dispatcherLoggedin.getLine(), dispatcherLoggedin.getWayside().getSection(), Integer.parseInt(selectedBlock.substring(1,2))));
+                            }
+                            else
+                            {
+                                t = model.getTrack(new ID(dispatcherLoggedin.getLine(), dispatcherLoggedin.getWayside().getSection(), Integer.parseInt(selectedBlock.substring(1,3))));
+                            }
+                            
+                            int set = Integer.parseInt(setpoint.getText());
+                            if(set < 0 || set >= t.getSpeedInheritLimit())
+                            {
+                                JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and " + t.getSpeedInheritLimit() + " for this block", "Input Error", JOptionPane.ERROR_MESSAGE);
                             }
                             else
                             {
@@ -590,7 +612,7 @@ public class CTCView extends JFrame
                     }
                     catch(NumberFormatException p)
                     {
-                        JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Setpoint value, please enter a number between 0 and 10", "Input Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
                 if(e.getSource().toString().equals(sendAuthority.toString()))
@@ -598,14 +620,9 @@ public class CTCView extends JFrame
                     try
                     {
                         int auth = Integer.parseInt(authority.getText());
-                        String trackID = track.getSelectedItem().toString();
-                        if(CTCView.getDebugMode() && dispatcherSelectedIndex > 0)
+                        if(auth < 0 || auth >= 10)
                         {
-                            System.out.println("CTC View: Authority value: " + auth + " sent to " + trackIDs[dispatcherSelectedIndex - 1]);
-                        }
-                        if(auth < 0 || auth > 70)
-                        {
-                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 70", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(DispatcherPanel.this, "Invalid Authority value, please enter a number between 0 and 10", "Input Error", JOptionPane.ERROR_MESSAGE);
                         }
                         else
                         {
@@ -615,6 +632,10 @@ public class CTCView extends JFrame
                             }
                             else
                             {
+                                if(CTCView.getDebugMode() && dispatcherSelectedIndex > 0)
+                                {
+                                    System.out.println("CTC View: Authority value: " + auth + " sent to " + trackIDs[dispatcherSelectedIndex - 1]);
+                                }
                                 control.setDispatcherAuthority(auth, dispatcherLoggedin.getLine(), dispatcherLoggedin.getWayside().getSection(), Integer.parseInt(trackIDs[dispatcherSelectedIndex - 1].substring(1,2)));
                             }
                         }
@@ -756,9 +777,9 @@ public class CTCView extends JFrame
                         {   
                             System.out.println("CTC View: Speed Entered: " + set);
                         }
-                        if(set < 0 || set > 100)
+                        if(set < 0 || set > 140)
                         {
-                            JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 140", "Input Error", JOptionPane.ERROR_MESSAGE);
                         }
                         else
                         {
@@ -775,7 +796,7 @@ public class CTCView extends JFrame
                     
                     catch(NumberFormatException p)
                     {
-                        JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 100", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(OperatorPanel.this, "Invalid Speed value, please enter a number between 0 and 140", "Input Error", JOptionPane.ERROR_MESSAGE);
                     }
                 }
             }
@@ -1331,10 +1352,17 @@ public class CTCView extends JFrame
                 {
                     if(sim.getTrainController(enteredTrainID) == null)
                     {
-                        sim.createTrain(l, crewCount, clockRate, enteredTrainID);
-                        Train t = sim.getTrainController(enteredTrainID).getTrain();
-                        crewCount = 0;
-                        initialize();
+                        boolean success = sim.createTrain(l, crewCount, clockRate, enteredTrainID);
+                        if(success)
+                        {
+                            Train t = sim.getTrainController(enteredTrainID).getTrain();
+                            crewCount = 0;
+                            initialize();
+                        }
+                        else
+                        {
+                            JOptionPane.showMessageDialog(TrainPanel.this, "Max number of train on " + l.toString() + " line", "Input Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                     else
                     {
@@ -1359,6 +1387,7 @@ public class CTCView extends JFrame
                 }
                 TrainController tc = sim.getTrainController(id);
                 tc.remove();
+                sim.remove(tc);
                 initialize();
             }
         };
@@ -1496,6 +1525,7 @@ public class CTCView extends JFrame
          */
         private JLabel openStateLabel = new JLabel("Open State");
         private JLabel failureStateLabel = new JLabel("Failure State");
+        private JLabel lightStateLabel = new JLabel("Light State");
         private JComboBox line; // holds the lines to be selected
         private JComboBox controller = new JComboBox();   // holds the waysides to be selected
         private JComboBox track = new JComboBox();    // holds the track blocks to be selected
@@ -1505,6 +1535,7 @@ public class CTCView extends JFrame
         private JTextField gradeField = new JTextField();   // displays the grade for the selected block
         private JTextField blockSizeField = new JTextField();   // displays the block size for the selected block
         private JTextField trackTypeField = new JTextField();   // displays the track type for the selected block
+        private JTextField lightStateField = new JTextField();
         //private JTextField passengersBoardingField = new JTextField();  // displays the passengers boarding for the selected block
         //private JTextField passengersDisembarkingField = new JTextField();  // displays the passengers disembarking for the selected block
         private JTextField openStateField = new JTextField();
@@ -1521,6 +1552,7 @@ public class CTCView extends JFrame
         private String trackType;  // holds the track type of the selected track block
         private String openState; 
         private String failureState; 
+        private Light lightState;
         //private int passengersBoarding; // holds the number of passengers boarding of the selected track block
         //private int passengersDisembarking; // holds the number of passengers disembarking of the selected track block
         private String trackIDs[] = new String [0];  // holds the ids of the track blocks in the system
@@ -1627,6 +1659,7 @@ public class CTCView extends JFrame
             trackTypeField.setColumns(10);
             openStateField.setColumns(10);
             failureStateField.setColumns(10);
+            lightStateField.setColumns(10);
             //passengersBoardingField.setColumns(10);
             //passengersDisembarkingField.setColumns(10);
             
@@ -1637,6 +1670,7 @@ public class CTCView extends JFrame
             trackTypeField.setText(trackType);
             openStateField.setText(openState + "");
             failureStateField.setText(failureState + "");
+            lightStateField.setText(lightState + "");
             
             speedLimitField.setEditable(false);
             elevationField.setEditable(false);
@@ -1648,6 +1682,7 @@ public class CTCView extends JFrame
             //passengersBoardingField.setEditable(false);
             //passengersDisembarkingField.setEditable(false);
             track.setEditable(false);
+            lightStateField.setEditable(false);
                         
             addComponent(this, lineLabel, 0, 0, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             addComponent(this, line, 1, 0, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
@@ -1669,15 +1704,17 @@ public class CTCView extends JFrame
             //addComponent(this, passengersBoardingField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
             //addComponent(this, passengersDisembarkingLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
             //addComponent(this, passengersDisembarkingField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, openStateLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, openStateField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, failureStateLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, failureStateField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
-            addComponent(this, closeButton, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, openButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, breakButton, 0, 12, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
-            addComponent(this, failType, 1, 12, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
-            addComponent(this, fixButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, lightStateLabel, 0, 8, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, lightStateField, 1, 8, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, openStateLabel, 0, 9, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openStateField, 1, 9, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, failureStateLabel, 0, 10, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failureStateField, 1, 10, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.NONE);
+            addComponent(this, closeButton, 0, 11, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, openButton, 0, 12, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, breakButton, 0, 13, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
+            addComponent(this, failType, 1, 13, 1, 1, 0, 0, insets, GridBagConstraints.WEST, GridBagConstraints.BOTH);
+            addComponent(this, fixButton, 0, 14, 1, 1, 0, 0, insets, GridBagConstraints.EAST, GridBagConstraints.NONE);
         }
         
         ActionListener lineComboListener = new ActionListener()
@@ -1733,6 +1770,8 @@ public class CTCView extends JFrame
                     track.setSelectedIndex(0);
                     trackIDs = new String[0];
                     blockSelectedIndex = 0;
+                    trackType = null;
+                    lightState = null;
                     initialize();
                 }
             }
@@ -1749,10 +1788,11 @@ public class CTCView extends JFrame
                 Track t = model.getTrack(trackselectedID);
                 if(t != null)
                 {
-                    speedLimit = t.getSpeedLimit();
+                    speedLimit = t.getSpeedInheritLimit();
                     elevation = t.getElevation();
                     grade = t.getGrade();  
                     blockSize = t.getBlockLength();
+                    lightState = t.getLightState();
 
                     if(t.isOpen())
                     {

@@ -19,7 +19,7 @@ public class Track
 	private ID trackID;
 	private String trackInfo;
 	private TrackFault failure;
-	private int trafficLight;
+	private Light trafficLight;
 	private double blockLength;
 	protected Track A;
 	protected Track B;
@@ -35,7 +35,7 @@ public class Track
 		occupied = false;
 		trackID = trkID;
 		failure = TrackFault.NONE;
-		trafficLight = 0;
+		trafficLight = Light.NONE;
 		blockLength = blkLen;
 		open = true;
 		authority = 0;
@@ -92,7 +92,7 @@ public class Track
 		log.info("Track " + trackID + ": " + trackInfo);
 	}
 	
-	public void setTrafficLight(int lightState) // set traffic light
+	public void setTrafficLight(Light lightState) // set traffic light
 	{
 		trackInfo = "info: traffic light set to: " + lightState;
 		trafficLight = lightState;
@@ -142,10 +142,15 @@ public class Track
 		return direction;
 	}
         
-	public int getSpeedLimit() // returns track speed limit
+	public int getInherentSpeedLimit() // returns track speed limit
 	{
 		trackInfo = "info: sent speed limit: " + speedLimit;
 		return speedLimit;
+	}
+	
+	public int getSpeedLimit()
+	{
+		return dispatchLimit;
 	}
         
 	public int getAuthority() // returns authority
@@ -181,4 +186,9 @@ public class Track
 	{
 		return blockLength;
 	}
+        
+        public Light getLightState()
+        {
+            return trafficLight;
+        }
 }
