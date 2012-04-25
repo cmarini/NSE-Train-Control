@@ -44,30 +44,26 @@ public class Track
 	
 	public void setFailure(TrackFault f) // set track to fail (set value to 1)
 	{
-		trackInfo = "info: track failed (" + f + ")";
 		failure = f;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": Failure set (" + f + ")");
 	}
 	
 	public void setDispatchLimit(int dLimit) // set dispatcher speed limit
 	{
-		trackInfo = "info: dispatcher limit set to: " + dLimit;
 		dispatchLimit = dLimit;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": Dispatcher limit set to " + dLimit);
 	}
 	
 	public void setAuthority(int auth) // set authority
 	{
-		trackInfo = "info: authority set to: " + auth;
 		authority = auth;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": authority set to " + auth);
 	}
 	
 	public void setFix() // call this method to fix track
 	{
-		trackInfo = "info: track fixed";
 		failure = TrackFault.NONE;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": Track fixed");
 	}
 	
 	public void setOccupied(Track from) // set block to occupied
@@ -84,30 +80,26 @@ public class Track
 		{
 			direction = true;
 		}
-		trackInfo = " info: track set to OCCUPIED";
 		occupied = true;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": set to OCCUPIED");
 	}
 	
 	public void setUnoccupied()
 	{
-		trackInfo = " info: track set to UNOCCUPIED";
 		occupied = false;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": set to UNOCCUPIED");
 	}
 	
 	public void setOpen(boolean iOpen) // set track to open
 	{
-		trackInfo = "info: track set to: " + iOpen;
 		open = iOpen;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": Open set to " + iOpen);
 	}
 	
 	public void setTrafficLight(Light lightState) // set traffic light
 	{
-		trackInfo = "info: traffic light set to: " + lightState;
 		trafficLight = lightState;
-		log.info("Track " + trackID + ": " + trackInfo);
+		log.info("Track " + trackID + ": Light set to " + lightState);
 	}
         
 	public void setNext(Track t)
@@ -155,7 +147,7 @@ public class Track
         
 	public int getInherentSpeedLimit() // returns track speed limit
 	{
-		trackInfo = "info: sent speed limit: " + speedLimit;
+		log.fine("Track " + trackID + ": Sent speed limit: " + speedLimit);
 		return speedLimit;
 	}
 	
@@ -166,25 +158,25 @@ public class Track
         
 	public int getAuthority() // returns authority
 	{
-		trackInfo = "info: sent speed limit: " + authority;
+		log.fine("Track " + trackID + ": Sent authority: " + authority);
 		return authority;
 	}
 
 	public double getElevation() // returns elevation
 	{
-		trackInfo = "info: sent elevation: " + elevation;
+		log.fine("Track " + trackID + ": Sent elevation: " + elevation);
 		return elevation;
 	}
 	
 	public ID getID() // returns track ID
 	{
-		trackInfo = "info: sent track ID: "+trackID;
+		log.fine("Track " + trackID + ": Sent track ID: " + trackID);
 		return trackID;
 	}
 	
 	public double getGrade() // returns grade
 	{
-		trackInfo = "info: sent grade: "+grade;
+		log.fine("Track " + trackID + ": Sent grade: " + grade;
 		return grade;
 	}
 	
@@ -197,9 +189,9 @@ public class Track
 	{
 		return blockLength;
 	}
-        
-        public Light getLightState()
-        {
-            return trafficLight;
-        }
+
+	public Light getLightState()
+	{
+	return trafficLight;
+	}
 }
