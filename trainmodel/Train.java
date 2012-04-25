@@ -66,11 +66,11 @@ public class Train
 	{
 		if emerBrake
 		{
-			velocity = 0.0;
+			velocity = oldVelocity - 2.73 * time;
 		}
 		else if servBrake
 		{
-			velocity = 0.0;
+			velocity = oldVelocity - 1.2 * time;
 		}
 		else
 		{
