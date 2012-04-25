@@ -72,7 +72,7 @@ public class Track
 	
 	public void setOccupied(Track from) // set block to occupied
 	{
-		if(from.equals(A))
+		if(A.equals(from))
 		{
 			direction = false;
 		}
