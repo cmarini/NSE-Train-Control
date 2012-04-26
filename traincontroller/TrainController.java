@@ -22,9 +22,9 @@ public class TrainController implements Runnable
     private double currentSpeed;          //Speed returned by Train Model 
     private double operatorSpeed;         //Speed entered by user 
     private double waysideSpeed;          //Speed sent by the wayside 
-    private static double maxPower = 120; //kW
+    private static double maxPower = 120000; //W
     private double power;                 //power sent to the  train
-    private double init_power = 60;       //kW
+    private double init_power = 12000;       //W
     private double velocity;              //Trains current velocity 
     private double prev_d;                //previous d value
     private double prev_v;                //previous v value 
@@ -52,7 +52,7 @@ public class TrainController implements Runnable
         switch (line)
         {
 			case GREEN:
-				G = new GreenSchedule();
+				G = new GreenSchedule(this);
 				break;
 			case RED:
 				R = new RedSchedule();
@@ -109,6 +109,7 @@ public class TrainController implements Runnable
 		{
 			power = init_power;
 			ran++;
+                        return power;
 		}
         
 		if(authority < 1)
@@ -117,7 +118,7 @@ public class TrainController implements Runnable
 			return 0;
 		}
 		
-		if(emergencyBraking = true) 
+		if(emergencyBraking == true) 
 		{
 			train.setEmergencyBrake(emergencyBrake);
 			return 0;
@@ -171,11 +172,12 @@ public class TrainController implements Runnable
      */
     public void updateTrain() 
     {
-        System.out.println("Inside TrainControllers Update Method.");
+        //System.out.println("Inside TrainControllers Update Method.");
         Transponder.Type info;
+        currentSpeed = train.getVelocity();
         power = calcPower(currentSpeed, operatorSpeed);  
 		train.setPower(power); 
-		train.updateTrack();
+		train.updateTrack(Math.floor(60/clockRate)*.001);
 		
 
         if (train.hasTransponder()) 

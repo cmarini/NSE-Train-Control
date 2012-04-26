@@ -44,7 +44,7 @@ public class Train
 	{
 		length = 32.2; //m
 		trainLine = line;
-		mass = 40.9 * 2000 + crew * 175; // lbs
+		mass = 40.9 * 2000 + crew * 175 * 2.2; // Kg
 		height = 3.42; //m
 		width = 2.65; //m
 		crewCount = crew;
@@ -62,26 +62,44 @@ public class Train
 		failures[2] = false;
 		emerBrake = false;
 		servBrake = false;
-		distInBlock = length;
+		distInBlock = 0;
+                blockLength = length;
+                oldVelocity = 1;
 	}
 
 	public void calcVelocity()
 	{
+            
+            System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass);
+                if(oldVelocity == 0)
+                {
+                    oldVelocity = 1;
+                }
 		if (emerBrake)
 		{
 			velocity = oldVelocity - 2.73 * time;
+                        if(velocity <= 0)
+                        {
+                            velocity = 0;
+                        }
+                        oldVelocity = velocity;
 		}
 		else if (servBrake)
 		{
 			velocity = oldVelocity - 1.2 * time;
+                        if(velocity <= 0)
+                        {
+                            velocity = 0;
+                        }
+                        oldVelocity = velocity;
 		}
 		else
 		{
 			velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
 			oldVelocity = velocity;
 		}
-		velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
-		oldVelocity = velocity;
+		//velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
+		//oldVelocity = velocity;
 		//return velocity;
 	}
 
@@ -221,23 +239,29 @@ public class Train
 		failures[i] = false;
 	}
 
-	public void updateTrack()
+	public void updateTrack(double t)
 	{
+                time = t;
 		distTraveled = distTraveled + velocity * time;
 		distInBlock = distInBlock + velocity * time;
 		remainder = length - distInBlock;
 		calcVelocity();
+                //System.out.println("Velocity " + velocity + " distTraveled " + distTraveled);
 
 		if (remainder < 0)
 		{
+                    if(prevTrack != null)
+                    {
 			prevTrack.setUnoccupied();
+                    }
 		}
 
 		if (distInBlock > blockLength)
 		{
-			trackPiece.setOccupied(trackPiece);
+
+                        trackPiece.setOccupied(prevTrack);
+                        prevTrack = trackPiece;
 			trackPiece = trackPiece.getNext();
-			trackPiece.setOccupied(prevTrack);
 			distInBlock = distInBlock - blockLength;
 			blockSpeed = trackPiece.getSpeedLimit();
 			blockAuthority = trackPiece.getAuthority();
@@ -275,12 +299,14 @@ public class Train
 
 	public int getSpeedLimit()
 	{
+                blockSpeed = trackPiece.getSpeedLimit();
 		return blockSpeed;
 	}
 
 	public int getAuthority()
 	{
-		return blockAuthority;
+		blockAuthority = trackPiece.getAuthority();
+                return blockAuthority;
 	}
 
 	public void setPassengers(int pass)

@@ -116,6 +116,7 @@
                             }
                             trainControllers.get(i).getTrain().setTrack(model.getTrack(new ID(Line.GREEN, 'F', 0)));
                             control.setOperatorCommands(70, false, trainControllers.get(i).getID().toString());
+                            control.setDispatcherAuthority(10, Line.GREEN, 'F', 0);
                         }
                         break;
                     case RED:

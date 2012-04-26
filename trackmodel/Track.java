@@ -70,7 +70,7 @@ public class Track
 	{
 		if(from == null)
 		{
-			direction = true;
+			direction = false;
 		}
 		else if(A.equals(from))
 		{
@@ -102,16 +102,18 @@ public class Track
 		log.info("Track " + trackID + ": Light set to " + lightState);
 	}
         
-	public void setNext(Track t)
+	public void setPrev(Track t)
 	{
 		A = t;
 		log.config("Track " + trackID + ": A set to " + t);
+                //System.out.println("Track " + trackID + ": A set to " + t.getID());
 	}
 
-	public void setPrev(Track t)
+	public void setNext(Track t)
 	{
 		B = t;
 		log.config("Track " + trackID + ": B set to " + t);
+                //System.out.println("Track " + trackID + ": B set to " + t.getID());
 	}
 	
 //---------------------------------------------------------------------------------------	

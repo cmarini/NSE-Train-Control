@@ -88,7 +88,7 @@ public class CTCControl
     {
         TrainController t = sim.getTrainController(trainID);
         t.setBraking(b);
-        //t.setOperator(sp);
+        t.setOperatorSpeed(sp);
         if(debugMode)
         {
             System.out.println("CTC Control: Operator Speed : " + sp + " Brake: " + b + " to train: " + trainID);

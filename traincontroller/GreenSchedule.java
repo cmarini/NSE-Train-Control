@@ -18,8 +18,9 @@ public class GreenSchedule
     private static double[] times = {2.3, 2.3, 2.4, 2.7, 2.6, 1.9, 2.0, 2.0, 2.2, 2.5, 2.2, 4.4, 2.2, 2.5, 2.2, 4.4, 2.2, 2.3, 2.4, 2.1, 2.0, 2.0};
     //make a parallel times and stations
 
-    public GreenSchedule() 
+    public GreenSchedule(TrainController t) 
     {
+        tc = t;
     }
 
     public void greenSchedule() 

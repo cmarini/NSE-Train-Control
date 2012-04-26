@@ -128,7 +128,7 @@ public class TrackParser
 				{
 					e.linkback = true;
 				}
-				if (ss[10].toUpperCase().contains("BAKCWARDS"))
+				if (ss[10].toUpperCase().contains("BACKWARDS"))
 				{
 					e.backwards = true;
 				}

@@ -20,7 +20,7 @@ import java.util.ArrayList;
  */
 public class CTCModel 
 {
-    private static boolean debugMode;
+    private static boolean debugMode = false;
     private static int clockRate = 60;
     private TrackParser parser;
     private Wayside [] greenTrackControllers = {
@@ -83,6 +83,8 @@ public class CTCModel
         Stack switches = new Stack();
         boolean first = true;
         Track firstBlock = null;
+        TrackType prevType = null;
+        boolean prevBackwards = false;
         
         while (parser.next())
         {
@@ -93,6 +95,7 @@ public class CTCModel
             TrackType type = parser.getTrackType();
             char waysideChar = parser.getSection();
             boolean linkback = parser.isLinkback();
+            boolean backwards = parser.isBackwards();
             
             if(waysideChar != previous)
             {
@@ -124,6 +127,11 @@ public class CTCModel
                         t = new Track(elevation, grade, speedLimit, blockLength, idNum);
                     }
                 }
+            }
+            
+            if(debugMode)
+            {
+                System.out.println(type + " " + t.getID() + " Created");
             }
             
             if(first)
@@ -300,27 +308,246 @@ public class CTCModel
                             break;
                     }
                 } 
-                if(linkback)
+                
+
+                if(backwards)
                 {
-                    if(!prevLinkBack)
+                    if(type == TrackType.SWITCHTY)
                     {
-                        Switch u = (Switch)switches.pop();
-                        t.setPrev(prev);
-                        prev.setNext(t);
-                        t.setNext(u);
-                        u.setNext(t);
+                        if(prevType == TrackType.SWITCH || prevType == TrackType.SWITCHTY)
+                        {
+                            ((Switch)t).setPrev(prev);
+                            ((Switch)prev).setNext(t);
+                            prevType = type;
+                            prevBackwards = true;
+                            prevLinkBack = false;
+                            prev = t;
+                        }
+                        else
+                        {
+                            ((Switch)t).setNext(prev, false);
+                            prev.setNext(t);
+                            prevType = type;
+                            prevBackwards = true;
+                            prevLinkBack = false;
+                            prev = t;
+                        }
                     }
                     else
                     {
-                        Switch u = (Switch)switches.pop();
-                        t.setPrev(u);
-                        u.setNext(t);
+                        if(t instanceof Switch)
+                        {
+                            if(prev instanceof Switch)
+                            {
+                                ((Switch)t).setNext(prev);
+                                ((Switch)prev).setNext(t);
+                                prevType = type;
+                                prevBackwards = true;
+                                prevLinkBack = false;
+                                prev = t;
+                            }
+                            else
+                            {
+                                ((Switch)t).setNext(prev);
+                                prev.setNext(t);
+                                prevType = type;
+                                prevBackwards = true;
+                                prevLinkBack = false;
+                                prev = t;
+                            }
+                        }
+                        else
+                        {
+                            if(prev instanceof Switch)
+                            {
+                                t.setNext(prev);
+                                ((Switch)prev).setNext(t);
+                                prevType = type;
+                                prevBackwards = true;
+                                prevLinkBack = false;
+                                prev = t;
+                            }
+                            else
+                            {
+                                t.setNext(prev);
+                                prev.setNext(t);
+                                prevType = type;
+                                prevBackwards = true;
+                                prevLinkBack = false;
+                                prev = t;
+                            }
+                        }
                     }
                 }
                 else
                 {
-                    t.setPrev(prev);
-                    prev.setNext(t);
+                    if(!linkback)
+                    {
+                        if(type == TrackType.SWITCHTY)
+                        {
+                            if(prev instanceof Switch)
+                            {
+                                ((Switch)prev).setNext(t, false);
+                                ((Switch)t).setPrev(prev);
+                                prevType = type;
+                                prevBackwards = false;
+                                prevLinkBack = false;
+                                prev = t;
+                            }
+                            else
+                            {
+                                prev.setNext(t);
+                                ((Switch)t).setPrev(prev);
+                                prevType = type;
+                                prevBackwards = false;
+                                prevLinkBack = false;
+                                prev = t; 
+                            }
+                        }
+                        else
+                        {
+                            if(prevType == TrackType.SWITCHTY)
+                            {
+                                if(prevBackwards)
+                                {
+                                    if(t instanceof Switch)
+                                    {
+                                        ((Switch)prev).setNext(t, false);
+                                        ((Switch)t).setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                    else
+                                    {
+                                        ((Switch)prev).setPrev(t);
+                                        t.setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                }
+                                else
+                                {
+                                    if(t instanceof Switch)
+                                    {
+                                        ((Switch)prev).setNext(t, false);
+                                        ((Switch)t).setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                    else
+                                    {
+                                        ((Switch)prev).setNext(t, true);
+                                        t.setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                if(prevBackwards)
+                                {
+                                    if(prev instanceof Switch)
+                                    {
+                                        ((Switch)prev).setPrev(t);
+                                        t.setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                    else
+                                    {
+                                        prev.setPrev(t);
+                                        t.setPrev(prev);
+                                        prevType = type;
+                                        prevBackwards = false;
+                                        prevLinkBack = false;
+                                        prev = t;
+                                    }
+                                }
+                                else
+                                {
+                                    if(prev instanceof Switch)
+                                    {
+                                        if(t instanceof Switch)
+                                        {
+                                            ((Switch)prev).setNext(t);
+                                            ((Switch)t).setPrev(prev);
+                                            prevType = type;
+                                            prevBackwards = false;
+                                            prevLinkBack = false;
+                                            prev = t;
+                                        }
+                                        else
+                                        { 
+                                            ((Switch)prev).setNext(t);
+                                            t.setPrev(prev);
+                                            prevType = type;
+                                            prevBackwards = false;
+                                            prevLinkBack = false;
+                                            prev = t;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if(t instanceof Switch)
+                                        {
+                                            prev.setNext(t);
+                                            ((Switch)t).setPrev(prev);
+                                            prevType = type;
+                                            prevBackwards = false;
+                                            prevLinkBack = false;
+                                            prev = t;
+                                        }
+                                        else
+                                        {
+                                            prev.setNext(t);
+                                            t.setPrev(prev);
+                                            prevType = type;
+                                            prevBackwards = false;
+                                            prevLinkBack = false;
+                                            prev = t;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if(!prevLinkBack)
+                        {
+                            Switch u = (Switch)switches.pop();
+                            t.setPrev(prev);
+                            prev.setNext(t);
+                            t.setNext(u);
+                            ((Switch)u).setNext(t, true);
+                            prevType = type;
+                            prevBackwards = false;
+                            prevLinkBack = true;
+                            prev = t;
+                        }
+                        else
+                        {
+                            Switch u = (Switch)switches.pop();
+                            t.setPrev(u);
+                            ((Switch)u).setNext(t, false);
+                            ((Switch)u).swapNext();
+                            prevType = type;
+                            prevBackwards = false;
+                            prevLinkBack = true;
+                            prev = t;
+                        }
+                    }
                 }
             }
         }
@@ -328,7 +555,7 @@ public class CTCModel
         if(firstBlock != null && t != null)
         {
             firstBlock.setPrev(t);
-            t.setNext(firstBlock);
+            ((Switch)t).setNext(firstBlock, true);
         }
     }
     

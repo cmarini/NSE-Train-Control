@@ -36,19 +36,47 @@ public class Switch extends Track
 		return sInfo;
 	}
         
-	public void setNext(Track t)
+	public void setNext(Track t, boolean backwards)
 	{
+            if(!backwards)
+            {
 		if(B == null)
 		{
 			B = t;
 			log.config("Track " + trackID + ": B set to " + t);
+                        //System.out.println("Track " + trackID + ": B set to " + t.getID());
 		}
 		else
 		{
 			C = t;
 			log.config("Track " + trackID + ": C set to " + t);
+                        //System.out.println("Track " + trackID + ": C set to " + t.getID());
 		}
+            }
+            else
+            {
+                if(C == null)
+		{
+			C = t;
+			log.config("Track " + trackID + ": C set to " + t);
+                        //System.out.println("Track " + trackID + ": C set to " + t.getID());
+		}
+		else
+		{
+			B = t;
+			log.config("Track " + trackID + ": B set to " + t);
+                        //System.out.println("Track " + trackID + ": B set to " + t.getID());
+		}
+            }
 	}
+        
+        public void swapNext()
+        {
+            Track temp = B;
+            B = C;
+            C = temp;
+            //System.out.println("SWITCH: swapNext");
+        }
 	
 	public Track getNext()
 	{
