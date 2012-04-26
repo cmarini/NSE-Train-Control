@@ -124,7 +124,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	
 	protected void spreadAuthority(int auth)
 	{
-		int dir = direction ? -1 : 1;
+		int dir = direction ? 1 : -1;
 		for (int i = trackStart(); i < trackEnd(); i += dir)
 		{
 			track.get(i).setAuthority(auth);
