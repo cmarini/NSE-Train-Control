@@ -79,7 +79,7 @@ public class CTCModel
         
         try
         {
-            parser = new TrackParser("src/parser/GreenLine.csv");
+            parser = new TrackParser("GreenLine.csv");
             initializeTrack(parser);
         }
         catch(IOException e)
@@ -89,7 +89,7 @@ public class CTCModel
         
         try
         {
-            parser = new TrackParser("src/parser/RedLine.csv");
+            parser = new TrackParser("RedLine.csv");
             initializeTrack(parser);
         }
         catch(IOException e)

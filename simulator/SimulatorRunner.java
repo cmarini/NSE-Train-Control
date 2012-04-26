@@ -9,6 +9,7 @@ package simulator;
 import ctc.CTCView;
 import global.LogSetup;
 import java.lang.Math;
+import java.util.logging.*;
 
 /**
  * Contains the main method for the NSE train simulator program as well as the
@@ -19,7 +20,7 @@ import java.lang.Math;
 
 public class SimulatorRunner
 {
-    public static final boolean DEBUG_MODE = true; // used to turn on/off debug print statements
+    public static final boolean DEBUG_MODE = false; // used to turn on/off debug print statements
     private static CTCView view;    // references the main GUI of the program
     private static Simulator s;     // used to initiate updates on clock ticks
     private static int clockRate = 60;  // holds the number of minutes equal to one hour in the simulation
@@ -33,6 +34,9 @@ public class SimulatorRunner
     public static void main(String[] args) 
     {
         LogSetup.init();
+        LogSetup.setConsoleLevel(Level.OFF);
+        LogSetup.setFileLevel(Level.OFF);
+        
         s = new Simulator(DEBUG_MODE);
         view = new CTCView(DEBUG_MODE, s);
         

@@ -205,7 +205,7 @@ public class TrainController implements Runnable
 				train.openDoors();
                                 if (firstStoppedAtStation)
                                 {
-                                    log.fine("Stopped at station on " + train.getTrack().getID());
+                                    System.out.println("Stopped at station on " + train.getTrack().getID());
                                     firstStoppedAtStation = false;
                                 }
 				if( timewaited >= 60 ) 
@@ -215,7 +215,7 @@ public class TrainController implements Runnable
 					timewaited = 0;
                                         train.stoppedForStation();
                                         firstStoppedAtStation = true;
-                                        log.fine("Resuming from station on " + train.getTrack().getID());
+                                        System.out.println("Resuming from station on " + train.getTrack().getID());
 				}
 				//Signal that train goes to next station
                 }
