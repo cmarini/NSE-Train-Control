@@ -10,6 +10,7 @@ public class Switch extends Track
 	}
 	
 	public Track C;
+	private boolean orientation; // True is entering from double-side
 	
 	private SwitchState switchState = SwitchState.LEFT; //defult setting
 	private String sInfo;
@@ -78,22 +79,48 @@ public class Switch extends Track
             //System.out.println("SWITCH: swapNext");
         }
 	
+	public void setOrientation(boolean b)
+	{
+		orientation = b;
+	}
+	
 	public Track getNext()
 	{
-		if(direction == true)
+		if (orientation == true)
 		{
-			if(switchState.equals(SwitchState.LEFT))
+			if(direction == true)
 			{
-				return B;
+				if(switchState.equals(SwitchState.LEFT))
+				{
+					return B;
+				}
+				else
+				{
+					return C;
+				}
 			}
 			else
 			{
-				return C;
+				return A;
 			}
 		}
 		else
 		{
-			return A;
+			if(direction == false)
+			{
+				if(switchState.equals(SwitchState.LEFT))
+				{
+					return B;
+				}
+				else
+				{
+					return C;
+				}
+			}
+			else
+			{
+				return A;
+			}
 		}
 	}
 }
