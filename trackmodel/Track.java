@@ -16,7 +16,7 @@ public class Track
 	private int authority;
 	private boolean occupied;
 	private boolean open;
-	private ID trackID;
+	protected ID trackID;
 	private String trackInfo;
 	private TrackFault failure;
 	private Light trafficLight;
@@ -105,11 +105,13 @@ public class Track
 	public void setNext(Track t)
 	{
 		A = t;
+		log.config("Track " + trackID + ": A set to " + t);
 	}
 
 	public void setPrev(Track t)
 	{
 		B = t;
+		log.config("Track " + trackID + ": B set to " + t);
 	}
 	
 //---------------------------------------------------------------------------------------	

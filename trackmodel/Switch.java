@@ -41,10 +41,12 @@ public class Switch extends Track
 		if(B == null)
 		{
 			B = t;
+			log.config("Track " + trackID + ": B set to " + t);
 		}
 		else
 		{
 			C = t;
+			log.config("Track " + trackID + ": C set to " + t);
 		}
 	}
 	
