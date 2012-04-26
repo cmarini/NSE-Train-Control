@@ -345,6 +345,16 @@ public class CTCView extends JFrame
         return model;
     }
     
+    /**
+     * return the control
+     * 
+     * @return a CTCControl 
+     */
+    public static CTCControl getControl()
+    {
+        return control;
+    }
+    
     private class MainPanel extends JPanel
     {
         private MapPanel map = new MapPanel(model, ""); // references the panel that paints the system

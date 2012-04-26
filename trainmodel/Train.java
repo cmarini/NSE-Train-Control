@@ -259,7 +259,8 @@ public class Train
 	public void setTrack(Track T)
 	{
 		trackPiece = T;
-		//updateTrack();
+		T.setOccupied(null);
+                //updateTrack();
 	}
 
 	public Track getTrack()

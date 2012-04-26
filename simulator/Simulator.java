@@ -6,8 +6,7 @@
 
     package simulator;
 
-    import ctc.CTCView;
-    import ctc.CTCModel;
+    import ctc.*;
     import global.*;
     import traincontroller.*;
     import java.util.ArrayList;
@@ -27,6 +26,7 @@
     private static int timeCounter = 0; // used to determine when the next demo event will occur
     private static CTCView view;    // references the main gui of the program   
     private static CTCModel model;  // references the model of the system used by the gui
+    private static CTCControl control;
     private static int clockRate = 60;  // used to determine when clock ticks will occur 
     private static ArrayList <TrainController> trainControllers = new <TrainController> ArrayList();   // references all train controllers currently in the system
     private static ArrayList <TrainController> removedTrains = new <TrainController> ArrayList();
@@ -65,6 +65,17 @@
     {
         model = m;
     }
+    
+    /**
+    * set the reference to the the model for main GUI
+    * 
+    * @param m CTCModel object which defines the model for main GUI
+    * @see ctc.CTCModel
+    */
+    public void setControl(CTCControl c)
+    {
+        control = c;
+    }
 
     /**
     * set the clock rate for the system such that one system hour is equal to 
@@ -91,15 +102,20 @@
         demoMode = view.getDemo();
         for(int i = 0; i < trainControllers.size(); i++)
         {
-            trainControllers.get(i).setclockRate(clockRate);
-            if(trainControllers.get(i).getTrain().getTrack())
+            trainControllers.get(i).setClockRate(clockRate);
+            if(trainControllers.get(i).getTrain().getTrack() == null)
             {
                 switch(trainControllers.get(i).getTrain().getLine())
                 {
                     case GREEN:
                         if(!model.getTrack(new ID(Line.GREEN, 'F', 0)).isOccupied())
                         {
+                            if(debugMode)
+                            {
+                                System.out.println("Train " + trainControllers.get(i).getID() + " added");
+                            }
                             trainControllers.get(i).getTrain().setTrack(model.getTrack(new ID(Line.GREEN, 'F', 0)));
+                            control.setOperatorCommands(70, false, trainControllers.get(i).getID().toString());
                         }
                         break;
                     case RED:

@@ -3,6 +3,7 @@ package traincontroller;
 import global.*;
 import trainmodel.*;
 import java.util.logging.*;
+import trackmodel.*;
 
 
 public class TrainController implements Runnable
@@ -36,24 +37,24 @@ public class TrainController implements Runnable
     private int ran = 1; 
     private String message;
 	 private int timewaited; 
-	 private int clockticValue;
+	 private double clockticValue;
 	
 	
-    public TrainController(Line line, int crewCount, int clock, String idVal, Track T) 
+    public TrainController(Line line, int crewCount, int clock, String idVal) 
     {
         scheduleLine = line;
         clockRate = clock;
         crew = crewCount;
         id = idVal;
-        braking = false; 
+        emergencyBrake = false; 
         train = new Train(scheduleLine, crew, id);
         message = "";
         switch (line)
         {
-			case Line.GREEN:
+			case GREEN:
 				G = new GreenSchedule();
 				break;
-			case Line.RED:
+			case RED:
 				R = new RedSchedule();
 				break;
 		}
@@ -82,12 +83,12 @@ public class TrainController implements Runnable
         
     public void setBraking(boolean b) //emergency brake
     {
-        braking = b;
+        emergencyBrake = b;
     }
     
     public boolean getBraking()
     {
-        return braking;
+        return emergencyBrake;
     }
 
     public double calcPower(double currentSpeed, double operatorSpeed) 
@@ -163,7 +164,6 @@ public class TrainController implements Runnable
 			return maxPower;
 		}
 		
-		return power;
     }
 
     /*
@@ -172,7 +172,7 @@ public class TrainController implements Runnable
     public void updateTrain() 
     {
         System.out.println("Inside TrainControllers Update Method.");
-        String info;
+        Transponder.Type info;
         power = calcPower(currentSpeed, operatorSpeed);  
 		train.setPower(power); 
 		train.updateTrack();
@@ -247,8 +247,8 @@ public class TrainController implements Runnable
     
     public void remove() //send train to the train yard - modify schedule to go to the next station but not anywhere else 
     {
-		set some type of remove flag whenever flags set dont accept passengers 
-		continues on the every station 
+/*		set some type of remove flag whenever flags set dont accept passengers 
+		continues on the every station */
 		//setPassengers 
         //Sending train to the train yard 
     }

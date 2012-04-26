@@ -7,6 +7,7 @@
 package simulator;
 
 import ctc.CTCView;
+import global.LogSetup;
 import java.lang.Math;
 
 /**
@@ -26,11 +27,13 @@ public class SimulatorRunner
 
     public static void main(String[] args) 
     {
+        LogSetup.init();
         s = new Simulator(DEBUG_MODE);
         view = new CTCView(DEBUG_MODE, s);
         
         s.setView(view);
         s.setModel(view.getModel());
+        s.setControl(view.getControl());
         isOpen = true;
         
         while(isOpen)

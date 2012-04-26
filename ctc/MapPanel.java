@@ -11,6 +11,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 import global.*;
+import trackmodel.*;
+import java.util.ArrayList;
 
 /**
  * 
@@ -330,6 +332,7 @@ public class MapPanel extends JPanel
     public void paintComponent(Graphics g) 
     {
         super.paintComponent(g);
+        ArrayList <Track> t;
         
         if(debugMode)
         {
@@ -405,152 +408,152 @@ public class MapPanel extends JPanel
                             g.drawLine(10, 135, 25, 125);
                             break;
                         case 'A':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 0);
                             for(int i = 0; i < greenCoordinates[0].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[0][i][0], greenCoordinates[0][i][1], greenCoordinates[0][i][2], greenCoordinates[0][i][3]);
                             }
                             break;
                         case 'B':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 1);
                             for(int i = 0; i < greenCoordinates[1].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[1][i][0], greenCoordinates[1][i][1], greenCoordinates[1][i][2], greenCoordinates[1][i][3]);
                             }
                             break;
                         case 'C':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 2);
                             for(int i = 0; i < greenCoordinates[2].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[2][i][0], greenCoordinates[2][i][1], greenCoordinates[2][i][2], greenCoordinates[2][i][3]);
                             }
                             break;
                         case 'D':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 3);
                             for(int i = 0; i < greenCoordinates[3].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[3][i][0], greenCoordinates[3][i][1], greenCoordinates[3][i][2], greenCoordinates[3][i][3]);
                             }
                             break;
                         case 'E':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 4);
                             for(int i = 0; i < greenCoordinates[4].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[4][i][0], greenCoordinates[4][i][1], greenCoordinates[4][i][2], greenCoordinates[4][i][3]);
                             }
                             break;
                         case 'F':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 5);
                             for(int i = 0; i < greenCoordinates[5].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[5][i][0], greenCoordinates[5][i][1], greenCoordinates[5][i][2], greenCoordinates[5][i][3]);
                             }
                             break;
                         case 'G':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 6);
                             for(int i = 0; i < greenCoordinates[6].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[6][i][0], greenCoordinates[6][i][1], greenCoordinates[6][i][2], greenCoordinates[6][i][3]);
                             }
                             break;
                         case 'H':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 7);
                             for(int i = 0; i < greenCoordinates[7].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[7][i][0], greenCoordinates[7][i][1], greenCoordinates[7][i][2], greenCoordinates[7][i][3]);
                             }
                             break;
                         case 'I':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0);
+                            t = model.getWaysideTrack(Line.GREEN, 8);
                             for(int i = 0; i < greenCoordinates[8].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[8][i][0], greenCoordinates[8][i][1], greenCoordinates[8][i][2], greenCoordinates[8][i][3]);
                             }
                             break;
                         case 'J':
-//                            Track [] t = model.getWaysideTrack(Line.GREEN, 0
+                            t = model.getWaysideTrack(Line.GREEN, 9);
                             for(int i = 0; i < greenCoordinates[9].length; i++)
                             {
-//                            if(t[0].isOccupied())
-//                            {
-//                                g.setColor(Color.BLACK);
-//                            }
-//                            else
-//                            {
-//                                g.setColor(Color.GREEN);
-//                            }
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.GREEN);
+                            }
                                 g.drawLine(greenCoordinates[9][i][0], greenCoordinates[9][i][1], greenCoordinates[9][i][2], greenCoordinates[9][i][3]);
                             }
                             break;

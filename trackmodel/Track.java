@@ -176,7 +176,7 @@ public class Track
 	
 	public double getGrade() // returns grade
 	{
-		log.fine("Track " + trackID + ": Sent grade: " + grade;
+		log.fine("Track " + trackID + ": Sent grade: " + grade);
 		return grade;
 	}
 	
