@@ -377,7 +377,9 @@ public class CTCView extends JFrame
         private JComboBox clockCombo= new JComboBox(clockRates);    // used to create a dropdown which holds the options for setting the clock rate 
         private JLabel trackSectionLabel = new JLabel("Display track secion: ");    // labels the dropdown for selecting the section to paint
         private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", 
-            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line "};
+            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line ",
+            "Red A", "Red B", "Red C", "Red D", "Red E", "Red F", "Red G", "Red H", "Red I", 
+            "Red J", "Red K"};
         /*
          * Holds the possible options for displaying the system
          */
@@ -686,7 +688,9 @@ public class CTCView extends JFrame
          * labels the track combo box select
          */
         private final String trackSections [] = {"", "Green Line ", "Green A", "Green B", "Green C", 
-            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line "};
+            "Green D", "Green E", "Green F", "Green G", "Green H", "Green I", "Green J", "Red Line ",
+            "Red A", "Red B", "Red C", "Red D", "Red E", "Red F", "Red G", "Red H", "Red I", 
+            "Red J", "Red K"};
         /*
          * holds all of the sections that can be displayed
          */

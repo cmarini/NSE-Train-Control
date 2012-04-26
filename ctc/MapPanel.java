@@ -15,14 +15,15 @@ import trackmodel.*;
 import java.util.ArrayList;
 
 /**
+ * This file contains the data and methods for painting the map of the system
  * 
- * @author AM
+ * @author Zachary Sweigart
  */
 public class MapPanel extends JPanel
 {
-    private boolean debugMode;
-    private CTCModel model;
-    private ID trackSection; 
+    private boolean debugMode; // set the debug mode flag
+    private CTCModel model; // references the model of the system
+    private ID trackSection; // holds the track section to be painted
     private int greenCoordinates [][][] = {
                                             {{20, 20, 100, 100}, 
                                             {105, 105, 185, 185}, 
@@ -118,7 +119,7 @@ public class MapPanel extends JPanel
                                             {150, 250, 105, 250}},
                                             
                                             {{550, 400, 450, 400},
-                                                {445, 400, 345, 400}, 
+                                            {445, 400, 345, 400}, 
                                             {340, 400, 260, 380}, 
                                             {255, 375, 200, 340}, 
                                             {200, 335, 200, 235},
@@ -226,7 +227,93 @@ public class MapPanel extends JPanel
                                             {697, 350, 724, 350},
                                             {727, 350, 754, 350},
                                             {757, 350, 784, 350}}
-                                          };
+                                          }; // coordinates of the green blocks to be painted for their sections
+    private int redCoordinates [][][] = {
+                                            {{20, 350, 80, 325}, 
+                                            {82, 327, 127, 277}, 
+                                            {130, 275, 160, 210}, 
+                                            {163, 207, 203, 167}, 
+                                            {205, 165, 250, 140},
+                                            {252, 142, 328, 122},
+                                            {330, 120, 443, 120},
+                                            {445, 122, 503, 152},
+                                            {505, 155, 540, 210}},
+    
+                                            {{700, 50, 600, 200}, 
+                                            {595, 205, 460, 292}, 
+                                            {455, 295, 245, 355},
+                                            {240, 355, 130, 355},
+                                            {125, 355, 10, 355}},
+                                            
+                                            {{700, 20, 615, 20}, 
+                                            {610, 20, 525, 20}, 
+                                            {520, 20, 435, 20}, 
+                                            {430, 20, 325, 20}, 
+                                            {320, 20, 235, 20},
+                                            {230, 20, 190, 60}, 
+                                            {188, 62, 172, 122}, 
+                                            {170, 125, 160, 190},
+                                            {160, 195, 160, 270},
+                                            {160, 275, 160, 350},
+                                            {160, 355, 160, 430}},
+                                            
+                                            {{350, 20, 350, 120},
+                                            {350, 125, 350, 225},
+                                            {350, 230, 350, 330},
+                                            {350, 335, 350, 435}},
+                                            
+                                            {{350, 20, 350, 75},
+                                            {350, 80, 350, 135},
+                                            {350, 140, 350, 195},
+                                            {350, 200, 350, 255},
+                                            {350, 260, 350, 315},
+                                            {350, 320, 350, 375},
+                                            {350, 380, 350, 435}},
+                                            
+                                            {{350, 20, 350, 120},
+                                            {350, 125, 350, 225},
+                                            {350, 230, 350, 330},
+                                            {350, 335, 350, 435}},
+                                            
+                                            {{600, 20, 600, 75}, 
+                                            {600, 80, 600, 135}, 
+                                            {600, 140, 600, 195}, 
+                                            {600, 200, 570, 240}, 
+                                            {568, 242, 523, 263},
+                                            {520, 265, 470, 280}, 
+                                            {465, 280, 390, 280}, 
+                                            {385, 280, 310, 280},
+                                            {305, 280, 230, 280}},
+                                            
+                                            {{600, 400, 505, 400}, 
+                                            {500, 400, 405, 400}, 
+                                            {400, 400, 330, 380}, 
+                                            {325, 375, 280, 325}, 
+                                            {275, 320, 260, 235},
+                                            {255, 230, 280, 150}, 
+                                            {285, 145, 350, 100}},
+                                            
+                                            {{50, 50, 150, 30}, 
+                                            {152, 28, 252, 28}, 
+                                            {255, 28, 305, 100}, 
+                                            {310, 105, 330, 205}, 
+                                            {332, 210, 340, 310},
+                                            {345, 315, 400, 350}, 
+                                            {405, 353, 490, 370}},
+                                            
+                                            {{300, 440, 230, 370}, 
+                                            {230, 365, 230, 300}, 
+                                            {230, 295, 230, 230}, 
+                                            {230, 225, 230, 160}, 
+                                            {230, 155, 300, 85}},
+                                            
+                                            {{300, 440, 230, 370}, 
+                                            {230, 365, 230, 300}, 
+                                            {230, 295, 230, 230}, 
+                                            {230, 225, 230, 160}, 
+                                            {230, 155, 300, 85}}
+    
+    };// coordinates of the red blocks to be painted for their sections
     
     MapPanel(CTCModel m)
     {
@@ -244,8 +331,9 @@ public class MapPanel extends JPanel
     }
     
     /**
+     * Set the debug mode flag
      * 
-     * @param d
+     * @param d boolean debug mode flag
      */
     public void setDebugMode(boolean d)
     {
@@ -253,8 +341,9 @@ public class MapPanel extends JPanel
     }
     
     /**
+     * set the track section to be painted
      * 
-     * @param tc
+     * @param tc string track section id
      */
     public void setTrackSection(String tc)
     {
@@ -266,8 +355,9 @@ public class MapPanel extends JPanel
     }
     
     /**
+     * set the track section to be painted
      * 
-     * @param tc
+     * @param tc ID track section ID
      */
     public void setTrackSection(ID tc)
     {
@@ -279,8 +369,10 @@ public class MapPanel extends JPanel
     }
     
     /**
+     * set the section ID to be painted
      * 
-     * @param s
+     * @param s String section id to be painted
+     * @return ID of section to be painted
      */
     private ID setSection(String s)
     {
@@ -320,6 +412,28 @@ public class MapPanel extends JPanel
                 {
                     case ' ':
                         return (new ID(Line.RED, ' ', -1));
+                    case 'A':
+                        return (new ID(Line.RED, 'A', -1));
+                    case 'B':
+                        return (new ID(Line.RED, 'B', -1));
+                    case 'C':
+                        return (new ID(Line.RED, 'C', -1));
+                    case 'D':
+                        return (new ID(Line.RED, 'D', -1));
+                    case 'E':
+                        return (new ID(Line.RED, 'E', -1));
+                    case 'F':
+                        return (new ID(Line.RED, 'F', -1));
+                    case 'G':
+                        return (new ID(Line.RED, 'G', -1));
+                    case 'H':
+                        return (new ID(Line.RED, 'H', -1));
+                    case 'I':
+                        return (new ID(Line.RED, 'I', -1));
+                    case 'J':
+                        return (new ID(Line.RED, 'J', -1));
+                    case 'K':
+                        return (new ID(Line.RED, 'K', -1));
                 }
             }
         }
@@ -602,6 +716,171 @@ public class MapPanel extends JPanel
                             g.drawLine(325, 265, 300, 255);
                             g.drawLine(300, 255, 300, 200);
                             g.drawLine(300, 200, 325, 190);
+                            break;
+                    case 'A':
+                            t = model.getWaysideTrack(Line.RED, 0);
+                            for(int i = 0; i < redCoordinates[0].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[0][i][0], redCoordinates[0][i][1], redCoordinates[0][i][2], redCoordinates[0][i][3]);
+                            }
+                            break;
+                        case 'B':
+                            t = model.getWaysideTrack(Line.RED, 1);
+                            for(int i = 0; i < redCoordinates[1].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[1][i][0], redCoordinates[1][i][1], redCoordinates[1][i][2], redCoordinates[1][i][3]);
+                            }
+                            break;
+                        case 'C':
+                            t = model.getWaysideTrack(Line.RED, 2);
+                            for(int i = 0; i < redCoordinates[2].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[2][i][0], redCoordinates[2][i][1], redCoordinates[2][i][2], redCoordinates[2][i][3]);
+                            }
+                            break;
+                        case 'D':
+                            t = model.getWaysideTrack(Line.RED, 3);
+                            for(int i = 0; i < redCoordinates[3].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[3][i][0], redCoordinates[3][i][1], redCoordinates[3][i][2], redCoordinates[3][i][3]);
+                            }
+                            break;
+                        case 'E':
+                            t = model.getWaysideTrack(Line.RED, 4);
+                            for(int i = 0; i < redCoordinates[4].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[4][i][0], redCoordinates[4][i][1], redCoordinates[4][i][2], redCoordinates[4][i][3]);
+                            }
+                            break;
+                        case 'F':
+                            t = model.getWaysideTrack(Line.RED, 5);
+                            for(int i = 0; i < redCoordinates[5].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[5][i][0], redCoordinates[5][i][1], redCoordinates[5][i][2], redCoordinates[5][i][3]);
+                            }
+                            break;
+                        case 'G':
+                            t = model.getWaysideTrack(Line.RED, 6);
+                            for(int i = 0; i < redCoordinates[6].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[6][i][0], redCoordinates[6][i][1], redCoordinates[6][i][2], redCoordinates[6][i][3]);
+                            }
+                            break;
+                        case 'H':
+                            t = model.getWaysideTrack(Line.RED, 7);
+                            for(int i = 0; i < redCoordinates[7].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[7][i][0], redCoordinates[7][i][1], redCoordinates[7][i][2], redCoordinates[7][i][3]);
+                            }
+                            break;
+                        case 'I':
+                            t = model.getWaysideTrack(Line.RED, 8);
+                            for(int i = 0; i < redCoordinates[8].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[8][i][0], redCoordinates[8][i][1], redCoordinates[8][i][2], redCoordinates[8][i][3]);
+                            }
+                            break;
+                        case 'J':
+                            t = model.getWaysideTrack(Line.RED, 9);
+                            for(int i = 0; i < redCoordinates[9].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[9][i][0], redCoordinates[9][i][1], redCoordinates[9][i][2], redCoordinates[9][i][3]);
+                            }
+                            break;
+                        case 'K':
+                            t = model.getWaysideTrack(Line.RED, 10);
+                            for(int i = 0; i < redCoordinates[10].length; i++)
+                            {
+                            if(t.get(i).isOccupied())
+                            {
+                                g.setColor(Color.BLACK);
+                            }
+                            else
+                            {
+                                g.setColor(Color.RED);
+                            }
+                                g.drawLine(redCoordinates[10][i][0], redCoordinates[10][i][1], redCoordinates[10][i][2], redCoordinates[10][i][3]);
+                            }
                             break;
                     }
                     break;
