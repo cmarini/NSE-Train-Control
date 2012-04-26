@@ -101,6 +101,7 @@
     public static void run()
     {
         TrainController tc; // Used to create new trains
+        Wayside [] lineWaysides;
         demoMode = view.getDemo();
         
         /* Determine if a train is waiting to leave the train yard and add it to
@@ -140,6 +141,19 @@
                 }
             }
             trainControllers.get(i).run();
+            
+        }
+        
+        lineWaysides = model.getLineWaysides(Line.GREEN);
+        for(int j = 0; j < lineWaysides.length; j++)
+        {
+            lineWaysides[j].run();
+        }
+        
+        lineWaysides = model.getLineWaysides(Line.RED);
+        for(int j = 0; j < lineWaysides.length; j++)
+        {
+            lineWaysides[j].run();
         }
         
         /* Determine if a train has been sent the remove command and switch the 

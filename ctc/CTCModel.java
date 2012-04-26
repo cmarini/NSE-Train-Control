@@ -51,6 +51,32 @@ public class CTCModel
      */
     public CTCModel()
     {
+        greenTrackControllers[0].setWaysideNextLeft(greenTrackControllers[1]);
+        greenTrackControllers[0].setWaysidePrevLeft(greenTrackControllers[2]);
+        greenTrackControllers[1].setWaysideNextLeft(greenTrackControllers[2]);
+        greenTrackControllers[1].setWaysidePrevLeft(greenTrackControllers[0]);
+        greenTrackControllers[2].setWaysideNextLeft(greenTrackControllers[3]);
+        greenTrackControllers[2].setWaysidePrevLeft(greenTrackControllers[1]);
+        greenTrackControllers[2].setWaysideNextRight(greenTrackControllers[9]);
+        greenTrackControllers[2].setWaysidePrevRight(greenTrackControllers[0]);
+        greenTrackControllers[3].setWaysideNextLeft(greenTrackControllers[4]);
+        greenTrackControllers[3].setWaysidePrevLeft(greenTrackControllers[2]);
+        greenTrackControllers[4].setWaysideNextLeft(greenTrackControllers[5]);
+        greenTrackControllers[4].setWaysidePrevLeft(greenTrackControllers[3]);
+        greenTrackControllers[5].setWaysideNextLeft(greenTrackControllers[6]);
+        greenTrackControllers[5].setWaysidePrevLeft(greenTrackControllers[4]);
+        greenTrackControllers[6].setWaysideNextLeft(greenTrackControllers[7]);
+        greenTrackControllers[6].setWaysidePrevLeft(greenTrackControllers[9]);
+        greenTrackControllers[6].setWaysideNextRight(greenTrackControllers[8]);
+        greenTrackControllers[6].setWaysidePrevRight(greenTrackControllers[5]);
+        greenTrackControllers[7].setWaysideNextLeft(greenTrackControllers[8]);
+        greenTrackControllers[7].setWaysidePrevLeft(greenTrackControllers[6]);
+        greenTrackControllers[8].setWaysideNextLeft(greenTrackControllers[6]);
+        greenTrackControllers[8].setWaysidePrevLeft(greenTrackControllers[7]);
+        greenTrackControllers[9].setWaysideNextLeft(greenTrackControllers[3]);
+        greenTrackControllers[9].setWaysidePrevLeft(greenTrackControllers[6]);
+        
+        
         try
         {
             parser = new TrackParser("src/parser/GreenLine.csv");
@@ -319,6 +345,7 @@ public class CTCModel
                  */
                 if(backwards)
                 {
+                    ((Switch)t).setOrientation(true);
                     if(type == TrackType.SWITCHTY)
                     {
                         if(prevType == TrackType.SWITCH || prevType == TrackType.SWITCHTY)
@@ -852,6 +879,17 @@ public class CTCModel
             }
         }
         return null;
+    }
+    
+    public Wayside [] getLineWaysides(Line l)
+    {
+        switch(l)
+        {
+            case GREEN:
+                return greenTrackControllers;
+            default:
+                return redTrackControllers;
+        }
     }
     
 }

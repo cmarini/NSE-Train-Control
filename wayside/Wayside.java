@@ -170,21 +170,25 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	public void setWaysideNextLeft(Wayside w)
 	{
 		nextL = w;
+		log.config(logPrefix() + "NextLeft set to" + w.getID());
 	}
 	
 	public void setWaysideNextRight(Wayside w)
 	{
 		nextR = w;
+		log.config(logPrefix() + "NextRight set to" + w.getID());
 	}
 	
 	public void setWaysidePrevLeft(Wayside w)
 	{
 		prevL = w;
+		log.config(logPrefix() + "PrevLeft set to" + w.getID());
 	}
 	
 	public void setWaysidePrevRight(Wayside w)
 	{
 		prevR = w;
+		log.config(logPrefix() + "PrevRight set to" + w.getID());
 	}
 	
 	public ID getID()

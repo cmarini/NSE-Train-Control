@@ -70,7 +70,7 @@ public class Train
 	public void calcVelocity()
 	{
             
-            System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass);
+            System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass + " distance " + distInBlock);
 		if (emerBrake)
 		{
 			velocity = oldVelocity - 2.73 * time;
@@ -260,6 +260,7 @@ public class Train
 		{
 			trackPiece.setOccupied(prevTrack);
 			prevTrack = trackPiece;
+                System.out.print("Track " + trackPiece.getID());
 			if (trackPiece instanceof Switch)
 			{
 				trackPiece = ((Switch)trackPiece).getNext();
@@ -268,11 +269,14 @@ public class Train
 			{
 				trackPiece = trackPiece.getNext();
 			}
+               System.out.print("   New Track " + trackPiece.getID());
 			distInBlock = distInBlock - blockLength;
 			blockSpeed = trackPiece.getSpeedLimit();
 			blockAuthority = trackPiece.getAuthority();
 			grade = trackPiece.getGrade();
 			blockLength = trackPiece.getBlockLength();
+                        System.out.print(" New Authority = " + blockAuthority);
+                        System.out.println();
 
 			if (trackPiece instanceof Transponder)
 			{
