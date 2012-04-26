@@ -165,7 +165,7 @@ public class TrainController implements Runnable
 				// v = prev_v; //v= v(n-1)
 			}*/
 			train.setServiceBrake(false);
-			return maxPower;
+			return MAX_POWER;
 		}
 		
     }
