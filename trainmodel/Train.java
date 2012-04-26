@@ -71,10 +71,6 @@ public class Train
 	{
             
             System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass);
-                if(oldVelocity == 0)
-                {
-                    oldVelocity = 1;
-                }
 		if (emerBrake)
 		{
 			velocity = oldVelocity - 2.73 * time;
@@ -95,6 +91,10 @@ public class Train
 		}
 		else
 		{
+			if(oldVelocity == 0)
+			{
+				oldVelocity = 1;
+			}
 			velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
 			oldVelocity = velocity;
 		}

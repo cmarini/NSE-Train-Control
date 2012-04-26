@@ -63,7 +63,7 @@ public class TrainController implements Runnable
     public void run() 
     {
         updateTrain();
-        updateSchedule();
+        // updateSchedule();
     }
     
     public Train getTrain() 
@@ -109,7 +109,7 @@ public class TrainController implements Runnable
 		{
 			power = init_power;
 			ran++;
-                        return power;
+			return power;
 		}
         
 		if(authority < 1)
@@ -120,10 +120,11 @@ public class TrainController implements Runnable
 		
 		if(emergencyBraking == true) 
 		{
-			train.setEmergencyBrake(emergencyBrake);
+			train.setEmergencyBrake(true);
 			return 0;
 		}   
         
+        /*
         if (scheduleLine.equals(Line.GREEN)) 
         {
         		onSchedule = G.onSchedule();
@@ -132,7 +133,9 @@ public class TrainController implements Runnable
         {
         		onSchedule = R.onSchedule();
         }
+		*/
         
+        onSchedule = true;
         if (onSchedule == false) //means off schedule 
         {
             setPoint = waysideSpeed;
@@ -142,7 +145,7 @@ public class TrainController implements Runnable
             setPoint = (waysideSpeed < operatorSpeed) ? waysideSpeed : operatorSpeed;
         }
 	
-		if(currentSpeed > setPoint) //when your going slower than you want to go or someone pulls the emergency break
+		if(currentSpeed > setPoint)
 		{
 			train.setServiceBrake(true);
 			return 0;
@@ -173,21 +176,22 @@ public class TrainController implements Runnable
     public void updateTrain() 
     {
         //System.out.println("Inside TrainControllers Update Method.");
-        Transponder.Type info;
-        currentSpeed = train.getVelocity();
-        power = calcPower(currentSpeed, operatorSpeed);  
+		Transponder.Type info;
+		currentSpeed = train.getVelocity();
+		power = calcPower(currentSpeed, operatorSpeed);  
 		train.setPower(power); 
 		train.updateTrack(Math.floor(60/clockRate)*.001);
 		
-
+		
+		return;
         if (train.hasTransponder()) 
         {
             info = train.getTransponderInfo();
-            if (info.equals("TUNNEL")) 
+            if (info == Transponder.Type.UNDERGROUND) 
             {
                 train.setHeadLights();
             }
-            if (info.equals("STATION") && trainStopped()) 
+            if (info. == Transponder.Type.STATION && trainStopped()) 
             {  
 				clockticValue = (60 / clockRate) * .001; 
 				timewaited += clockticValue; 
