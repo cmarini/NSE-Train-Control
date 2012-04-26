@@ -15,27 +15,30 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
         
 /**
+ * This file contains the specification for the dispatcher login dialog box
  * 
- * @author AM
+ * @author Zachary Sweigart
  */
 public class LogInDialog extends JDialog
 {
-    private boolean debugMode;
-    private JTextField tfUsername;
-    private JPasswordField pfPassword;
-    private JLabel lbUsername;
-    private JLabel lbPassword;
-    private JButton btnLogin;
-    private JButton btnCancel;
-    private boolean succeeded;
-    private String verifiedUsername;
-    private Dispatcher [] dispatchers;
-    private Dispatcher verifiedDispatcher;
+    private boolean debugMode;  // Sets the debug mode flag
+    private JTextField tfUsername;  // allows the user to enter their username
+    private JPasswordField pfPassword; // allows the user to enter their password
+    private JLabel lbUsername;  // labels the username field
+    private JLabel lbPassword;  // labels the password field
+    private JButton btnLogin;   // logs the user in
+    private JButton btnCancel;  // canels the login dialog
+    private boolean succeeded;  // signals whether or not the user logged in successfully
+    private String verifiedUsername; // holds the verified username
+    private Dispatcher [] dispatchers;  // holds the valid dispatchers
+    private Dispatcher verifiedDispatcher; // holds the verified dispatcher
 
     /**
+     * create and display a new log in dialog
      * 
-     * @param owner
-     * @param d
+     * @param owner frame that displays the the dialog
+     * @param d sets the debug mode flag
+     * @param dispatch  holds the valid dispatcher information
      */
     public LogInDialog(JFrame owner, boolean d, Dispatcher [] dispatch) 
     {
@@ -137,8 +140,9 @@ public class LogInDialog extends JDialog
     }
 
     /**
+     * return the successfully logged in username
      * 
-     * @return
+     * @return string verified username
      */
     public String getVerifiedUsername()
     {
@@ -146,8 +150,9 @@ public class LogInDialog extends JDialog
     }
     
     /**
+     * return the successfully logged in dispatcher
      * 
-     * @return
+     * @return dispatcher successfully logged in
      */
     public Dispatcher getVerifiedDispatcher()
     {
@@ -155,8 +160,9 @@ public class LogInDialog extends JDialog
     }
     
     /**
+     * get the username out of the text field
      * 
-     * @return
+     * @return string entered username
      */
     public String getUsername() 
     {
@@ -164,8 +170,9 @@ public class LogInDialog extends JDialog
     }
 
     /**
+     * get the password out of the text field
      * 
-     * @return
+     * @return string entered password
      */
     public String getPassword() 
     {
@@ -173,8 +180,9 @@ public class LogInDialog extends JDialog
     }
 
     /**
+     * return if the user logged in successfully
      * 
-     * @return
+     * @return boolean successful login
      */
     public boolean isSucceeded() 
     {

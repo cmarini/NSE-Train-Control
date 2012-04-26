@@ -25,6 +25,11 @@ public class SimulatorRunner
     private static int clockRate = 60;  // holds the number of minutes equal to one hour in the simulation
     private static boolean isOpen;  // used to determine if the GUI has been closed
 
+    /**
+     * runs the main program
+     * 
+     * @param args command line arguments
+     */
     public static void main(String[] args) 
     {
         LogSetup.init();
@@ -41,7 +46,6 @@ public class SimulatorRunner
             int sleeptime = (int)(Math.ceil(clockRate/60.0));
             s.run();
             clockRate = view.getClockRate();
-            //s.setTrainControllerClockRate(clockRate);
             isOpen = view.getIsOpen();
             sleep(sleeptime);
         }

@@ -20,9 +20,8 @@ import java.util.ArrayList;
  */
 public class CTCModel 
 {
-    private static boolean debugMode = false;
-    private static int clockRate = 60;
-    private TrackParser parser;
+    private static boolean debugMode = false; // Used to print out debugging statements
+    private TrackParser parser; // Loads in track data from csv files
     private Wayside [] greenTrackControllers = {
         (new WaysideA(new ID(Line.GREEN, 'A', -1))), 
         (new WaysideB(new ID(Line.GREEN, 'B', -1))), 
@@ -48,7 +47,7 @@ public class CTCModel
         (new WaysideJ(new ID(Line.RED, 'K', -1)))};;
     
     /**
-     * 
+     * Create a new CTCModel object and read in the data for the two lines
      */
     public CTCModel()
     {
@@ -75,19 +74,22 @@ public class CTCModel
     
     private void initializeTrack(TrackParser parser)
     {
-        int blockCounter = 0;
-        char previous = '.';
-        boolean prevLinkBack = false;
-        Track prev = null;
-        Track t = null;
-        Stack switches = new Stack();
-        boolean first = true;
-        Track firstBlock = null;
-        TrackType prevType = null;
-        boolean prevBackwards = false;
+        int blockCounter = 0;   // used to determine the location of a block in a section
+        char previous = '.';    // used to determine when a new block section has been reached
+        boolean prevLinkBack = false;   // used to determine if the previous block was a linkback block
+        Track prev = null;  // the previous block loaded
+        Track t = null; // the current block being loaded
+        Stack switches = new Stack();   // holds the switch blocks as they are encountered
+        boolean first = true;   // used to determine if the block being loaded is the first in the file
+        Track firstBlock = null;    // holds the first block loaded
+        TrackType prevType = null;  // used to determine the track type of the current block
+        boolean prevBackwards = false;  // used to determine the orientation of a switch block
         
         while (parser.next())
         {
+            /*
+             * get and store the data the parser reads from the CSV
+             */
             double elevation = parser.getElevation();
             double grade = parser.getGrade();
             int speedLimit = parser.getSpeedLimit();
@@ -106,6 +108,9 @@ public class CTCModel
             ID idNum = new ID(parser.getLine(), waysideChar, blockCounter);
             blockCounter++;            
             
+            /*
+             * Create the proper type of block
+             */
             if(type.equals(TrackType.CROSSING))
             {
                 t = new Crossing(elevation, grade, speedLimit, blockLength, idNum);
@@ -309,7 +314,9 @@ public class CTCModel
                     }
                 } 
                 
-
+                /*
+                 * links the blocks together
+                 */
                 if(backwards)
                 {
                     if(type == TrackType.SWITCHTY)
@@ -551,6 +558,9 @@ public class CTCModel
                 }
             }
         }
+        /*
+         * Link the first block and last blocks to form a circuit 
+         */
         t = (Switch)switches.pop();
         if(firstBlock != null && t != null)
         {
@@ -560,25 +570,18 @@ public class CTCModel
     }
     
     /**
-     * 
-     * @param d
+     * set the debug mode flag
+     * @param d boolean debug mode flag
      */
     public void setDebugMode(boolean d)
     {
         debugMode = d;
     }
-   
-    /**
-     * 
-     */
-    public void run()
-    {
-        
-    }
 
     /**
-     * 
-     * @return
+     * return the controllers for a certain line
+     * @param line Line for the desired controllers
+     * @return array of waysides
      */
     public Wayside [] getControllers(Line line)
     {
@@ -594,14 +597,15 @@ public class CTCModel
     }
         
     /**
-     * 
-     * @return
+     * get the track for a specific section
+     * @param selectedWaysideID ID for desired wayside
+     * @return array of strings of track block IDs in the section
      */
     public String [] getTrackIDs(ID selectedWaysideID)
     {
-        Wayside w [] = null;
-        ArrayList <Track> trackBlocks = null;
-        String trackIDs[];
+        Wayside w [] = null;    // holds the waysides from a specific line
+        ArrayList <Track> trackBlocks = null;   // holds the track blocks from a specific section
+        String trackIDs[];  // holds the string track ids for a specific section
         
         if(selectedWaysideID == null)
         {
@@ -670,8 +674,10 @@ public class CTCModel
     }
     
     /**
-     * 
-     * @return
+     * get the track blocks in a specific section
+     * @param l Line where the blocks are located
+     * @param i character section where the blocks are located
+     * @return ArrayList of Track in the desired section
      */
     public ArrayList <Track> getWaysideTrack(Line l, int i)
     {
@@ -689,10 +695,15 @@ public class CTCModel
         return null;
     }
     
+    /**
+     * get the wayside IDs on a specific line
+     * @param l Line where the waysides are located
+     * @return String array of the waysides
+     */
     public String [] getWaysides(Line l)
     {
-        Wayside [] w;
-        String [] waysideStrings;
+        Wayside [] w;   // holds the waysides on a line
+        String [] waysideStrings;   // holds the string IDs for the waysides
         switch(l)
         {
             case GREEN:
@@ -714,6 +725,11 @@ public class CTCModel
         return waysideStrings;
     }
     
+    /**
+     * get a specific track block object
+     * @param id ID for the track block
+     * @return Track 
+     */
     public Track getTrack(ID id)
     {
         if(id.getLine().equals(Line.GREEN))
@@ -773,6 +789,12 @@ public class CTCModel
         return null;
     }
     
+    /**
+     * get the wayside object for a specific section
+     * @param l Line where the wayside is located
+     * @param section character section for the wayside
+     * @return wayside object
+     */
     public Wayside getWayside(Line l, char section)
     {
         if(l.equals(Line.GREEN))

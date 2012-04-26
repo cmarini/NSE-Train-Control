@@ -37,9 +37,9 @@ public class CTCView extends JFrame
     private int controllerSelectedIndex = 0; // used to hold the location of the currently selected wayside
     private int blockSelectedIndex = 0; // used to hold the location of the currently selected train block
     private int trainSelectedIndex = 0; // used to hold the location of the currently selected train
-    private int operatorTrainSelectedIndex = 0;
+    private int operatorTrainSelectedIndex = 0; // used to hold the location of the currently selected train by the operator
     private int dispatcherSelectedIndex = 0;    // used to hold the location of the currently selected train block on the dipatcher screen
-    private int clockSelectedIndex = 8;
+    private int clockSelectedIndex = 8; // used to determine what clock rate was selected
     private static CTCModel model = new CTCModel(); // references the model of the system 
     private static CTCControl control = new CTCControl(model);  // references the control that passes messages to the system
     private static Simulator sim;   // references the simulator for the system
@@ -53,12 +53,9 @@ public class CTCView extends JFrame
     private TrackPanel trackPanel;  // used to create the dispaly for the view/modify track screen
     private MetricsPanel metricsPanel;  // used to create the dispaly for the view metrics screen
     private SplashPanel splashPanel = new SplashPanel();    // used to create the dispaly for the splash screen
-    private Line selectedLine = Line.GREEN;
-    private ID selectedWaysideID;
-    private ID selectedDispatcherTrainID;
-    private Line dispatcherLine;
-    private ID dispatcherWaysideID;
-    private Dispatcher [] dispatchers = new Dispatcher [10];
+    private Line selectedLine = Line.GREEN; // Holds the currently selected line on the track screen
+    private ID selectedWaysideID; // Holds the currently selected wayside id for the track screen
+    private Dispatcher [] dispatchers = new Dispatcher [21];    // holds all of the dispatchers
     
     /**
      * creates a new CTCView object and initializes debug mode to false
@@ -154,6 +151,18 @@ public class CTCView extends JFrame
         dispatchers[7] = (new Dispatcher("dgreenh", "password", Line.GREEN, (new ID(Line.GREEN, 'H', -1))));
         dispatchers[8] = (new Dispatcher("dgreeni", "password", Line.GREEN, (new ID(Line.GREEN, 'I', -1))));
         dispatchers[9] = (new Dispatcher("marinic", "password", Line.GREEN, (new ID(Line.GREEN, 'J', -1))));
+        
+        dispatchers[10] = (new Dispatcher("dreda", "password", Line.RED, (new ID(Line.RED, 'A', -1))));
+        dispatchers[11] = (new Dispatcher("dredb", "password", Line.RED, (new ID(Line.RED, 'B', -1))));
+        dispatchers[12] = (new Dispatcher("dredc", "password", Line.RED, (new ID(Line.RED, 'C', -1))));
+        dispatchers[13] = (new Dispatcher("dredd", "password", Line.RED, (new ID(Line.RED, 'D', -1))));
+        dispatchers[14] = (new Dispatcher("drede", "password", Line.RED, (new ID(Line.RED, 'E', -1))));
+        dispatchers[15] = (new Dispatcher("dredf", "password", Line.RED, (new ID(Line.RED, 'F', -1))));
+        dispatchers[16] = (new Dispatcher("dredg", "password", Line.RED, (new ID(Line.RED, 'G', -1))));
+        dispatchers[17] = (new Dispatcher("dredh", "password", Line.RED, (new ID(Line.RED, 'H', -1))));
+        dispatchers[18] = (new Dispatcher("dredi", "password", Line.RED, (new ID(Line.RED, 'I', -1))));
+        dispatchers[19] = (new Dispatcher("dredj", "password", Line.RED, (new ID(Line.RED, 'J', -1))));
+        dispatchers[20] = (new Dispatcher("dredk", "password", Line.RED, (new ID(Line.RED, 'K', -1))));
     }
     
     private class MenuActionRunDemo implements ActionListener
@@ -326,9 +335,9 @@ public class CTCView extends JFrame
     }
     
     /**
-     * return the state of the debug mode flag
+     * set the state of the debug mode flag
      * 
-     * @return a boolean representing the state of the debug mode flag
+     * @param b boolean state of the debug mode
      */
     public static void setDemoMode(boolean b)
     {
@@ -497,7 +506,6 @@ public class CTCView extends JFrame
         private Insets insets = new Insets(0,0,0,0);    // insets for the map
         private Insets insets2 = new Insets(0,0,0,10);  // insets for all other display components
         private String [] trackIDs; // holds the trackIDs available to the dispatcher
-        private String [] trainIDs; //
 
         DispatcherPanel()
         {
@@ -522,8 +530,6 @@ public class CTCView extends JFrame
             {
                 trackIDs = new String[0];
             }
-            
-//            trainIDs = sim.getTrainIDs();
             
             track.removeAllItems();
             track.addItem("");
@@ -685,7 +691,7 @@ public class CTCView extends JFrame
          * holds all of the sections that can be displayed
          */
         private JComboBox trackCombo = new JComboBox(trackSections);    // displays all the track sections that can be displayed  
-        private String [] trainIDs;
+        private String [] trainIDs; // Holds the trains that may be operated
         
         OperatorPanel()
         {
@@ -1469,9 +1475,9 @@ public class CTCView extends JFrame
         private JLabel gradeLabel = new JLabel("Grade");    // labels the grade for the selected track block
         private JLabel blockSizeLabel = new JLabel("Block Size");   // labels the block size for the selected track block
         private JLabel trackTypeLabel = new JLabel("Track Type");   // labels the track type for the selected track block
-        private JLabel openStateLabel = new JLabel("Open State");
-        private JLabel failureStateLabel = new JLabel("Failure State");
-        private JLabel lightStateLabel = new JLabel("Light State");
+        private JLabel openStateLabel = new JLabel("Open State");   // labels the open state for the selected track block
+        private JLabel failureStateLabel = new JLabel("Failure State"); // labels the failure of the selected track block
+        private JLabel lightStateLabel = new JLabel("Light State"); // labels the light stat for the selected track block
         private JComboBox line; // holds the lines to be selected
         private JComboBox controller = new JComboBox();   // holds the waysides to be selected
         private JComboBox track = new JComboBox();    // holds the track blocks to be selected
@@ -1481,9 +1487,9 @@ public class CTCView extends JFrame
         private JTextField gradeField = new JTextField();   // displays the grade for the selected block
         private JTextField blockSizeField = new JTextField();   // displays the block size for the selected block
         private JTextField trackTypeField = new JTextField();   // displays the track type for the selected block
-        private JTextField lightStateField = new JTextField();
-        private JTextField openStateField = new JTextField();
-        private JTextField failureStateField = new JTextField();
+        private JTextField lightStateField = new JTextField();  // dispalys the light state of the selected block
+        private JTextField openStateField = new JTextField();   // displays the open state for the selected block
+        private JTextField failureStateField = new JTextField();// dispalys the failure state of the selected block
         private JButton closeButton = new JButton("Close"); // sends close signal to the selected track block
         private JButton openButton = new JButton("Open");   // sends open signal to the selected track block
         private JButton breakButton = new JButton("Break"); // sends break signal to the selected track block
@@ -1494,9 +1500,9 @@ public class CTCView extends JFrame
         private double grade;  // holds the grade of the selected track block
         private double blockSize;  // holds the block size of the selected track block
         private String trackType;  // holds the track type of the selected track block
-        private String openState; 
-        private String failureState; 
-        private Light lightState;
+        private String openState;  // holds the open state of the selected track block
+        private String failureState; // holds the failure state of the selected track block
+        private Light lightState;   // holds the light state of the selected track block
         private String trackIDs[] = new String [0];  // holds the ids of the track blocks in the system
         private String controllerIDs [] = new String [0];    // holds the ids of the controllers in the system
                 

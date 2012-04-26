@@ -52,6 +52,9 @@ public class CTCControl
      * send the dispatcher speed to the specified track block
      * 
      * @param sp integer setpoint from the dispatcher
+     * @param l Line of the block
+     * @param wayside character wayside of the block
+     * @param unit integer block unit
      */
     public void setDispatcherSpeed(int sp, Line l, char wayside, int unit)
     {
@@ -67,6 +70,9 @@ public class CTCControl
      * send the dispatcher authority to the specified track block
      * 
      * @param auth integer authority from the dispatcher
+     * @param l Line of the block
+     * @param wayside character wayside of the block
+     * @param unit integer block unit
      */
     public void setDispatcherAuthority(int auth, Line l, char wayside, int unit)
     {     
@@ -83,6 +89,7 @@ public class CTCControl
      * 
      * @param sp integer speed
      * @param b boolean brake signal
+     * @param trainID String ID of the train
      */
     public void setOperatorCommands(int sp, boolean b, String trainID)
     {

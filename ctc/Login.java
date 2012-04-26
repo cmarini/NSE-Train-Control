@@ -8,18 +8,22 @@
 package ctc;
 
 /**
+ * This class contains methods for determining whether or not a dispatcher has 
+ * logged in successfully
  * 
- * @author AM
+ * @author Zachary Sweigart
  */
 public class Login 
 {
 
     /**
+     * Determine if the username and password provided are valid
      * 
-     * @param userName
-     * @param password
-     * @param debugMode
-     * @return
+     * @param userName String username entered by the user
+     * @param password String password entered by the user
+     * @param debugMode boolean debug mode flag
+     * @param dispatchers valid dispatcher objects
+     * @return integer location of successful login information in the dispatcher array
      */
     public static int authenticate(String userName, String password, boolean debugMode, Dispatcher [] dispatchers)
     {
