@@ -39,6 +39,7 @@ public class Train
 	public int blockAuthority;
 	public double distInBlock;
 	public double remainder;
+        public boolean stopForStation;
 
 	public Train(Line line, int crew, String id)
 	{
@@ -65,12 +66,13 @@ public class Train
 		distInBlock = 0;
                 blockLength = length;
                 oldVelocity = 1;
+                stopForStation = false;
 	}
 
 	public void calcVelocity()
 	{
             
-            System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass + " distance " + distInBlock);
+            //System.out.println("powerCMD " + powerCmd + " time" + time + " oldVelocity" + oldVelocity + " mass" + mass + " distance " + distInBlock);
 		if (emerBrake)
 		{
 			velocity = oldVelocity - 2.73 * time;
@@ -78,6 +80,7 @@ public class Train
                         {
                             velocity = 0;
                         }
+                        velocity = 0;
                         oldVelocity = velocity;
 		}
 		else if (servBrake)
@@ -95,7 +98,7 @@ public class Train
 			{
 				oldVelocity = 1;
 			}
-			velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
+			velocity = 3 * ((((powerCmd*time)/oldVelocity)/mass) + oldVelocity);
 			oldVelocity = velocity;
 		}
 		//velocity = (((powerCmd*time)/oldVelocity)/mass) + oldVelocity;
@@ -192,11 +195,13 @@ public class Train
 	public void openDoors()
 	{
 		doors = true;
+                System.out.println("Doors Open");
 	}
 
 	public void closeDoors()
 	{
 		doors = false;
+                System.out.println("Doors Closed");
 	}
 
 	public boolean getDoors()
@@ -246,11 +251,11 @@ public class Train
 		distInBlock = distInBlock + velocity * time;
 		remainder = length - distInBlock;
 		calcVelocity();
-		//System.out.println("Velocity " + velocity + " distTraveled " + distTraveled);
+		System.out.println("Velocity " + velocity + " distTraveled " + distInBlock);
 
 		if (remainder < 0)
 		{
-			if(prevTrack != null)
+			if(prevTrack != null  && prevTrack.isOccupied())
 			{
 				prevTrack.setUnoccupied();
 			}
@@ -270,6 +275,10 @@ public class Train
 				trackPiece = trackPiece.getNext();
 			}
                System.out.print("   New Track " + trackPiece.getID());
+                        if (trackPiece instanceof Station)
+                        {
+                            stopForStation = true;
+                        }
 			distInBlock = distInBlock - blockLength;
 			blockSpeed = trackPiece.getSpeedLimit();
 			blockAuthority = trackPiece.getAuthority();
@@ -320,6 +329,16 @@ public class Train
 	{
 		occupancy = pass;
 	}
+        
+        public boolean needsToStopForStation()
+        {
+            return stopForStation;
+        }
+        
+        public void stoppedForStation()
+        {
+            stopForStation = false;
+        }
 
 
 }

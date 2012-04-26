@@ -10,6 +10,7 @@ import simulator.*;
 import global.*;
 import trackmodel.*;
 import traincontroller.*;
+import wayside.*;
 
 /**
  * This file contains the specification for the CTCControl which passes messages
@@ -76,7 +77,9 @@ public class CTCControl
      */
     public void setDispatcherAuthority(int auth, Line l, char wayside, int unit)
     {     
+        Wayside w = model.getWayside(l, wayside);
         Track t = model.getTrack(new ID(l, wayside, unit));
+        w.setAuthority(t.getID(), auth);
         t.setAuthority(auth);
         if(debugMode)
         {

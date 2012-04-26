@@ -8,6 +8,7 @@ import trackmodel.*;
 
 public class TrainController implements Runnable
 { 
+    final static Logger log = Logger.getLogger(TrainController.class.getName());
     private Train train;
 	 private Track track; 
     private GreenSchedule G;
@@ -36,12 +37,14 @@ public class TrainController implements Runnable
     private int crew;
     private int ran = 1; 
     private String message;
-	 private int timewaited; 
+	 private double timewaited; 
 	 private double clockticValue;
+         private boolean firstStoppedAtStation;
 	
 	
     public TrainController(Line line, int crewCount, int clock, String idVal) 
     {
+        firstStoppedAtStation = true;
         scheduleLine = line;
         clockRate = clock;
         crew = crewCount;
@@ -183,28 +186,41 @@ public class TrainController implements Runnable
 		train.updateTrack(Math.floor(60/clockRate)*.001);
 		
 		
-		return;/*
-        if (train.hasTransponder()) 
+
+      /*  if (train.hasTransponder()) 
         {
             info = train.getTransponderInfo();
             if (info == Transponder.Type.UNDERGROUND) 
             {
                 train.setHeadLights();
-            }
-            if (info == Transponder.Type.STATION && trainStopped()) 
-            {  
-				clockticValue = (60 / clockRate) * .001; 
+            } */
+            if (train.needsToStopForStation()) 
+            { 
+                train.setEmergencyBrake(true);
+                if (trainStopped())
+                {
+				clockticValue = (60.00 / clockRate) * 0.01; 
 				timewaited += clockticValue; 
 				
 				train.openDoors();
+                                if (firstStoppedAtStation)
+                                {
+                                    log.fine("Stopped at station on " + train.getTrack().getID());
+                                    firstStoppedAtStation = false;
+                                }
 				if( timewaited >= 60 ) 
 				{   //After clock rate of 60secs close doors 
 					train.closeDoors();
-					timewaited = 0; 
+                                        train.setEmergencyBrake(false);
+					timewaited = 0;
+                                        train.stoppedForStation();
+                                        firstStoppedAtStation = true;
+                                        log.fine("Resuming from station on " + train.getTrack().getID());
 				}
-				//Signal that train goes to next station 
+				//Signal that train goes to next station
+                }
             }
-        }*/
+        // }
     }
 
     public void updateSchedule() 

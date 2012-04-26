@@ -1243,7 +1243,7 @@ public class CTCView extends JFrame
                     mass = t.getMass();
                     crewCount = t.getCrew();
                     passCount = t.getOccupancy();
-                    currentSpeed = t.getVelocity();
+                    currentSpeed = Math.floor(t.getVelocity());
                     currentAcceleration = t.calcAcceleration();
                     message = tc.getMessage();
                     cabinLights = t.getCabinLights();

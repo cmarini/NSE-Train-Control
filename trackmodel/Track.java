@@ -57,7 +57,7 @@ public class Track
 	public void setAuthority(int auth) // set authority
 	{
 		authority = auth;
-		log.info("Track " + trackID + ": authority set to " + auth);
+		// log.info("Track " + trackID + ": authority set to " + auth);
 	}
 	
 	public void setFix() // call this method to fix track

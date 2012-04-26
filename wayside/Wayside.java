@@ -30,8 +30,10 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	
 	public void run()
 	{
+            //System.out.println("Wayside " + id + " run");
 		if(hasTrain())
 		{
+                    // System.out.println("Wayside " + id + " run");
 			runLogic();
 		}
 	}
@@ -124,6 +126,11 @@ public abstract class Wayside implements WaysideInterface, Runnable
 	
 	protected void spreadAuthority(int auth)
 	{
+                for (Track t : track)
+                {
+                    t.setAuthority(1);
+                }
+                /*
 		int dir = direction ? 1 : -1;
 		for (int i = trackStart(); i < trackEnd(); i += dir)
 		{
@@ -134,6 +141,7 @@ public abstract class Wayside implements WaysideInterface, Runnable
 				auth = -1;
 			}
 		}
+                */
 	}
 	
 	protected Wayside nextLeft()
