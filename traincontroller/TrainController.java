@@ -183,7 +183,7 @@ public class TrainController implements Runnable
 		train.updateTrack(Math.floor(60/clockRate)*.001);
 		
 		
-		return;
+		return;/*
         if (train.hasTransponder()) 
         {
             info = train.getTransponderInfo();
@@ -191,7 +191,7 @@ public class TrainController implements Runnable
             {
                 train.setHeadLights();
             }
-            if (info. == Transponder.Type.STATION && trainStopped()) 
+            if (info == Transponder.Type.STATION && trainStopped()) 
             {  
 				clockticValue = (60 / clockRate) * .001; 
 				timewaited += clockticValue; 
@@ -204,7 +204,7 @@ public class TrainController implements Runnable
 				}
 				//Signal that train goes to next station 
             }
-        }
+        }*/
     }
 
     public void updateSchedule() 

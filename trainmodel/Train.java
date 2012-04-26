@@ -105,12 +105,12 @@ public class Train
 
 	public void setServiceBrake(boolean bR)
 	{
-		emerBrake = bR;
+		servBrake = bR;
 	}
 
 	public void setEmergencyBrake(boolean bR)
 	{
-		servBrake = bR;
+		emerBrake = bR;
 	}
 
 	public double getVelocity()
