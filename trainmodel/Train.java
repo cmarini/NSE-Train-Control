@@ -241,27 +241,33 @@ public class Train
 
 	public void updateTrack(double t)
 	{
-                time = t;
+		time = t;
 		distTraveled = distTraveled + velocity * time;
 		distInBlock = distInBlock + velocity * time;
 		remainder = length - distInBlock;
 		calcVelocity();
-                //System.out.println("Velocity " + velocity + " distTraveled " + distTraveled);
+		//System.out.println("Velocity " + velocity + " distTraveled " + distTraveled);
 
 		if (remainder < 0)
 		{
-                    if(prevTrack != null)
-                    {
-			prevTrack.setUnoccupied();
-                    }
+			if(prevTrack != null)
+			{
+				prevTrack.setUnoccupied();
+			}
 		}
 
 		if (distInBlock > blockLength)
 		{
-
-                        trackPiece.setOccupied(prevTrack);
-                        prevTrack = trackPiece;
-			trackPiece = trackPiece.getNext();
+			trackPiece.setOccupied(prevTrack);
+			prevTrack = trackPiece;
+			if (trackPiece instanceof Switch)
+			{
+				trackPiece = ((Switch)trackPiece).getNext();
+			}
+			else
+			{
+				trackPiece = trackPiece.getNext();
+			}
 			distInBlock = distInBlock - blockLength;
 			blockSpeed = trackPiece.getSpeedLimit();
 			blockAuthority = trackPiece.getAuthority();
@@ -274,17 +280,14 @@ public class Train
 				stationName = transponder.getStationName();
 				transType = transponder.getType();
 			}
-
-
 		}
-
 	}
 
 	public void setTrack(Track T)
 	{
 		trackPiece = T;
 		T.setOccupied(null);
-                //updateTrack();
+		//updateTrack();
 	}
 
 	public Track getTrack()
