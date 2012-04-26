@@ -3,6 +3,10 @@ package wayside;
 import global.*;
 import trackmodel.*;
 
+/**
+ * Controls the specific logic for the 'A' section of track
+ * @author Christian Marini
+ */
 public class WaysideA extends Wayside
 {
 	public WaysideA(ID id)

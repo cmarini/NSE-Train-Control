@@ -3,6 +3,10 @@ package wayside;
 import global.*;
 import trackmodel.*;
 
+/**
+ * Controls the specific logic for the 'D' section of track
+ * @author Christian Marini
+ */
 public class WaysideD extends Wayside
 {
 	private boolean toTrainYard;
