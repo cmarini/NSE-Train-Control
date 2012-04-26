@@ -109,13 +109,13 @@ public class CTCModel
             }
             else
             {
-                if(type.equals(TrackType.STATION) || type.equals(TrackType.SWITCHTY))
+                if(type.equals(TrackType.STATION))
                 {
                     t = new Station(elevation, grade, speedLimit, blockLength, idNum);
                 }
                 else
                 {
-                    if(type.equals(TrackType.SWITCH))
+                    if(type.equals(TrackType.SWITCH) || type.equals(TrackType.SWITCHTY))
                     {
                         t = new Switch(elevation, grade, speedLimit, blockLength, idNum);
                     }
