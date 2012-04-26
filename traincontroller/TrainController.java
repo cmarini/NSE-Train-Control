@@ -22,9 +22,9 @@ public class TrainController implements Runnable
     private double currentSpeed;          //Speed returned by Train Model 
     private double operatorSpeed;         //Speed entered by user 
     private double waysideSpeed;          //Speed sent by the wayside 
-    private static double maxPower = 120000; //W
+    private static double MAX_POWER = 120000; //W
     private double power;                 //power sent to the  train
-    private double init_power = 12000;       //W
+    private double INIT_POWER = 12000;       //W
     private double velocity;              //Trains current velocity 
     private double prev_d;                //previous d value
     private double prev_v;                //previous v value 
@@ -107,7 +107,7 @@ public class TrainController implements Runnable
 		
 		if (ran == 1) 
 		{
-			power = init_power;
+			power = INIT_POWER;
 			ran++;
 			return power;
 		}
@@ -153,15 +153,15 @@ public class TrainController implements Runnable
 		else
 		{
 			/*power = Kp * d + Ki * v;
-			if (power < maxPower) 
+			if (power < MAX_POWER) 
 			{
 				trainPeriod = (60 / clockRate) * .001; 
 				d = setPoint - currentSpeed;
 				v = prev_v + (trainPeriod / 2) * (d + prev_d);
 			}
-			else if (power >= maxPower) 
+			else if (power >= MAX_POWER) 
 			{
-				power = maxPower
+				power = MAX_POWER;
 				// v = prev_v; //v= v(n-1)
 			}*/
 			train.setServiceBrake(false);
