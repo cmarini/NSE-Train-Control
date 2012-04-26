@@ -195,13 +195,13 @@ public class Train
 	public void openDoors()
 	{
 		doors = true;
-                System.out.println("Doors Open");
+		// System.out.println("Doors Open");
 	}
 
 	public void closeDoors()
 	{
 		doors = false;
-                System.out.println("Doors Closed");
+		// System.out.println("Doors Closed");
 	}
 
 	public boolean getDoors()
@@ -251,7 +251,7 @@ public class Train
 		distInBlock = distInBlock + velocity * time;
 		remainder = length - distInBlock;
 		calcVelocity();
-		System.out.println("Velocity " + velocity + " distTraveled " + distInBlock);
+		//System.out.println("Velocity " + velocity + " distTraveled " + distInBlock);
 
 		if (remainder < 0)
 		{
@@ -265,7 +265,7 @@ public class Train
 		{
 			trackPiece.setOccupied(prevTrack);
 			prevTrack = trackPiece;
-                System.out.print("Track " + trackPiece.getID());
+            System.out.print("Train " + trainId + ": New Track " + trackPiece.getID() + " -> ");
 			if (trackPiece instanceof Switch)
 			{
 				trackPiece = ((Switch)trackPiece).getNext();
@@ -274,7 +274,7 @@ public class Train
 			{
 				trackPiece = trackPiece.getNext();
 			}
-               System.out.print("   New Track " + trackPiece.getID());
+			System.out.print(trackPiece.getID());
                         if (trackPiece instanceof Station)
                         {
                             stopForStation = true;
@@ -284,7 +284,7 @@ public class Train
 			blockAuthority = trackPiece.getAuthority();
 			grade = trackPiece.getGrade();
 			blockLength = trackPiece.getBlockLength();
-                        System.out.print(" New Authority = " + blockAuthority);
+                        System.out.print(", new Authority = " + blockAuthority);
                         System.out.println();
 
 			if (trackPiece instanceof Transponder)
