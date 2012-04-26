@@ -1,4 +1,4 @@
-//package traincontroller;
+package traincontroller;
 
 import global.*;
 import trainmodel.*;
@@ -48,6 +48,15 @@ public class TrainController implements Runnable
         braking = false; 
         train = new Train(scheduleLine, crew, id);
         message = "";
+        switch (line)
+        {
+			case Line.GREEN:
+				G = new GreenSchedule();
+				break;
+			case Line.RED:
+				R = new RedSchedule();
+				break;
+		}
     }
 		
     public void run() 
@@ -90,21 +99,28 @@ public class TrainController implements Runnable
         double Ki = 1;          //integral (Guess value)
 		
 		  prev_v = train.getVelocity(); 
-		  waysideSpeed = getSpeedLimit(); 
-		  authority = getAuthority(); 
+		  waysideSpeed = train.getSpeedLimit(); 
+		  authority = train.getAuthority(); 
 		  
-		  
-		  if (ran == 1) 
-        {
-            power = init_power;
-            ran++;
-        }
+		power = 0;
+		
+		if (ran == 1) 
+		{
+			power = init_power;
+			ran++;
+		}
         
-        if(authority < 1)
-		  {
-		  		train.setServiceBrake(serviceBrake); 
-				power = 0; 
-		  }
+		if(authority < 1)
+		{
+			train.setServiceBrake(true); 
+			return 0;
+		}
+		
+		if(emergencyBraking = true) 
+		{
+			train.setEmergencyBrake(emergencyBrake);
+			return 0;
+		}   
         
         if (scheduleLine.equals(Line.GREEN)) 
         {
@@ -121,36 +137,31 @@ public class TrainController implements Runnable
         } 
         else 
         {
-            setPoint = operatorSpeed;
+            setPoint = (waysideSpeed < operatorSpeed) ? waysideSpeed : operatorSpeed;
         }
 	
 		if(currentSpeed > setPoint) //when your going slower than you want to go or someone pulls the emergency break
 		{
-			train.setServiceBrake(serviceBrake); 
-			power = 0; 
+			train.setServiceBrake(true);
+			return 0;
 		}
-		else if(currentSpeed < setPoint)
+		else
 		{
+			/*power = Kp * d + Ki * v;
 			if (power < maxPower) 
-         {
-        		trainPeriod = (60 / clockRate) * .001; 
-            d = setPoint - currentSpeed;
-            v = prev_v + (trainPeriod / 2) * (d + prev_d);
-         } 
-         else if (power >= maxPower) 
-         {
-            v = prev_v; //v= v(n-1)
-         }
-
-        power = Kp * d + Ki * v;
-			
+			{
+				trainPeriod = (60 / clockRate) * .001; 
+				d = setPoint - currentSpeed;
+				v = prev_v + (trainPeriod / 2) * (d + prev_d);
+			}
+			else if (power >= maxPower) 
+			{
+				power = maxPower
+				// v = prev_v; //v= v(n-1)
+			}*/
+			train.setServiceBrake(false);
+			return maxPower;
 		}
-		 
-		if(emergencyBraking = true) 
-		{
-			train.setEmergencyBrake(emergencyBrake);
-			power = 0; 
-		}        
 		
 		return power;
     }
@@ -162,8 +173,9 @@ public class TrainController implements Runnable
     {
         System.out.println("Inside TrainControllers Update Method.");
         String info;
-        power = calcPower(currentSpeed, operatorSpeed, waysideSpeed);  
+        power = calcPower(currentSpeed, operatorSpeed);  
 		train.setPower(power); 
+		train.updateTrack();
 		
 
         if (train.hasTransponder()) 
@@ -221,10 +233,9 @@ public class TrainController implements Runnable
         return clockRate;
     }
 
-    public void setclockRate(int clock) 
+    public void setClockRate(int clock) 
     {
-       
-        clock = clockRate;
+        clockRate = clock;
     }
 	
 		

@@ -18,9 +18,8 @@ public class RedSchedule
     private double clockrate;
     public double[] times = {3.7, 2.3, 1.5, 1.8, 2.1, 2.1, 1.7, 2.3};
 
-    public RedSchedule(double[] time) 
+    public RedSchedule() 
     {
-        times = time;
     }
 
     public void redSchedule() {
