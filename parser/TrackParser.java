@@ -37,6 +37,7 @@ public class TrackParser
 		public double elevation;
 		public double cumuElevation;
 		public boolean linkback;
+		public boolean backwards;
 		
 		public String toString()
 		{
@@ -120,11 +121,16 @@ public class TrackParser
 			e.cumuElevation = Double.parseDouble(ss[9]);
 			
 			e.linkback = false;
+			e.backwards = false;
 			if (ss.length > 10)
 			{
-				if (!ss[10].toUpperCase().equals(""))
+				if (ss[10].toUpperCase().contains("LINKBACK"))
 				{
 					e.linkback = true;
+				}
+				if (ss[10].toUpperCase().contains("BAKCWARDS"))
+				{
+					e.backwards = true;
 				}
 			}
 			
@@ -262,6 +268,15 @@ public class TrackParser
 	public boolean isLinkback()
 	{
 		return entries.get(index).linkback;
+	}
+
+	/**
+	 * Returns <code>true</code> if the switch is 'backwards'
+	 * @return <code>true</code> if the switch is 'backwards'
+	 */
+	public boolean isBackwards()
+	{
+		return entries.get(index).backwards;
 	}
 	
 	/**
